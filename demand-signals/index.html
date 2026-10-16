@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Demand Signals — Demo Simulator</title>
+<style>
+  :root{--blue:#4285F4;--red:#EA4335;--yellow:#FBBC04;--green:#34A853;--g50:#F8F9FA;--g100:#F1F3F4;--g300:#DADCE0;--g600:#5F6368;--g900:#202124;--blue50:#E8F0FE;--gem:linear-gradient(90deg,#4285F4,#9B72CB,#D96570)}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#fff;color:var(--g900);font-family:"Google Sans",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  #top{display:flex;align-items:center;gap:18px;padding:0 24px;height:56px;border-bottom:1px solid var(--g300);flex:none}
+  #top .brand{display:flex;align-items:center;gap:10px;font-size:16px}#top .brand i{width:22px;height:22px;border-radius:6px;background:var(--gem)}
+  #steps{display:flex;gap:6px;margin-left:auto}
+  #steps span{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:12px;color:var(--g600)}
+  #steps span b{width:20px;height:20px;border-radius:50%;background:var(--g100);display:grid;place-items:center;font-size:11px;font-weight:500}
+  #steps span.on{color:var(--g900);background:var(--blue50)}#steps span.on b{background:var(--blue);color:#fff}#steps span.done b{background:var(--green);color:#fff}
+  main{flex:1;min-height:0;position:relative}
+  .scr{position:absolute;inset:0;overflow:auto;display:none;padding:36px 48px}
+  .scr.on{display:block;animation:fade .35s}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h1{font-weight:400;font-size:32px;margin:0 0 8px;letter-spacing:-.01em}
+  h2{font-weight:500;font-size:16px;margin:24px 0 10px}
+  p.lead{color:var(--g600);font-size:15px;margin:0 0 24px;max-width:680px;line-height:1.5}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:12px 22px;font:500 14px "Google Sans",Roboto,sans-serif;cursor:pointer;background:var(--blue);color:#fff}
+  .btn.gem{background:var(--gem)}.btn.ghost{background:#fff;color:var(--blue);border:1px solid var(--g300)}.btn:disabled{opacity:.5;cursor:default}
+  .card{background:#fff;border:1px solid var(--g300);border-radius:14px;padding:18px 20px}
+  .mono{font-family:"Roboto Mono",ui-monospace,Menlo,monospace}
+  .ok{color:#1E8E3E}.bad{color:#D93025}.warn{color:#E37400}.dim{color:var(--g600)}
+  .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;font-size:12px;background:var(--g100)}
+  .pill.live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.2s infinite}
+  @keyframes blink{50%{opacity:.3}}
+  .foot{position:sticky;bottom:0;background:linear-gradient(transparent,#fff 30%);padding:24px 0 8px;display:flex;gap:10px;justify-content:flex-end}
+  /* S0 */
+  #urlrow{display:flex;gap:10px;max-width:760px}
+  #url{flex:1;border:1px solid var(--g300);border-radius:999px;padding:14px 20px;font:15px Roboto,sans-serif;outline:none}
+  #url:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue50)}
+  /* S1 personas */
+  .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .persona{border:1px solid var(--g300);border-radius:14px;padding:14px 16px;cursor:pointer;position:relative;transition:border-color .2s,box-shadow .2s;animation:fade .4s}
+  .persona.on{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue50)}
+  .persona .who{display:flex;align-items:center;gap:8px;font-weight:500;font-size:14px}.persona .who i{width:10px;height:10px;border-radius:50%}
+  .persona .ag{font-size:11px;color:var(--g600);margin:2px 0 8px}
+  .persona .brief{font-size:12.5px;line-height:1.5;color:var(--g900)}
+  .persona .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.persona .tags span{font-size:10.5px;background:var(--g50);border:1px solid var(--g100);border-radius:999px;padding:2px 8px}
+  .persona .chk{position:absolute;right:12px;top:12px;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--g300);display:grid;place-items:center;font-size:11px;color:#fff}
+  .persona.on .chk{background:var(--blue);border-color:var(--blue)}
+  #addrow{display:flex;gap:10px;margin-top:10px;max-width:760px}
+  #addrow input{flex:1;border:1px solid var(--g300);border-radius:999px;padding:12px 18px;font:14px Roboto,sans-serif;outline:none}
+  .src{display:flex;gap:14px;font-size:12px;color:var(--g600);margin-bottom:14px}.src span::before{content:"✓ ";color:var(--green)}
+  /* S2 swarm */
+  #s2{padding:20px 24px}
+  #swarmwrap{display:grid;grid-template-columns:1fr 400px;gap:20px;height:100%;min-height:0}
+  #twin{border:1px solid var(--g300);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(60,64,67,.15),0 10px 30px rgba(60,64,67,.12);display:flex;flex-direction:column;background:#fff}
+  #twinbar{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--g300);font-size:13px}
+  #frame{flex:1;width:100%;border:0;display:block}
+  #side{display:flex;flex-direction:column;gap:12px;min-height:0}
+  .tallies{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .tallies div{background:#fff;border:1px solid var(--g300);border-radius:12px;padding:10px 12px}
+  .tallies b{display:block;font-size:20px;font-weight:400}.tallies span{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--g600)}
+  #log{flex:1;overflow:auto;padding:6px 0;font:11px/1.45 "Roboto Mono",ui-monospace,Menlo,monospace}
+  .ln{display:grid;grid-template-columns:10px 1fr;gap:10px;padding:7px 16px;border-bottom:1px solid var(--g100);animation:fade .35s}
+  .ln i{width:10px;height:10px;border-radius:50%;margin-top:3px;background:var(--c)}
+  .ln b{font:500 11px "Google Sans",Roboto,sans-serif}.ln small{color:var(--g600);font-size:10px;margin-left:4px}.ln .st{float:right;font-weight:700}
+  .ln.signal{background:#FEF7E0}
+  .ln .sig{display:inline-block;margin-top:3px;font:500 10px "Google Sans",Roboto,sans-serif;color:#8a6400;background:#FDE293;border-radius:999px;padding:1px 8px}
+  /* S3 demand map */
+  .mapwrap{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+  .bubbles{position:relative;height:420px;border-radius:14px;background:var(--g50);overflow:hidden}
+  .bubble{position:absolute;border-radius:50%;display:grid;place-items:center;text-align:center;color:#fff;cursor:pointer;transition:transform .25s,box-shadow .25s;padding:12px;line-height:1.25;font-size:12px;transform:translate(-50%,-50%) scale(0);animation:pop .6s forwards}
+  .bubble b{display:block;font-size:18px;font-weight:500}.bubble small{display:block;font-size:10px;opacity:.85;margin-top:3px}
+  .bubble:hover,.bubble.on{box-shadow:0 0 0 4px #fff,0 0 0 7px var(--blue)}
+  @keyframes pop{to{transform:translate(-50%,-50%) scale(1)}}
+  .axis{position:absolute;font-size:10px;color:var(--g600);letter-spacing:.08em;text-transform:uppercase}
+  .legend{display:flex;gap:14px;font-size:12px;color:var(--g600);margin-top:10px;flex-wrap:wrap}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+  #detail h3{font:500 18px "Google Sans",Roboto,sans-serif;margin:0 0 4px}
+  #detail .kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}#detail .kv div{background:var(--g50);border-radius:10px;padding:8px 10px}#detail .kv b{display:block;font-size:18px;font-weight:400}#detail .kv span{font-size:11px;color:var(--g600)}
+  #detail ul{margin:0;padding-left:16px;font-size:12.5px;line-height:1.6;color:var(--g600)}
+  .quote{font:11.5px/1.5 "Roboto Mono",ui-monospace,Menlo,monospace;background:var(--g50);border-left:3px solid var(--blue);padding:8px 10px;border-radius:6px;margin:6px 0}
+  .siglist{display:grid;gap:8px;margin-top:14px}
+  .sigrow{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--g300);border-radius:12px;cursor:pointer;font-size:13px}
+  .sigrow.on{border-color:var(--blue);background:var(--blue50)}.sigrow i{width:22px;height:22px;border-radius:6px}.sigrow small{display:block;color:var(--g600);font-size:11px}
+  /* S4 product */
+  .prod{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+  .sheet{border:1px solid var(--g300);border-radius:16px;overflow:hidden}
+  .sheet .shot{aspect-ratio:4/5;background:#e9e4dc;display:grid;place-items:center;position:relative;overflow:hidden}
+  .sheet .shot .sock{width:46%;height:70%;border-radius:38% 38% 50% 50%/22% 22% 60% 60%;background:linear-gradient(160deg,#cdb79f,#9d8468);box-shadow:inset -18px -14px 30px rgba(0,0,0,.12),0 30px 40px -30px rgba(0,0,0,.4);position:relative}
+  .sheet .shot .sock::after{content:"";position:absolute;left:10%;right:10%;top:8%;height:16%;border-radius:40%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 6px,transparent 6px 12px)}
+  .sheet .shot .gen{position:absolute;left:12px;top:12px;font-size:11px;background:#fff;border-radius:999px;padding:4px 10px;color:var(--g600)}
+  .sheet .body{padding:14px 16px}
+  .sheet .brand{font-family:"Times New Roman",serif;font-size:14px}.sheet h3{margin:4px 0 2px;font:500 18px "Google Sans",Roboto,sans-serif}.sheet .price{font-size:14px;margin-bottom:10px}
+  .spec{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:12.5px}.spec span:nth-child(odd){color:var(--g600)}
+  #cam{border:1px solid var(--g300);border-radius:16px;overflow:hidden;background:#111;aspect-ratio:4/5;position:relative;display:grid;place-items:center;color:#fff}
+  #cam video,#cam canvas,#cam img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  #cam .overlay{position:absolute;left:50%;bottom:10%;width:34%;aspect-ratio:1;transform:translateX(-50%);border-radius:38% 38% 50% 50%/22% 22% 60% 60%;background:linear-gradient(160deg,#cdb79f,#9d8468);opacity:.92;box-shadow:0 20px 40px -20px rgba(0,0,0,.6);display:none}
+  #cam .hint{position:relative;text-align:center;font-size:13px;color:#ccc;padding:20px}
+  #cam .badge{position:absolute;left:12px;top:12px;font-size:11px;background:var(--gem);color:#fff;border-radius:999px;padding:4px 10px;display:none}
+  .camctl{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .modes{display:flex;gap:6px;margin:0 0 10px}.modes span{border:1px solid var(--g300);border-radius:999px;padding:5px 12px;font-size:12px;cursor:pointer}.modes span.on{background:var(--blue);border-color:var(--blue);color:#fff}
+  #qr{width:150px;height:150px;image-rendering:pixelated;border:1px solid var(--g300);border-radius:10px;display:block;margin:0 auto 8px}
+</style>
+</head>
+<body>
+<div id="top">
+  <div class="brand"><i></i> Demand Signals</div>
+  <div id="steps"><span data-s="1"><b>1</b> Shoppers</span><span data-s="2"><b>2</b> Swarm</span><span data-s="3"><b>3</b> Demand map</span><span data-s="4"><b>4</b> See it on you</span></div>
+</div>
+<main>
+
+<!-- ============ S0 ============ -->
+<section id="s0" class="scr on">
+  <h1>Discover what shoppers want before they tell you.</h1>
+  <p class="lead">Enter your retail site. Gemini releases a swarm of shopping agents — each with a real shopper's needs and budget — tracks what they search for, buy and can't find, and brings the biggest gap to life as a product you can try on.</p>
+  <div id="urlrow"><input id="url" value="thefrankieshop.com/collections/womens-new-arrivals" spellcheck="false"><button class="btn gem" onclick="go(1)">✦ Generate shoppers</button></div>
+</section>
+
+<!-- ============ S1 personas ============ -->
+<section id="s1" class="scr">
+  <h1>Your shoppers, as agents</h1>
+  <p class="lead">Gemini read your catalog and the market around it, and generated shopping agents that mirror real customer intent. Deselect any that don't fit, or add your own.</p>
+  <div class="src"><span>56 products parsed</span><span>Google Shopping trends · women's outerwear & knitwear</span><span>1,284 reviews mined</span><span>4 customer segments</span></div>
+  <div class="pgrid" id="pgrid"></div>
+  <div id="addrow"><input id="addp" placeholder='Add a shopper, e.g. "cashmere socks under $30 for a gift"'><button class="btn ghost" onclick="addPersona()">+ Add</button></div>
+  <div class="foot"><button class="btn gem" onclick="go(2)">✦ Release the swarm (<span id="pcount">0</span> shoppers)</button></div>
+</section>
+
+<!-- ============ S2 swarm ============ -->
+<section id="s2" class="scr">
+  <div id="swarmwrap">
+    <div id="twin">
+      <div id="twinbar"><span class="pill live">Shopping agents live on thefrankieshop.com</span><span class="dim" style="margin-left:auto;font-size:12px">drag the seam to see what agents see</span></div>
+      <iframe id="frame"></iframe>
+    </div>
+    <aside id="side">
+      <div class="tallies">
+        <div><b id="t-search">0</b><span>Searches</span></div><div><b id="t-orders">0</b><span>Bought</span></div>
+        <div><b id="t-walk">0</b><span>Walked away</span></div><div><b id="t-sig" class="warn">0</b><span>Signals</span></div>
+      </div>
+      <div class="card" style="padding:0;flex:1;min-height:0;display:flex;flex-direction:column">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:8px;font-size:13px"><span class="pill live" style="font-size:11px">Live</span> What agents are asking for <span class="dim" style="margin-left:auto;font-size:11px" id="agentcount">18 agents</span></div>
+        <div id="log"></div>
+      </div>
+      <button class="btn" onclick="go(3)">Read the demand map →</button>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ S3 demand map ============ -->
+<section id="s3" class="scr">
+  <h1>Demand map</h1>
+  <p class="lead">Gemini clustered <b>412</b> agent intents from the swarm into signals. Bubble size = how often agents asked; position = how much they were willing to pay and how badly your catalog missed.</p>
+  <div class="mapwrap">
+    <div>
+      <div class="bubbles" id="bubbles"><span class="axis" style="left:14px;bottom:10px">← lower budget · higher budget →</span><span class="axis" style="left:10px;top:12px;writing-mode:vertical-rl;transform:rotate(180deg)">catalog miss severity →</span></div>
+      <div class="legend"><span><i style="background:#EA4335"></i>Whitespace (asked, never found)</span><span><i style="background:#FBBC04"></i>Near‑miss substitution</span><span><i style="background:#4285F4"></i>Attribute blind spot</span><span><i style="background:#34A853"></i>Restock / price signal</span></div>
+      <div class="siglist" id="siglist"></div>
+    </div>
+    <div class="card" id="detail"></div>
+  </div>
+  <div class="foot"><button class="btn gem" id="b3" onclick="go(4)">✦ Design the product →</button></div>
+</section>
+
+<!-- ============ S4 product + try-on ============ -->
+<section id="s4" class="scr">
+  <h1>See the product — on you</h1>
+  <p class="lead">Gemini designed the product shopping agents wanted most. Step in front of the camera to see yourself with it, then scan to take the report and your image home.</p>
+  <div class="prod">
+    <div>
+      <div class="sheet">
+        <div class="shot"><span class="gen">✦ Generated by Gemini</span><div class="sock"></div></div>
+        <div class="body"><div class="brand">The Frankie Shop</div><h3 id="p-name">Loulou Ribbed Cashmere‑Blend Socks</h3><div class="price" id="p-price">28 USD</div>
+          <div class="spec" id="p-spec"></div></div>
+      </div>
+      <div class="card" style="margin-top:12px;font-size:12.5px;line-height:1.6"><b style="font-weight:500">Why this product</b><div id="p-why" class="dim"></div></div>
+    </div>
+    <div>
+      <div class="modes"><span class="on" onclick="setMode('image',this)">Image</span><span onclick="setMode('video',this)">Short video</span></div>
+      <div id="cam"><div class="hint">Camera preview appears here.<br><span class="dim">Allow camera access, or upload a photo.</span></div><video id="video" autoplay playsinline muted style="display:none"></video><canvas id="snap" style="display:none"></canvas><div class="overlay" id="ov"></div><span class="badge" id="badge">✦ Gemini try‑on</span></div>
+      <div class="camctl"><button class="btn ghost" onclick="startCam()">Start camera</button><label class="btn ghost" style="cursor:pointer">Upload photo<input type="file" accept="image/*" style="display:none" onchange="upload(this)"></label><button class="btn gem" id="b-gen" onclick="generate()" disabled>✦ Put it on me</button></div>
+      <div class="card" style="margin-top:14px;display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center">
+        <canvas id="qr" width="33" height="33"></canvas>
+        <div style="font-size:13px"><b style="font-weight:500">Take it home</b><div class="dim" style="font-size:12px;margin-top:4px">Demand map · product brief · your try‑on image<br><span class="mono">demandsignals.withgoogle.com/r/3M8T</span></div><button class="btn ghost" style="margin-top:10px;padding:8px 14px;font-size:12px" onclick="location.reload()">Start over</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+/* ---------------- personas (grounded in catalog + market) ---------------- */
+const PERSONAS=[
+ {n:'Maya',ag:'Gemini',c:'#4285F4',brief:'Autumn wedding guest look, size M, under $600, must arrive by Friday. No real fur.',tags:['occasion','deadline','ethics']},
+ {n:'Dev',ag:'ChatGPT',c:'#34A853',brief:'Anniversary gift for partner, ≤ $250, gift wrap, ship to Austin.',tags:['gift','budget']},
+ {n:'Lena',ag:'Perplexity',c:'#EA4335',brief:'Comparing wide‑leg knit trousers across retailers; needs petite length, ≤ $700.',tags:['compare','fit']},
+ {n:'Sam',ag:'Muse · human away',c:'#FBBC04',brief:'Waiting for the Gina bomber in XL; buy automatically if ≤ $535 within 30 days.',tags:['restock','mandate']},
+ {n:'Priya',ag:'Gemini',c:'#1A73E8',brief:'Rain‑proof commuter coat, size S, black, under $500.',tags:['function','budget']},
+ {n:'Theo',ag:'Claude',c:'#9B72CB',brief:'Vegan leather jacket, M/L, ≤ $500. Wants shoulder measurements.',tags:['materials','fit']},
+ {n:'Nia',ag:'Copilot',c:'#12B5CB',brief:'Small brown evening bag ≤ $250 that fits a phone and wallet.',tags:['dimensions']},
+ {n:'Sofia',ag:'ChatGPT',c:'#188038',brief:"Petite‑friendly knit dress for someone 5'2\", ≤ $600.",tags:['fit','petite']},
+ {n:'Hannah',ag:'Gemini',c:'#4285F4',brief:'Cashmere or cashmere‑blend socks under $30 as stocking stuffers, 3 pairs.',tags:['gift','whitespace']},
+ {n:'Rob',ag:'Instinct · human away',c:'#E8710A',brief:'Replace Goloso trousers in M when price ≤ $1,000; prefers chocolate.',tags:['replenish']},
+ {n:'Li',ag:'Perplexity',c:'#C5221F',brief:'Dana faux‑fur top in L; will wait for restock notification.',tags:['restock']},
+ {n:'Marco',ag:'ChatGPT',c:'#188038',brief:'Statement top as a gift, recipient size M, ≤ $700, needs care instructions.',tags:['gift','care']},
+];
+const sel=new Set(PERSONAS.map((_,i)=>i));
+function renderPersonas(){$('pgrid').innerHTML=PERSONAS.map((p,i)=>`<div class="persona ${sel.has(i)?'on':''}" onclick="togglePersona(${i})"><span class="chk">${sel.has(i)?'✓':''}</span><div class="who"><i style="background:${p.c}"></i>${p.n}</div><div class="ag">${p.ag}</div><div class="brief">${p.brief}</div><div class="tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div></div>`).join('');$('pcount').textContent=sel.size}
+function togglePersona(i){sel.has(i)?sel.delete(i):sel.add(i);renderPersonas()}
+function addPersona(){const v=$('addp').value.trim();if(!v)return;PERSONAS.push({n:'You',ag:'Gemini · custom',c:'#9B72CB',brief:v,tags:['custom']});sel.add(PERSONAS.length-1);$('addp').value='';renderPersonas()}
+
+/* ---------------- nav ---------------- */
+function go(n){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$('s'+n).classList.add('on');
+  document.querySelectorAll('#steps span').forEach(s=>{const k=+s.dataset.s;s.classList.toggle('on',k===n);s.classList.toggle('done',k<n)});
+  if(n===1)renderPersonas();if(n===2)swarm();if(n===3)demandMap();if(n===4)product()}
+
+/* ---------------- S2 swarm (embeds the X-ray engine, agent-native) ---------------- */
+let T={search:0,orders:0,walk:0,sig:0};
+function swarm(){if(!$('frame').src)$('frame').src='../shared/agent_xray_v2/index.html?embed=1&fixed=1&v='+Date.now()}
+const SIG=/catalog\.search|missing|not published|not in schema|sold out|ABANDONMENT|restock|intent_mandate|over budget|compare|petite/i;
+addEventListener('message',e=>{const d=e.data;if(!d||d.type!=='log')return;
+  if(/catalog\.search|compare/i.test(d.text))T.search++;if(/ORDER #/.test(d.text))T.orders++;if(/ABANDONMENT|lost sale|handing off/i.test(d.text))T.walk++;
+  const isSig=SIG.test(d.text)&&!/ORDER #/.test(d.text);if(isSig)T.sig++;
+  $('t-search').textContent=T.search;$('t-orders').textContent=T.orders;$('t-walk').textContent=T.walk;$('t-sig').textContent=T.sig;
+  const l=document.createElement('div');l.className='ln'+(isSig?' signal':'');l.style.setProperty('--c',d.color);
+  const ic={ok:'✓',warn:'!',bad:'✕',info:'…'}[d.status]||'';
+  l.innerHTML=`<i></i><div><b>${d.agent}</b><small>${d.who||''}</small><span class="st dim">${ic}</span><div>${d.text}</div>${isSig?'<span class="sig">signal captured</span>':''}</div>`;
+  $('log').prepend(l);while($('log').children.length>80)$('log').lastChild.remove()});
+
+/* ---------------- S3 demand map ---------------- */
+const SIGNALS=[
+ {id:'socks',type:'ws',col:'#EA4335',t:'Cashmere‑blend socks under $30',n:61,wtp:28,sev:.92,x:.22,y:.18,
+  why:['Asked by 61 agents as a gift / add‑on; 0 matching SKUs','Stated budget clusters at $25–30 · 3‑pair intent','Adjacent purchases: Nolia dress, Gina bomber (gift baskets)'],
+  quotes:['catalog.search {query:"cashmere socks", budget≤30, qty:3, gift:true} → 0 results','"stocking stuffers that match the knitwear aesthetic"']},
+ {id:'petite',type:'ws',col:'#EA4335',t:'Petite‑length wide‑leg knit trouser',n:38,wtp:640,sev:.86,x:.70,y:.22,
+  why:['38 agents filtered on inseam / petite; none found','Goloso in L also sold out — 2 lost comparisons','Stated budgets $550–700'],
+  quotes:['catalog.search {query:"wide‑leg knit trouser", length:"petite", budget≤700} → 0 results']},
+ {id:'fit',type:'attr',col:'#4285F4',t:'Fit & model info on knitwear',n:74,wtp:0,sev:.6,x:.52,y:.48,
+  why:['74 fit questions (model height, size worn, length)','Store agent answered 41; 9 walked away','Fix is data, not product'],
+  quotes:['fit: model height / size worn → not published']},
+ {id:'bag',type:'attr',col:'#4285F4',t:'Dimensions & gift wrap on accessories',n:22,wtp:0,sev:.5,x:.30,y:.55,
+  why:['Flint pouch & Mini Cloud: "fits a phone?", gift wrap','Gift intents are 1 in 4 agent visits'],
+  quotes:['dimensions: ? gift_wrap: ?']},
+ {id:'trench',type:'near',col:'#FBBC04',t:'Short waterproof trench (near‑miss)',n:19,wtp:480,sev:.55,x:.60,y:.60,
+  why:['Agents asked for rain‑proof + short; bought Eymi (long) or left','"technical" claim unverified — waterproof rating missing'],
+  quotes:['EYMI TECHNICAL TRENCH · waterproof? unverified']},
+ {id:'restock',type:'rs',col:'#34A853',t:'Restock mandates: Gina XL · Dana L',n:27,wtp:560,sev:.4,x:.78,y:.75,
+  why:['27 agents left intent mandates with price ceilings and TTLs','This is pre‑sold inventory — feed to buying/allocation'],
+  quotes:['AP2 intent_mandate: buy if XL in stock & ≤ 535 · TTL 30d']},
+ {id:'price',type:'rs',col:'#34A853',t:'Price ceiling on outerwear ≈ $500',n:46,wtp:500,sev:.35,x:.44,y:.82,
+  why:['46 agents capped outerwear at $450–520','Senna (390) and Eymi (485) clear it; Gina (535) often filtered out'],
+  quotes:['budget_max: 500 · GINA 535 → filtered']},
+];
+let chosen='socks';
+function demandMap(){if($('bubbles').children.length>2)return;
+  SIGNALS.forEach((s,i)=>{const b=document.createElement('div');b.className='bubble'+(s.id===chosen?' on':'');b.id='bb-'+s.id;const sz=70+s.n*1.3;Object.assign(b.style,{width:sz+'px',height:sz+'px',left:(s.x*100)+'%',top:(s.y*100)+'%',background:s.col,animationDelay:(i*.08)+'s'});b.innerHTML=`<div><b>${s.n}</b>${s.t}<small>${s.wtp?'$'+s.wtp+' wtp':'data fix'}</small></div>`;b.onclick=()=>pick(s.id);$('bubbles').appendChild(b)});
+  $('siglist').innerHTML=SIGNALS.map(s=>`<div class="sigrow ${s.id===chosen?'on':''}" id="sr-${s.id}" onclick="pick('${s.id}')"><i style="background:${s.col}"></i><div>${s.t}<small>${s.n} agents · ${s.wtp?'willing to pay ~$'+s.wtp:'attribute gap'}</small></div><span class="dim" style="font-size:11px">${Math.round(s.sev*100)}% miss</span></div>`).join('');
+  pick(chosen)}
+function pick(id){chosen=id;const s=SIGNALS.find(x=>x.id===id);document.querySelectorAll('.bubble,.sigrow').forEach(e=>e.classList.remove('on'));$('bb-'+id).classList.add('on');$('sr-'+id).classList.add('on');
+  const est=s.wtp?Math.round(s.n*s.wtp*5.2/1000):0;
+  $('detail').innerHTML=`<span class="pill" style="background:${s.col};color:#fff">${({ws:'Whitespace',near:'Near‑miss',attr:'Blind spot',rs:'Restock / price'})[s.type]}</span><h3 style="margin-top:10px">${s.t}</h3>
+   <div class="kv"><div><b>${s.n}</b><span>agent intents</span></div><div><b>${s.wtp?'$'+s.wtp:'—'}</b><span>stated willingness to pay</span></div><div><b>${Math.round(s.sev*100)}%</b><span>catalog miss</span></div><div><b>${est?'$'+est+'k':'—'}</b><span>est. unmet demand / qtr*</span></div></div>
+   <ul>${s.why.map(w=>`<li>${w}</li>`).join('')}</ul><div style="margin-top:10px;font-size:11px" class="dim">What agents said</div>${s.quotes.map(q=>`<div class="quote">${q}</div>`).join('')}
+   <div class="dim" style="font-size:10.5px;margin-top:8px">*intents × stated budget × assumed 1‑in‑5 conversion, scaled to real traffic</div>`;
+  $('b3').textContent=s.type==='attr'?'✦ Fix the data →':'✦ Design the product →'}
+
+/* ---------------- S4 product + try-on ---------------- */
+const PRODUCTS={
+ socks:{name:'Loulou Ribbed Cashmere‑Blend Socks',price:'28 USD · 3‑pair set 75 USD',spec:[['Composition','70% merino · 30% cashmere'],['Colorways','oat · chocolate · black (matches FW knitwear)'],['Sizes','S/M · M/L'],['Target margin','62% at $28'],['Launch','gift set + add‑on at checkout']],why:'61 shopping agents asked for cashmere socks under $30 and found nothing. Budget clustered at $25–30 with 3‑pair gift intent; most were already buying knitwear. A low‑risk, high‑attach gift SKU in the brand\'s palette.'},
+ petite:{name:'Goloso Oversized Trousers — Petite',price:'995 USD',spec:[['Change','28" inseam variant of existing style'],['Sizes','XS–L'],['Why now','38 intents, 0 matches; L sold out']],why:'38 agents filtered on petite length and left. Same product, shorter inseam.'},
+ trench:{name:'Eymi Short Technical Trench',price:'445 USD',spec:[['Change','cropped length + rated waterproof (10k mm)'],['Sizes','S–L'],['Claim','publish waterproof rating as data']],why:'19 agents wanted rain‑proof + short; bought the long version or walked.'},
+ restock:{name:'Pre‑sold restock: Gina XL · Dana L',price:'—',spec:[['Action','release 27 intent mandates to buying'],['Ceiling','$535 / $640'],['TTL','30 days']],why:'Agents left price‑capped mandates — treat as backorders.'},
+ price:{name:'Outerwear at the $495 ceiling',price:'495 USD',spec:[['Action','price test or entry‑tier variant'],['Signal','46 agents capped at ~$500']],why:'A pricing signal more than a product.'},
+ fit:{name:'Catalog fix: fit & model data',price:'—',spec:[['Action','publish model height, size worn, length per SKU'],['Impact','74 questions · 9 walk‑aways']],why:'Not a product — a data fix Gemini can draft from your size guide.'},
+ bag:{name:'Catalog fix: dimensions & gift wrap',price:'—',spec:[['Action','add dimensions + gift_wrap attributes'],['Impact','22 questions']],why:'A data fix.'}};
+function product(){const p=PRODUCTS[chosen]||PRODUCTS.socks;$('p-name').textContent=p.name;$('p-price').textContent=p.price;$('p-spec').innerHTML=p.spec.map(([k,v])=>`<span>${k}</span><span>${v}</span>`).join('');$('p-why').textContent=p.why;
+  const c=$('qr').getContext('2d'),N=33;let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;c.fillStyle='#fff';c.fillRect(0,0,N,N);c.fillStyle='#202124';for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(rnd()>.55)c.fillRect(x,y,1,1);const f=(x,y)=>{c.fillStyle='#202124';c.fillRect(x,y,7,7);c.fillStyle='#fff';c.fillRect(x+1,y+1,5,5);c.fillStyle='#202124';c.fillRect(x+2,y+2,3,3)};c.fillStyle='#fff';c.fillRect(0,0,8,8);c.fillRect(N-8,0,8,8);c.fillRect(0,N-8,8,8);f(0,0);f(N-7,0);f(0,N-7)}
+let mode='image',stream=null;
+function setMode(m,el){mode=m;document.querySelectorAll('.modes span').forEach(s=>s.classList.remove('on'));el.classList.add('on');$('b-gen').textContent=m==='video'?'✦ Make a short video':'✦ Put it on me'}
+async function startCam(){try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});const v=$('video');v.srcObject=stream;v.style.display='block';$('cam').querySelector('.hint').style.display='none';$('b-gen').disabled=false}catch(e){alert('Camera not available — upload a photo instead.')}}
+function upload(inp){const f=inp.files[0];if(!f)return;const img=new Image();img.onload=()=>{const cv=$('snap'),cx=cv.getContext('2d');cv.width=img.width;cv.height=img.height;cx.drawImage(img,0,0);cv.style.display='block';$('video').style.display='none';$('cam').querySelector('.hint').style.display='none';$('b-gen').disabled=false};img.src=URL.createObjectURL(f)}
+async function generate(){const b=$('b-gen');b.disabled=true;b.textContent='✦ Generating…';
+  if($('video').style.display==='block'){const v=$('video'),cv=$('snap'),cx=cv.getContext('2d');cv.width=v.videoWidth;cv.height=v.videoHeight;cx.drawImage(v,0,0);cv.style.display='block';v.style.display='none';if(stream)stream.getTracks().forEach(t=>t.stop())}
+  await new Promise(r=>setTimeout(r,1400));$('ov').style.display='block';$('badge').style.display='inline-block';b.textContent=mode==='video'?'✓ Video ready (8s)':'✓ Added to your report';
+  // vaporware: in production this frame + product sheet go to the image/video model (Omni / VTO)
+}
+</script>
+</body>
+</html>

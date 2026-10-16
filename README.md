@@ -1,27 +1,53 @@
 # Agent Storefront — prototypes
 
-Vaporware prototypes: turn any retail website into an AI‑ready *Agent Storefront*, then watch a swarm of synthetic shopping agents use it.
+Vaporware prototypes exploring agentic commerce for retail. Two demo flows share one visual engine.
 
-## Run
+**Live:** https://jasonrogersusa.github.io/agent-storefront/
+
+## Run locally
 
 ```bash
 cd prototypes
 python3 -m http.server 8765
-# open http://localhost:8765/demo_sim/
+# open http://localhost:8765/
 ```
 
-The simulator embeds the X‑ray prototype in an iframe, so it needs to be served over HTTP (not opened as a `file://`).
+The demos embed the X‑ray engine in an iframe, so they need to be served over HTTP (not opened as `file://`).
 
-## What's here
+## Folder map
 
-| Path | What it is |
+```
+prototypes/
+├── index.html              landing page linking both demos
+├── open-for-agents/        DEMO 1 · site readiness
+│   └── index.html          enter site → audit → pinned fixes + basket → build twin → swarm → report
+├── demand-signals/         DEMO 2 · demand listening
+│   └── index.html          generate shopping agents → swarm → demand map → product + try‑on
+├── shared/
+│   └── agent_xray_v2/      THE ENGINE · Agent X‑Ray (used by both demos via iframe)
+│       ├── index.html      human site vs. agent view under a draggable seam; 18 scripted agents
+│       ├── img/            real product photography (8 SKUs)
+│       └── products.json   catalog extracted from the saved Frankie Shop collection page
+└── archive/                early concepts, kept for reference
+    ├── agent_xray/         first X‑ray (creamery mock, token‑funnel dissolve)
+    └── agent_swarm/        first swarm (CSS silhouettes, no seam)
+```
+
+## The engine: `shared/agent_xray_v2`
+
+A Frankie Shop–style collection page rendered twice under a draggable seam — the human site on the left, the agent's "behind the curtain" view on the right (parsed data cards, unreadable promo, policy‑from‑prose, protocol 404s). Eighteen named agents (Gemini, ChatGPT, Perplexity, Muse, Claude, Copilot, Instinct, a store agent, unverified bots) move as collaborative‑tool cursors executing research‑grounded steps: UCP/ACP handshake, intent search, inventory & fit checks, promo/returns parsing, AP2 mandates, agentic tokens, B2A bundles, abandonment, bot blocks.
+
+Query params when embedding:
+
+| Param | Effect |
 | :--- | :--- |
-| `demo_sim/` | End‑to‑end demo flow: enter a site → audit (Cloudflare agent‑readiness + retail checks) → pin‑pointed issues on the site with a fix basket → Gemini builds a digital twin → agent swarm on the twin → interactive report with QR. |
-| `agent_xray_v2/` | **Agent X‑Ray** — a Frankie Shop–style collection page (real product imagery) rendered twice under a draggable seam: the human site vs. the agent's "behind the curtain" view. 18 named agents (Gemini, ChatGPT, Perplexity, Muse, Claude, Copilot, Instinct, a store agent, unverified bots) move as collaborative‑tool cursors executing research‑grounded steps (UCP/ACP handshake, intent search, inventory & fit checks, promo/returns parsing, AP2 mandates, agentic tokens, B2A bundles, abandonment, bot blocks). Supports `?embed=1` (no HUD/controls, streams log via `postMessage`) and `?fixed=1` (agent‑native state). |
-| `agent_swarm/` | Earlier swarm‑only prototype (CSS silhouettes, no seam). |
-| `agent_xray/` | First X‑ray concept (creamery mock, token‑funnel dissolve). |
-| `agent_xray_v2_products.json` | Catalog extracted from the saved Frankie Shop collection page (titles, prices, style numbers, per‑size availability, image filenames). |
+| `?embed=1` | hides HUD/controls, streams `{type:'log'}` and `{type:'tally'}` via `postMessage` to the parent |
+| `?fixed=1` | starts in the agent‑native (fixed) state |
 
-All agent behaviour and the audit checks are grounded in the research set (a16z/VGS, Google Cloud + Wayfair + Fiserv, Shopify, Visa, Databricks, Deloitte, Kevel/Scot Wingo, Cloudflare Agent Readiness, ucp.dev, agenticcommerce.dev).
+Parent can send `'fix'`, `'pause'`, `'play'` via `postMessage`.
+
+## Grounding
+
+Agent behaviour and audit checks come from the research set: a16z/VGS, Google Cloud + Wayfair + Fiserv (UCP/AP2), Shopify, Visa Intelligent Commerce, Databricks, Deloitte, Kevel/Scot Wingo, Cloudflare Agent Readiness (`isitagentready.com`), ucp.dev, agenticcommerce.dev.
 
 > Product photography and the "The Frankie Shop" name are used as demo material only.

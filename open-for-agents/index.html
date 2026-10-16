@@ -165,7 +165,7 @@
     <div class="card">
       <div class="ring" id="ring" style="--v:0;--c:#EA4335"><div><b id="score">—</b><small>/ 100</small></div></div>
       <div class="lvl" id="lvltxt">Cloudflare level — / 5</div>
-      <div class="thumbs"><img src="../agent_xray_v2/img/gina.jpg"><img src="../agent_xray_v2/img/rufina.jpg"><img src="../agent_xray_v2/img/nolia.jpg"><img src="../agent_xray_v2/img/goloso.jpg"></div>
+      <div class="thumbs"><img src="../shared/agent_xray_v2/img/gina.jpg"><img src="../shared/agent_xray_v2/img/rufina.jpg"><img src="../shared/agent_xray_v2/img/nolia.jpg"><img src="../shared/agent_xray_v2/img/goloso.jpg"></div>
       <div class="dim" style="font-size:11px;margin-top:8px">56 products · Shopify · 176 images · 113 scripts</div>
     </div>
     <div>
@@ -189,10 +189,10 @@
           <div class="m-promo" data-i="promo">Complimentary shipping over 300 USD · 15% off your first order with code FRANKIE15</div>
           <div class="m-head" data-i="md"><h3>New Arrivals</h3><p>Your weekly dose of everyday essentials. Subscribe to our newsletter for first-hand access.</p></div>
           <div class="m-grid">
-            <div class="m-tile" data-i="attrs"><img src="../agent_xray_v2/img/nolia.jpg"><span>Nolia Knit Long Cardigan Dress</span><b>550 USD</b></div>
-            <div class="m-tile" data-i="sizes"><img src="../agent_xray_v2/img/goloso.jpg"><span>Sportmax Goloso Oversized Trousers</span><b>995 USD</b><em>S M <s>L</s></em></div>
-            <div class="m-tile" data-i="acc"><img src="../agent_xray_v2/img/flint.jpg"><span>Loulou de Saison Flint Faux Fur Pouch</span><b>200 USD</b></div>
-            <div class="m-tile" data-i="price"><img src="../agent_xray_v2/img/gina.jpg"><span>Gina Faux Fur Bomber Jacket</span><b>535 USD</b></div>
+            <div class="m-tile" data-i="attrs"><img src="../shared/agent_xray_v2/img/nolia.jpg"><span>Nolia Knit Long Cardigan Dress</span><b>550 USD</b></div>
+            <div class="m-tile" data-i="sizes"><img src="../shared/agent_xray_v2/img/goloso.jpg"><span>Sportmax Goloso Oversized Trousers</span><b>995 USD</b><em>S M <s>L</s></em></div>
+            <div class="m-tile" data-i="acc"><img src="../shared/agent_xray_v2/img/flint.jpg"><span>Loulou de Saison Flint Faux Fur Pouch</span><b>200 USD</b></div>
+            <div class="m-tile" data-i="price"><img src="../shared/agent_xray_v2/img/gina.jpg"><span>Gina Faux Fur Bomber Jacket</span><b>535 USD</b></div>
           </div>
           <div class="m-foot" data-i="policy"><b>Shipping &amp; returns</b> We're happy to accept returns of unworn items with tags attached within 14 days of delivery. Complimentary shipping applies to US orders over 300 USD; otherwise a flat 12 USD.</div>
         </div>
@@ -382,7 +382,7 @@ async function build(){$('b2').disabled=true;$('build').style.display='block';
   $('b2').style.display='none';$('b2b').style.display='inline-flex'}
 /* ---------------- S3 ---------------- */
 let K={orders:0,gmv:0,aband:0,missed:0,blocked:0};
-function swarm(){if(!$('frame').src)$('frame').src='../agent_xray_v2/index.html?embed=1&fixed=1&v='+Date.now()}
+function swarm(){if(!$('frame').src)$('frame').src='../shared/agent_xray_v2/index.html?embed=1&fixed=1&v='+Date.now()}
 addEventListener('message',e=>{const d=e.data;if(!d)return;
   if(d.type==='tally'){K=d;$('t-orders').textContent=K.orders;$('t-gmv').textContent='$'+K.gmv.toLocaleString();$('t-aband').textContent=K.aband;$('t-blocked').textContent=K.blocked}
   if(d.type==='log'){const l=document.createElement('div');l.className='ln';l.style.setProperty('--c',d.color);
