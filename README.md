@@ -1,6 +1,6 @@
-# Next in Retail — Agent Storefront prototypes
+# Agent Storefront — prototypes
 
-Vaporware prototypes for the **Next in Retail** demo: turn any retail website into an AI‑ready *Agent Storefront*, then watch a swarm of synthetic shopping agents use it.
+Vaporware prototypes: turn any retail website into an AI‑ready *Agent Storefront*, then watch a swarm of synthetic shopping agents use it.
 
 ## Run
 
