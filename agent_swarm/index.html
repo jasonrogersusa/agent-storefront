@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Agent Swarm — The Frankie Shop (prototype)</title>
+<style>
+  :root{
+    --ink:#111;--mute:#8a8a8a;--line:#e6e6e6;--tile:#d9d9d9;
+    --maya:#c2663f;--dev:#6b7f3a;--lena:#6e4b7a;--sam:#3f5c8a;--store:#111;--bot:#c43b3b;
+    --ok:#2f8f5b;--warn:#b7791f;--bad:#c43b3b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#fff;color:var(--ink);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.02em}
+  body{display:grid;grid-template-columns:1fr 360px;min-height:100vh;overflow-x:hidden}
+
+  /* ================= SITE ================= */
+  #site{position:relative;min-width:0}
+  .nav{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;align-items:center;padding:14px 20px;font-size:10px;text-transform:uppercase}
+  .nav .logo{font-family:"Times New Roman",Times,serif;font-size:15px;text-transform:none;letter-spacing:0}
+  .nav .right{text-align:right;color:#333}
+  #promo{margin:0 20px;height:26px;background:linear-gradient(90deg,#f1ede6,#e8e2d8);display:flex;align-items:center;justify-content:center;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#4b4238;
+    /* it's an image. deliberately. */ font-family:Georgia,serif;font-style:italic}
+  .head{display:grid;grid-template-columns:1fr 1fr 1fr;padding:30px 20px 60px}
+  .head h1{font-weight:400;font-size:20px;margin:0;letter-spacing:0}
+  .head p{margin:0;font-size:10.5px;color:#333;max-width:280px;line-height:1.5}
+  .crumbs{display:grid;grid-template-columns:1fr 1fr 1fr;padding:0 20px 10px;font-size:9px;text-transform:uppercase;color:#333}
+  .crumbs span:nth-child(2),.crumbs span:nth-child(3){color:#999}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 20px 40px}
+  .tile{position:relative}
+  .img{position:relative;aspect-ratio:3/4;background:var(--tile);overflow:hidden}
+  .img .fig{position:absolute;left:50%;bottom:-4%;width:56%;height:92%;transform:translateX(-50%);border-radius:40% 40% 8% 8%/30% 30% 4% 4%;opacity:.9}
+  .img .fig::before{content:"";position:absolute;left:50%;top:-11%;width:28%;aspect-ratio:1;border-radius:50%;background:#b9a596;transform:translateX(-50%)}
+  .img .obj{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48%;height:38%;border-radius:4px}
+  .meta{display:flex;flex-direction:column;gap:4px;padding:10px 0 18px;font-size:9.5px;text-transform:uppercase}
+  .meta .price{font-weight:600}
+  .sizes{display:flex;gap:10px;font-size:9px;color:#333}
+  .sizes b{font-weight:400;position:relative;padding:1px 2px}
+  .sizes b.oos{color:#bbb;text-decoration:line-through}
+  .sizes b.low::after{content:"";position:absolute;right:-5px;top:1px;width:4px;height:4px;border-radius:50%;background:var(--warn)}
+  footer{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:40px 20px 60px;border-top:1px solid var(--line);font-size:9.5px;line-height:1.7;color:#333}
+  footer h5{margin:0 0 6px;font-size:9px;text-transform:uppercase;letter-spacing:.12em}
+  #returns{max-width:260px}
+
+  /* focus ring applied by agents */
+  [data-t]{transition:box-shadow .3s}
+  [data-t].focus{box-shadow:0 0 0 1.5px var(--c),0 0 0 6px color-mix(in srgb,var(--c) 14%,transparent);border-radius:2px}
+
+  /* ================= CURSORS ================= */
+  #layer{position:absolute;inset:0;pointer-events:none;z-index:50}
+  .cur{position:absolute;left:0;top:0;transition:transform 1.1s cubic-bezier(.4,.1,.2,1);will-change:transform}
+  .cur svg{display:block;width:14px;height:16px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
+  .cur .pill{position:absolute;left:12px;top:12px;padding:3px 8px;border-radius:999px;color:#fff;font-size:9.5px;font-weight:600;letter-spacing:.04em;white-space:nowrap;background:var(--c)}
+  .cur .pill small{opacity:.8;font-weight:400;margin-left:4px}
+  .cur .bubble{position:absolute;left:12px;top:34px;max-width:270px;background:#fff;border:1px solid var(--c);border-left-width:3px;padding:7px 9px;font:10.5px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:#222;box-shadow:0 8px 24px -12px rgba(0,0,0,.35);opacity:0;transform:translateY(-4px);transition:opacity .25s,transform .25s;letter-spacing:0}
+  .cur .bubble.show{opacity:1;transform:none}
+  .cur .bubble .s{display:inline-block;margin-left:6px;font-weight:700}
+  .s.ok{color:var(--ok)}.s.warn{color:var(--warn)}.s.bad{color:var(--bad)}.s.info{color:#555}
+  .cur.store .pill{border-radius:3px}
+  .cur.gone{opacity:0;transition:opacity .8s}
+  .cur.think svg{animation:bob 1s infinite}
+  @keyframes bob{50%{transform:translateY(-2px)}}
+
+  /* ================= RAIL ================= */
+  #rail{position:sticky;top:0;height:100vh;border-left:1px solid var(--line);background:#fafafa;display:flex;flex-direction:column;overflow:hidden}
+  #rail header{padding:16px 18px 10px;border-bottom:1px solid var(--line)}
+  #rail header h2{margin:0;font-size:10px;text-transform:uppercase;letter-spacing:.18em;font-weight:600;display:flex;justify-content:space-between}
+  #rail header h2 i{font-style:normal;color:var(--ok)}
+  .tally{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
+  .tally div{background:#fafafa;padding:10px 12px}
+  .tally b{display:block;font-size:18px;font-weight:500;letter-spacing:-.02em}
+  .tally span{font-size:8.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute)}
+  .roster{display:flex;flex-wrap:wrap;gap:6px;padding:10px 18px;border-bottom:1px solid var(--line)}
+  .roster span{display:inline-flex;align-items:center;gap:5px;font-size:9px;color:#333}
+  .roster span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c)}
+  #feed{flex:1;overflow:auto;padding:8px 0;font:10px/1.5 ui-monospace,Menlo,monospace;letter-spacing:0}
+  .ln{display:grid;grid-template-columns:38px 8px 1fr;gap:8px;padding:5px 18px;border-bottom:1px solid #f0f0f0;color:#222;animation:in .3s}
+  .ln .t{color:#aaa}.ln .d{width:7px;height:7px;border-radius:50%;background:var(--c);margin-top:4px}
+  .ln em{font-style:normal;color:#888}
+  @keyframes in{from{background:#fff3e8}to{background:transparent}}
+  #missed{border-top:1px solid var(--line);padding:10px 18px 14px;background:#fff}
+  #missed h4{margin:0 0 6px;font-size:8.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--mute)}
+  #missed li{font-size:10px;list-style:none;padding:3px 0;border-bottom:1px dashed #eee}
+  #missed ul{margin:0;padding:0}
+  #ctl{display:flex;gap:6px;padding:10px 18px;border-top:1px solid var(--line)}
+  #ctl button{flex:1;border:1px solid #111;background:#fff;padding:8px;font-size:9px;text-transform:uppercase;letter-spacing:.12em;cursor:pointer}
+  #ctl button.on{background:#111;color:#fff}
+</style>
+</head>
+<body>
+
+<!-- ============================ THE SITE ============================ -->
+<div id="site">
+  <div class="nav" data-t="nav">
+    <div class="logo">The Frankie Shop</div><div>Shop</div><div>Explore</div><div data-t="search">Search _</div>
+    <div class="right">US / EN &nbsp; ◯ &nbsp; ♡ [1] &nbsp; ▢ [0] &nbsp; <span data-t="cart">Cart [0]</span></div>
+  </div>
+  <div id="promo" data-t="promo">Complimentary shipping over 300 USD &nbsp;·&nbsp; 15% off your first order with code FRANKIE15</div>
+  <div class="head">
+    <h1>New Arrivals</h1>
+    <p>Your weekly dose of everyday essentials. Subscribe to our newsletter for first-hand access.</p>
+  </div>
+  <div class="crumbs"><span>↪ Women / New Arrivals</span><span>View ▦▦</span><span>⚙ Filter and Sort</span></div>
+
+  <div class="grid" data-t="grid">
+    <div class="tile" data-t="p1"><div class="img"><div class="fig" style="background:#8d4a2a"></div></div>
+      <div class="meta"><span>Senna Faux Fur Collarless Jacket</span><span class="price">495 USD</span>
+      <div class="sizes" data-t="p1s">→ <b>XXS</b><b>XS</b><b class="low">S</b><b data-t="p1m">M</b><b>L</b><b>XL</b></div></div></div>
+    <div class="tile" data-t="p2"><div class="img"><div class="fig" style="background:#3b2520"></div></div>
+      <div class="meta"><span>Sportmax Balco Hooded Cardigan</span><span class="price">1,020 USD</span>
+      <div class="sizes">→ <b>XS</b><b>S</b><b>M</b><b>L</b></div></div></div>
+    <div class="tile" data-t="p3"><div class="img"><div class="fig" style="background:#2e1d1a;border-radius:10% 10% 4% 4%"></div></div>
+      <div class="meta"><span>Sportmax Goloso Oversized Trousers</span><span class="price">995 USD</span>
+      <div class="sizes" data-t="p3s">→ <b>XS</b><b class="oos" data-t="p3S">S</b><b>M</b><b>L</b></div></div></div>
+    <div class="tile" data-t="p4"><div class="img"><div class="obj" style="background:#241a16"></div></div>
+      <div class="meta"><span>Loulou de Saison Flint Faux Fur Pouch</span><span class="price">200 USD</span>
+      <div class="sizes">→ <b>One size</b></div></div></div>
+    <div class="tile" data-t="p5"><div class="img"><div class="fig" style="background:#1e1e22"></div></div>
+      <div class="meta"><span>Loulou de Saison Dana Faux Fur Collar Top</span><span class="price">640 USD</span>
+      <div class="sizes">→ <b>XS</b><b>S</b><b>M</b><b>L</b></div></div></div>
+    <div class="tile" data-t="p6"><div class="img"><div class="obj" style="background:repeating-linear-gradient(#1f2433 0 10px,#6b4a33 10px 20px);width:60%;height:72%"></div></div>
+      <div class="meta"><span>Tekla Lambswool Blanket</span><span class="price">230 USD</span>
+      <div class="sizes">→ <b>One size</b></div></div></div>
+  </div>
+
+  <footer>
+    <div><h5>Customer care</h5>Contact<br>FAQ<br>Size guide</div>
+    <div id="returns" data-t="returns"><h5>Shipping &amp; returns</h5>We're happy to accept returns of unworn items with tags attached within 14 days of delivery. Final sale items are excluded. Complimentary shipping applies to US orders over 300 USD; otherwise a flat 12 USD.</div>
+    <div><h5>The Frankie Shop</h5>About<br>Stores<br>Careers</div>
+    <div><h5>Newsletter</h5>Subscribe for first-hand access.</div>
+  </footer>
+
+  <div id="layer"></div>
+</div>
+
+<!-- ============================ RAIL ============================ -->
+<aside id="rail">
+  <header><h2>Agent swarm <i>● live</i></h2></header>
+  <div class="tally">
+    <div><b id="k-orders">0</b><span>Orders</span></div>
+    <div><b id="k-gmv">$0</b><span>GMV</span></div>
+    <div><b id="k-aband">0</b><span>Abandoned</span></div>
+    <div><b id="k-missed">0</b><span>Missed demand</span></div>
+    <div><b id="k-blocked">0</b><span>Blocked bots</span></div>
+    <div><b id="k-tok">—</b><span>Tokens useful</span></div>
+  </div>
+  <div class="roster" id="roster"></div>
+  <div id="feed"></div>
+  <div id="missed"><h4>Missed demand → Whitespace Studio</h4><ul id="missed-ul"></ul></div>
+  <div id="ctl"><button id="b-play" class="on">Pause</button><button id="b-speed">Speed 1×</button><button id="b-reset">Reset</button></div>
+</aside>
+
+<script>
+/* ---------------------------------------------------------------
+   AGENT SCRIPTS — every step: [target, text, status, dwell(ms), effect]
+   statuses: ok | warn | bad | info ; effects: order:amount | abandon | missed:text | blocked | store
+---------------------------------------------------------------- */
+const AGENTS = [
+ { id:'maya', name:'Gemini', who:'for Maya', color:'var(--maya)', start:600, steps:[
+   ['nav',     'GET /.well-known/ucp → 200 · catalog, cart, checkout, identity_linking', 'ok', 1700],
+   ['search',  'catalog.search {occasion:"autumn wedding guest", size:"M", budget≤500, deliver_by:"Fri", avoid:["real fur"]}', 'info', 2600],
+   ['grid',    '3 candidates · ranking by fit-to-intent', 'info', 1400],
+   ['p1',      'SENNA JACKET 495 · material: faux fur (modacrylic) ✓ · occasion attr: missing', 'warn', 2400],
+   ['p1m',     'inventory.check {sku:SENNA-M} → 4 in stock', 'ok', 1700],
+   ['p1',      'fit query: model height / size worn → not published · asking store agent', 'warn', 2300],
+   ['p1',      'store agent: "model 5\'10, wears S · runs oversized" → M confirmed for Maya', 'ok', 2200],
+   ['returns', 'policy.returns → parsed from prose: 14d unworn · no structured policy JSON', 'warn', 2300],
+   ['cart',    'cart.create → AP2 cart_mandate · price locked 495.00 · dest hash ✓', 'ok', 2000],
+   ['cart',    'Visa agentic token ····8910 · dynamic CVV · passkey ✓ (Maya confirmed on phone)', 'ok', 2200],
+   ['cart',    'checkout.complete → ORDER #FS-{n} · seller of record: The Frankie Shop · loyalty linked', 'ok', 2600, 'order:495'],
+ ]},
+ { id:'dev', name:'ChatGPT', who:'for Dev', color:'var(--dev)', start:2400, steps:[
+   ['nav',     'GET /.well-known/acp.json → 200 · transports: rest, mcp', 'ok', 1600],
+   ['search',  'catalog.search {intent:"gift for partner", budget≤250, ship_to:"Austin, TX", gift_wrap:true}', 'info', 2500],
+   ['p4',      'FLINT POUCH 200 ✓ · one size ✓ · attribute gift_wrap: missing', 'warn', 2200],
+   ['p6',      'alt: TEKLA BLANKET 230 ✓ · keeping POUCH (higher review sentiment)', 'info', 1900],
+   ['promo',   'promo banner: image · 0 chars extracted · cannot verify FRANKIE15', 'bad', 2300],
+   ['p4',      'store agent: "gift wrap available at checkout, 15% applied server-side" ✓', 'ok', 2100],
+   ['cart',    'ACP checkout_session → Stripe shared payment token ✓ · Dev confirmed', 'ok', 2100],
+   ['cart',    'ORDER #FS-{n} · 170.00 after code · gift note attached', 'ok', 2500, 'order:170'],
+ ]},
+ { id:'lena', name:'Perplexity', who:'for Lena', color:'var(--lena)', start:4200, steps:[
+   ['grid',    'price compare: SPORTMAX GOLOSO TROUSERS across 4 retailers', 'info', 2000],
+   ['p3',      '995 USD · matches MSRP · size S → sold out', 'bad', 2100],
+   ['p3s',     'fit: inseam / petite length? not in schema', 'warn', 2000],
+   ['search',  'catalog.search {query:"wide-leg knit trouser", length:"petite", budget≤700} → 0 results', 'bad', 2400],
+   ['returns', 'checking return window before recommending elsewhere… 14d ok', 'info', 1600],
+   ['grid',    'AGENT ABANDONMENT · reason: size OOS + no petite option · logging demand', 'bad', 2600, 'abandon', 'missed:Petite-length wide-leg knit trouser ≤ 700 USD'],
+ ]},
+ { id:'sam', name:'Muse', who:'for Sam · human away', color:'var(--sam)', start:6200, steps:[
+   ['p3',      'restock watch: GOLOSO TROUSERS size S', 'info', 1800],
+   ['p3S',     'AP2 intent_mandate: buy if S in stock & price ≤ 995 · TTL 30d · passkey pre-signed', 'ok', 2600],
+   ['p2',      'store agent (B2A): "BALCO CARDIGAN + GOLOSO as a set −10%" · within mandate?', 'info', 2300],
+   ['p2',      'bundle 1,814 ≤ ceiling 2,000 · accepting · trousers S backordered', 'ok', 2200],
+   ['cart',    'ORDER #FS-{n} · 1,814 · ships on restock · Sam notified', 'ok', 2600, 'order:1814'],
+   ['promo',   'promo image unreadable → ignoring (mandate requires verifiable price)', 'warn', 2000],
+ ]},
+ { id:'store', name:'Frankie Store Agent', who:'', color:'var(--store)', start:3000, cls:'store', steps:[
+   ['p1',      'KYA: Gemini agent verified (Web Bot Auth) · answering fit: 5\'10 wears S, runs oversized', 'ok', 2200],
+   ['p4',      'gift_wrap not in catalog → answering from policy: available at checkout', 'ok', 2000],
+   ['p2',      'offering B2A bundle to Muse: cardigan + trousers −10% (margin ok)', 'info', 2200],
+   ['returns', 'return #R-118 · 12 days · 180 USD · < 500 threshold → auto-approved', 'ok', 2300],
+   ['promo',   'flag to merchant: promo trapped in image · 3 agents failed to parse today', 'warn', 2400],
+   ['p3s',     'flag: "petite length" asked 14× this week → Missed Demand Map', 'warn', 2300, 'missed:Petite sizing for oversized knitwear (14 queries / 7d)'],
+ ]},
+ { id:'bot', name:'crawler-7731', who:'unverified', color:'var(--bot)', start:9000, steps:[
+   ['nav',     'GET /collections/womens-new-arrivals · no Web Bot Auth signature', 'bad', 1600],
+   ['nav',     'robots.txt: unverified agents disallowed → 403 · blocked', 'bad', 2000, 'blocked'],
+ ]},
+];
+
+/* ---------------------------------------------------------------- engine */
+const layer=document.getElementById('layer'),feed=document.getElementById('feed'),site=document.getElementById('site');
+let speed=1,playing=true,orderN=20931,K={orders:0,gmv:0,aband:0,missed:0,blocked:0};
+const $=id=>document.getElementById(id);
+const rect=sel=>{const el=document.querySelector(`[data-t="${sel}"]`);const r=el.getBoundingClientRect(),s=site.getBoundingClientRect();return {el,x:r.left-s.left,y:r.top-s.top+scrollY*0,w:r.width,h:r.height}};
+const sleep=ms=>new Promise(r=>{const t=setInterval(()=>{if(playing){clearInterval(t);r()}},50);setTimeout(()=>{},0)}).then(()=>new Promise(r=>setTimeout(r,ms/speed)));
+const ts=()=>{const d=new Date();return d.toTimeString().slice(3,8)+'.'+String(d.getMilliseconds()).padStart(3,'0').slice(0,1)};
+
+function mkCursor(a){
+  const c=document.createElement('div');c.className='cur '+(a.cls||'');c.style.setProperty('--c',a.color);
+  c.innerHTML=`<svg viewBox="0 0 14 16"><path d="M1 1l12 6.5-5.2 1.3L5 15z" fill="${getComputedStyle(document.documentElement).getPropertyValue(a.color.slice(4,-1))||'#000'}" stroke="#fff" stroke-width="1"/></svg>
+    <div class="pill">${a.name}<small>${a.who}</small></div><div class="bubble"></div>`;
+  c.style.transform=`translate(${-60}px, ${-60}px)`;layer.appendChild(c);
+  const r=document.createElement('span');r.style.setProperty('--c',a.color);r.textContent=a.name+(a.who?' · '+a.who:'');$('roster').appendChild(r);
+  return c;
+}
+function log(a,text,status){
+  const l=document.createElement('div');l.className='ln';l.style.setProperty('--c',a.color);
+  l.innerHTML=`<span class="t">${ts()}</span><span class="d"></span><span><em>${a.name}</em> ${text}</span>`;
+  feed.prepend(l);while(feed.children.length>60)feed.lastChild.remove();
+}
+function tally(){$('k-orders').textContent=K.orders;$('k-gmv').textContent='$'+K.gmv.toLocaleString();$('k-aband').textContent=K.aband;$('k-missed').textContent=K.missed;$('k-blocked').textContent=K.blocked;
+  const useful=Math.min(97,38+K.orders*6);$('k-tok').textContent=useful+'%';}
+function missed(t){K.missed++;const li=document.createElement('li');li.textContent='• '+t;$('missed-ul').prepend(li);if($('missed-ul').children.length>4)$('missed-ul').lastChild.remove()}
+
+async function run(a){
+  const c=mkCursor(a);await sleep(a.start);
+  const bubble=c.querySelector('.bubble');
+  while(true){
+    for(const [sel,txt,st,dwell,...fx] of a.steps){
+      const r=rect(sel);
+      const jx=r.w*(0.25+Math.random()*0.5),jy=Math.min(r.h*(0.3+Math.random()*0.4),r.h-10);
+      c.style.transform=`translate(${r.x+jx}px, ${r.y+jy}px)`;
+      c.classList.add('think');bubble.classList.remove('show');
+      await sleep(1150);
+      c.classList.remove('think');
+      r.el.style.setProperty('--c',a.color);r.el.classList.add('focus');
+      const text=txt.replace('{n}',++orderN);
+      bubble.innerHTML=text+`<span class="s ${st}">${({ok:'✓',warn:'!',bad:'✗',info:'…'})[st]}</span>`;bubble.classList.add('show');
+      log(a,text,st);
+      for(const f of fx){
+        if(f.startsWith('order:')){K.orders++;K.gmv+=+f.slice(6)}
+        else if(f==='abandon')K.aband++;
+        else if(f==='blocked')K.blocked++;
+        else if(f.startsWith('missed:'))missed(f.slice(7));
+      }
+      tally();
+      await sleep(dwell);
+      r.el.classList.remove('focus');
+    }
+    if(a.id==='bot'){c.classList.add('gone');await sleep(14000);c.classList.remove('gone');continue}
+    bubble.classList.remove('show');await sleep(3000+Math.random()*4000);
+  }
+}
+AGENTS.forEach(run);
+
+/* ---------------------------------------------------------------- controls */
+$('b-play').onclick=e=>{playing=!playing;e.target.textContent=playing?'Pause':'Play';e.target.classList.toggle('on',playing)};
+$('b-speed').onclick=e=>{speed=speed===1?2:speed===2?4:1;e.target.textContent='Speed '+speed+'×'};
+$('b-reset').onclick=()=>location.reload();
+</script>
+</body>
+</html>

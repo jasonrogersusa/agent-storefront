@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Agent Storefront — Demo Simulator</title>
+<style>
+  :root{--blue:#4285F4;--red:#EA4335;--yellow:#FBBC04;--green:#34A853;--g50:#F8F9FA;--g100:#F1F3F4;--g300:#DADCE0;--g600:#5F6368;--g900:#202124;--blue50:#E8F0FE;--gem:linear-gradient(90deg,#4285F4,#9B72CB,#D96570)}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#fff;color:var(--g900);font-family:"Google Sans",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  a{color:var(--blue)}
+  /* top bar */
+  #top{display:flex;align-items:center;gap:18px;padding:0 24px;height:56px;border-bottom:1px solid var(--g300);flex:none}
+  #top .brand{display:flex;align-items:center;gap:10px;font-size:16px}
+  #top .brand i{width:22px;height:22px;border-radius:6px;background:var(--gem)}
+  #steps{display:flex;gap:6px;margin-left:auto}
+  #steps span{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:12px;color:var(--g600)}
+  #steps span b{width:20px;height:20px;border-radius:50%;background:var(--g100);display:grid;place-items:center;font-size:11px;font-weight:500}
+  #steps span.on{color:var(--g900);background:var(--blue50)}#steps span.on b{background:var(--blue);color:#fff}
+  #steps span.done b{background:var(--green);color:#fff}
+  /* screens */
+  main{flex:1;min-height:0;position:relative}
+  .scr{position:absolute;inset:0;overflow:auto;display:none;padding:40px 48px}
+  .scr.on{display:block;animation:fade .35s}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h1{font-weight:400;font-size:34px;margin:0 0 8px;letter-spacing:-.01em}
+  h2{font-weight:500;font-size:16px;margin:28px 0 10px}
+  p.lead{color:var(--g600);font-size:15px;margin:0 0 28px;max-width:640px;line-height:1.5}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:12px 22px;font:500 14px "Google Sans",Roboto,sans-serif;cursor:pointer;background:var(--blue);color:#fff}
+  .btn.gem{background:var(--gem)}.btn.ghost{background:#fff;color:var(--blue);border:1px solid var(--g300)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .card{background:#fff;border:1px solid var(--g300);border-radius:14px;padding:18px 20px}
+  .mono{font-family:"Roboto Mono",ui-monospace,Menlo,monospace}
+  .ok{color:#1E8E3E}.bad{color:#D93025}.warn{color:#E37400}.dim{color:var(--g600)}
+  /* S0 */
+  #urlrow{display:flex;gap:10px;max-width:760px}
+  #url{flex:1;border:1px solid var(--g300);border-radius:999px;padding:14px 20px;font:15px Roboto,sans-serif;outline:none}
+  #url:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue50)}
+  .chips{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .chip{border:1px solid var(--g300);border-radius:999px;padding:6px 12px;font-size:12px;cursor:pointer;background:#fff}
+  .chip:hover{background:var(--g50)}
+  /* S1 audit */
+  .two{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start}
+  .ring{width:180px;height:180px;border-radius:50%;display:grid;place-items:center;margin:8px auto 10px;background:conic-gradient(var(--c,#EA4335) calc(var(--v,0)*1%),var(--g100) 0);position:relative}
+  .ring::after{content:"";position:absolute;inset:12px;border-radius:50%;background:#fff}
+  .ring div{position:relative;text-align:center}.ring b{display:block;font-size:44px;font-weight:400;line-height:1}.ring small{color:var(--g600);font-size:12px}
+  .lvl{text-align:center;font-size:13px;color:var(--g600)}
+  .thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:14px}
+  .thumbs img{width:100%;aspect-ratio:5/7;object-fit:cover;border-radius:4px}
+  .checks{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .check{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--g100);font-size:13px}
+  .check i{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-style:normal;color:#fff;background:var(--g300);flex:none}
+  .check.pass i{background:var(--green)}.check.fail i{background:var(--red)}.check.warn i{background:var(--yellow);color:#202124}
+  .check .why{margin-left:auto;font-size:11px;color:var(--g600)}
+  .check.pending{opacity:.45}
+  .prog{height:4px;background:var(--g100);border-radius:2px;overflow:hidden;margin:10px 0 18px}
+  .prog i{display:block;height:100%;width:0;background:var(--gem);transition:width .3s}
+  /* S2 fixes */
+  #s2{padding:20px 24px}
+  #patchwrap{display:grid;grid-template-columns:1fr 400px;gap:20px;height:100%;min-height:0}
+  #sitemodal{border:1px solid var(--g300);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(60,64,67,.15),0 10px 30px rgba(60,64,67,.12);display:flex;flex-direction:column;background:#fff;min-height:0}
+  #sitebar{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--g300)}
+  #siteview{position:relative;flex:1;overflow:auto;background:var(--g50)}
+  #mini{background:#fff;margin:22px 64px 22px 22px;border:1px solid var(--g300);font-family:"Helvetica Neue",Arial,sans-serif;color:#111;letter-spacing:.02em}
+  .m-nav{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr 1.3fr;font-size:9px;text-transform:uppercase;padding:12px 16px;align-items:center}
+  .m-logo{font-family:"Times New Roman",serif;font-size:13px;text-transform:none}.m-nav .r{text-align:right}
+  .m-promo{margin:0 16px;height:22px;display:flex;align-items:center;justify-content:center;font:italic 8px Georgia,serif;letter-spacing:.14em;text-transform:uppercase;background:linear-gradient(90deg,#f1ede6,#e8e2d8);color:#4b4238}
+  .m-head{padding:20px 16px 28px;display:grid;grid-template-columns:1fr 1fr 1fr}.m-head h3{margin:0;font-weight:400;font-size:16px}.m-head p{margin:0;font-size:8.5px;max-width:220px;line-height:1.5}
+  .m-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:0 16px 20px}
+  .m-tile img{width:100%;aspect-ratio:5/7;object-fit:cover;display:block}.m-tile span,.m-tile b,.m-tile em{display:block;font-size:8px;text-transform:uppercase;margin-top:4px}.m-tile em{font-style:normal;color:#555}
+  .m-foot{padding:16px;border-top:1px solid #e6e6e6;font-size:8.5px;line-height:1.6;max-width:360px}.m-foot b{display:block;text-transform:uppercase;font-size:8px;letter-spacing:.12em;margin-bottom:4px}
+  [data-i]{transition:box-shadow .25s;border-radius:2px}[data-i].hot{box-shadow:0 0 0 2px var(--blue),0 0 0 8px var(--blue50)}
+  #lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+  #lines line{stroke:var(--g300);stroke-width:1.5}#lines line.hot{stroke:var(--blue);stroke-width:2}
+  #pins{position:absolute;inset:0;pointer-events:none}
+  .pin{position:absolute;width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid var(--red);color:var(--red);display:grid;place-items:center;font:600 12px "Google Sans",Roboto,sans-serif;pointer-events:auto;cursor:pointer;transform:translate(-50%,-50%);box-shadow:0 2px 6px rgba(60,64,67,.25);transition:transform .15s}
+  .pin.warn{border-color:var(--yellow);color:#8a6400}.pin.hot{transform:translate(-50%,-50%) scale(1.18);background:var(--blue);border-color:var(--blue);color:#fff}
+  .pin.done{background:var(--green);border-color:var(--green);color:#fff}
+  #pop{position:absolute;display:none;width:320px;background:#fff;border:1px solid var(--g300);border-radius:14px;box-shadow:0 6px 24px rgba(60,64,67,.25);padding:14px 16px;z-index:5;font-size:13px}
+  #pop h4{margin:0 0 6px;font:500 15px "Google Sans",Roboto,sans-serif}
+  #pop .sees{background:var(--g50);border-radius:8px;padding:8px 10px;font:11px/1.5 "Roboto Mono",ui-monospace,Menlo,monospace;margin:8px 0}
+  #pop p{margin:6px 0;color:var(--g600);line-height:1.5;font-size:12.5px}
+  #pop .src{font-size:11px;color:var(--g600)}
+  #pop .act{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
+  #patchside{display:flex;flex-direction:column;gap:12px;min-height:0}
+  .sidehead{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--g100);font:500 13px "Google Sans",Roboto,sans-serif}
+  #issuelist{overflow:auto;flex:1}
+  .irow{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--g100);cursor:pointer;font-size:13px}
+  .irow:hover,.irow.hot{background:var(--blue50)}
+  .irow .n{width:22px;height:22px;border-radius:50%;border:2px solid var(--red);color:var(--red);display:grid;place-items:center;font-size:11px;font-weight:600}
+  .irow.warn .n{border-color:var(--yellow);color:#8a6400}.irow.done .n{background:var(--green);border-color:var(--green);color:#fff}
+  .irow small{display:block;color:var(--g600);font-size:11px}
+  .irow .add{border:1px solid var(--g300);background:#fff;border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer}
+  .irow.done .add{background:var(--green);border-color:var(--green);color:#fff}
+  #basket .chips .chip{background:var(--blue50);border-color:transparent;color:var(--blue);cursor:default}
+  #buildlog{height:150px;overflow:auto;font-size:11px;line-height:1.6;background:var(--g50);border-radius:10px;padding:10px 12px}
+  #buildlog div{animation:fade .3s}
+  .prog{height:4px;background:var(--g100);border-radius:2px;overflow:hidden;margin:6px 0 10px}
+  .prog i{display:block;height:100%;width:0;background:var(--gem);transition:width .3s}
+  /* S3 swarm */
+  #s3{padding:20px 24px}
+  #swarmwrap{display:grid;grid-template-columns:1fr 380px;gap:20px;height:100%;min-height:0}
+  #twin{border:1px solid var(--g300);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(60,64,67,.15),0 10px 30px rgba(60,64,67,.12);display:flex;flex-direction:column;background:#fff}
+  #twinbar{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--g300);font-size:13px}
+  #frame{flex:1;width:100%;border:0;display:block}
+  #side{display:flex;flex-direction:column;gap:12px;min-height:0}
+  .tallies{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .tallies div{background:#fff;border:1px solid var(--g300);border-radius:12px;padding:10px 12px}
+  .tallies b{display:block;font-size:20px;font-weight:400}.tallies span{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--g600)}
+  #log{flex:1;overflow:auto;padding:6px 0;font:11px/1.45 "Roboto Mono",ui-monospace,Menlo,monospace}
+  .ln{display:grid;grid-template-columns:10px 1fr;gap:10px;padding:7px 16px;border-bottom:1px solid var(--g100);animation:fade .35s}
+  .ln i{width:10px;height:10px;border-radius:50%;margin-top:3px;background:var(--c)}
+  .ln b{font:500 11px "Google Sans",Roboto,sans-serif}.ln small{color:var(--g600);font-size:10px;margin-left:4px}
+  .ln .st{float:right;font-weight:700}
+  .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;font-size:12px;background:var(--g100)}
+  .pill.live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.2s infinite}
+  @keyframes blink{50%{opacity:.3}}
+  /* S4 report */
+  .rep{display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--g300);margin-bottom:16px}
+  .tabs span{padding:10px 14px;font-size:13px;color:var(--g600);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .tabs span.on{color:var(--blue);border-color:var(--blue)}
+  .tab{display:none}.tab.on{display:block;animation:fade .3s}
+  .ring.sm{width:130px;height:130px;margin:0 auto 6px}.ring.sm b{font-size:34px}
+  .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kpis div{background:var(--g50);border-radius:10px;padding:10px 12px}.kpis b{display:block;font-size:22px;font-weight:400}.kpis span{font-size:11px;color:var(--g600)}
+  .heat{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;cursor:pointer}
+  .heat div{border-radius:8px;padding:10px 10px;font-size:11px;color:#fff;min-height:54px;display:flex;align-items:flex-end;transition:background .5s;line-height:1.3}
+  .sw{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px}
+  .funnel{display:grid;gap:8px}.funnel div{display:grid;grid-template-columns:150px 1fr 60px;gap:12px;align-items:center;font-size:13px}
+  .funnel i{display:block;height:22px;border-radius:6px;background:var(--gem);width:0;transition:width 1s}
+  .funnel b{font-weight:400;text-align:right}
+  table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:8px 6px;border-bottom:1px solid var(--g100);text-align:left}th{font-weight:500;color:var(--g600);font-size:12px}
+  .bars div{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center;font-size:13px;margin:8px 0}
+  .bars span{display:flex;gap:3px;height:20px}.bars span i{display:block;border-radius:4px;min-width:4px}
+  .demand{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.dcard h3{font:500 15px "Google Sans",Roboto,sans-serif;margin:10px 0 6px}.dcard p{font-size:12.5px;color:var(--g600);line-height:1.5;margin:0 0 8px}
+  .files{display:grid;grid-template-columns:1fr 1fr;gap:8px}.files div{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--g100);border-radius:10px;font-size:12.5px}.files div b{font:500 11px "Roboto Mono",ui-monospace,Menlo,monospace}.files small{color:var(--g600);margin-left:auto}
+  pre{background:var(--g50);border-radius:10px;padding:12px 14px;font:11.5px/1.5 "Roboto Mono",ui-monospace,Menlo,monospace;white-space:pre-wrap;margin:0}
+  #qr{width:200px;height:200px;image-rendering:pixelated;border:1px solid var(--g300);border-radius:10px;display:block;margin:0 auto 10px}
+  .foot{position:sticky;bottom:0;background:linear-gradient(transparent,#fff 30%);padding:24px 0 8px;display:flex;gap:10px;justify-content:flex-end}
+</style>
+</head>
+<body>
+<div id="top">
+  <div class="brand"><i></i> Agent Storefront <span class="dim" style="font-size:12px">· Next in Retail</span></div>
+  <div id="steps">
+    <span data-s="1"><b>1</b> Audit</span><span data-s="2"><b>2</b> Patch</span><span data-s="3"><b>3</b> Swarm</span><span data-s="4"><b>4</b> Report</span>
+  </div>
+</div>
+<main>
+
+<!-- ============ S0: enter site ============ -->
+<section id="s0" class="scr on">
+  <h1>Is your store ready for AI shoppers?</h1>
+  <p class="lead">Enter any retail site. Gemini audits it against Cloudflare's agent-readiness standards and retail-specific checks, builds an agent-native digital twin, and releases a swarm of synthetic shoppers to prove it works.</p>
+  <div id="urlrow"><input id="url" value="thefrankieshop.com/collections/womens-new-arrivals" spellcheck="false"><button class="btn gem" onclick="go(1)">✦ Audit with Gemini</button></div>
+  <div class="chips"><span class="chip" onclick="setUrl('thefrankieshop.com/collections/womens-new-arrivals')">The Frankie Shop</span><span class="chip" onclick="setUrl('scoopandco.com')">Scoop &amp; Co. Creamery</span><span class="chip" onclick="setUrl('stridelab.com/new')">Stride Lab</span><span class="chip" onclick="setUrl('ritualroast.com/shop')">Ritual Roast</span></div>
+</section>
+
+<!-- ============ S1: audit ============ -->
+<section id="s1" class="scr">
+  <h1>Agent-readiness audit</h1>
+  <p class="lead" id="s1lead">Scanning <span class="mono" id="s1url"></span> …</p>
+  <div class="prog"><i id="p1"></i></div>
+  <div class="two">
+    <div class="card">
+      <div class="ring" id="ring" style="--v:0;--c:#EA4335"><div><b id="score">—</b><small>/ 100</small></div></div>
+      <div class="lvl" id="lvltxt">Cloudflare level — / 5</div>
+      <div class="thumbs"><img src="../agent_xray_v2/img/gina.jpg"><img src="../agent_xray_v2/img/rufina.jpg"><img src="../agent_xray_v2/img/nolia.jpg"><img src="../agent_xray_v2/img/goloso.jpg"></div>
+      <div class="dim" style="font-size:11px;margin-top:8px">56 products · Shopify · 176 images · 113 scripts</div>
+    </div>
+    <div>
+      <div class="checks">
+        <div><h2 style="margin-top:0">Cloudflare agent standards</h2><div id="cfchecks"></div></div>
+        <div><h2 style="margin-top:0">Retail readiness <span class="dim" style="font-weight:400;font-size:12px">· Gemini</span></h2><div id="rtchecks"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><button class="btn" id="b1" disabled onclick="go(2)">Review issues on your site →</button></div>
+</section>
+
+<!-- ============ S2: patch ============ -->
+<section id="s2" class="scr">
+  <div id="patchwrap">
+    <div id="sitemodal">
+      <div id="sitebar"><span class="dim mono" style="font-size:11px">thefrankieshop.com/collections/womens-new-arrivals</span><span class="pill" style="margin-left:auto;font-size:11px"><b id="issuecount">0</b>&nbsp;issues found</span></div>
+      <div id="siteview">
+        <div id="mini">
+          <div class="m-nav" data-i="bots"><span class="m-logo">The Frankie Shop</span><span>SHOP</span><span>EXPLORE</span><span>SEARCH _</span><span class="r" data-i="proto">US / EN · ♡ [1] · CART [0]</span></div>
+          <div class="m-promo" data-i="promo">Complimentary shipping over 300 USD · 15% off your first order with code FRANKIE15</div>
+          <div class="m-head" data-i="md"><h3>New Arrivals</h3><p>Your weekly dose of everyday essentials. Subscribe to our newsletter for first-hand access.</p></div>
+          <div class="m-grid">
+            <div class="m-tile" data-i="attrs"><img src="../agent_xray_v2/img/nolia.jpg"><span>Nolia Knit Long Cardigan Dress</span><b>550 USD</b></div>
+            <div class="m-tile" data-i="sizes"><img src="../agent_xray_v2/img/goloso.jpg"><span>Sportmax Goloso Oversized Trousers</span><b>995 USD</b><em>S M <s>L</s></em></div>
+            <div class="m-tile" data-i="acc"><img src="../agent_xray_v2/img/flint.jpg"><span>Loulou de Saison Flint Faux Fur Pouch</span><b>200 USD</b></div>
+            <div class="m-tile" data-i="price"><img src="../agent_xray_v2/img/gina.jpg"><span>Gina Faux Fur Bomber Jacket</span><b>535 USD</b></div>
+          </div>
+          <div class="m-foot" data-i="policy"><b>Shipping &amp; returns</b> We're happy to accept returns of unworn items with tags attached within 14 days of delivery. Complimentary shipping applies to US orders over 300 USD; otherwise a flat 12 USD.</div>
+        </div>
+        <svg id="lines"></svg>
+        <div id="pins"></div>
+        <div id="pop"></div>
+      </div>
+    </div>
+    <aside id="patchside">
+      <div class="card" style="padding:0;display:flex;flex-direction:column;min-height:0;flex:1">
+        <div class="sidehead">Issues <span class="dim" style="font-weight:400">· click a pin or a row</span></div>
+        <div id="issuelist"></div>
+      </div>
+      <div class="card" id="basket">
+        <div class="sidehead" style="padding:0 0 8px">Fix basket <span class="pill" style="margin-left:auto"><b id="basketcount">0</b>&nbsp;selected</span></div>
+        <div id="basketchips" class="chips" style="margin:0"></div>
+        <div class="dim" style="font-size:11px;margin-top:10px">House rules: returns auto-approved ≤ <b>$500</b> · verified agents only</div>
+      </div>
+      <div id="build" style="display:none" class="card"><div class="sidehead" style="padding:0 0 6px">Building digital twin</div><div class="prog"><i id="p2"></i></div><div id="buildlog" class="mono"></div></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" onclick="go(1)">←</button><button class="btn gem" id="b2" onclick="build()" disabled>✦ Build digital twin</button><button class="btn" id="b2b" style="display:none" onclick="go(3)">Release agent swarm →</button></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ S3: swarm ============ -->
+<section id="s3" class="scr">
+  <div id="swarmwrap">
+    <div id="twin">
+      <div id="twinbar"><span class="pill live">Agent-native twin · twin.agentstorefront.withgoogle.com/frankie</span><span class="dim" style="margin-left:auto;font-size:12px">drag the seam to see behind the curtain</span></div>
+      <iframe id="frame"></iframe>
+    </div>
+    <aside id="side">
+      <div class="card" style="padding:14px 16px">
+        <div class="dim" style="font-size:11px;text-transform:uppercase;letter-spacing:.12em">Readiness</div>
+        <div style="display:flex;align-items:baseline;gap:10px"><span class="bad" style="font-size:22px">34</span><span class="dim">→</span><span class="ok" style="font-size:34px;font-weight:400" id="sw-after">96</span><span class="dim" style="font-size:12px">· Level 5</span></div>
+      </div>
+      <div class="tallies">
+        <div><b id="t-orders">0</b><span>Orders</span></div><div><b id="t-gmv">$0</b><span>GMV</span></div>
+        <div><b id="t-aband">0</b><span>Abandoned</span></div><div><b id="t-blocked">0</b><span>Blocked</span></div>
+      </div>
+      <div class="card" style="padding:0;flex:1;min-height:0;display:flex;flex-direction:column">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:8px;font-size:13px"><span class="pill live" style="font-size:11px">Live</span> Agent activity <span class="dim" style="margin-left:auto;font-size:11px" id="agentcount">18 agents</span></div>
+        <div id="log"></div>
+      </div>
+      <button class="btn" id="b3b" onclick="go(4)">Get your report →</button>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ S4: report ============ -->
+<section id="s4" class="scr">
+  <div class="rep">
+    <div>
+      <h1 style="font-size:28px">Your Agent Storefront report</h1>
+      <p class="lead" style="margin-bottom:18px">The Frankie Shop · womens-new-arrivals · generated by Gemini</p>
+      <div class="tabs"><span class="on" data-tab="over">Overview</span><span data-tab="checks">Checks</span><span data-tab="swarm">Swarm</span><span data-tab="demand">Missed demand</span><span data-tab="files">Files &amp; prompt</span></div>
+
+      <div class="tab on" id="tab-over">
+        <div class="card" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:center">
+          <div style="text-align:center"><div class="ring sm" id="rb" style="--v:34;--c:#EA4335"><div><b>34</b><small>before</small></div></div><div class="dim" style="font-size:12px">Level 1 · Basic web presence</div></div>
+          <div style="text-align:center"><div class="ring sm" id="ra" style="--v:0;--c:#34A853"><div><b id="ra-n">0</b><small>after</small></div></div><div class="dim" style="font-size:12px">Level 5 · Agent-native</div></div>
+          <div class="kpis"><div><b id="r-orders">0</b><span>orders by agents</span></div><div><b id="r-gmv">$0</b><span>simulated GMV</span></div><div><b id="r-aband">0</b><span>abandonments</span></div><div><b>−81%</b><span>tokens per page</span></div></div>
+        </div>
+        <h2>Check map <span class="dim" style="font-weight:400;font-size:12px">· tap to flip before / after</span></h2>
+        <div class="card"><div id="heat" class="heat"></div><div style="display:flex;gap:16px;margin-top:10px;font-size:12px" class="dim"><span><i class="sw" style="background:#34A853"></i> pass</span><span><i class="sw" style="background:#FBBC04"></i> partial</span><span><i class="sw" style="background:#EA4335"></i> fail</span><span style="margin-left:auto" id="heatlabel">Showing: after</span></div></div>
+        <h2>Agent journey funnel</h2>
+        <div class="card"><div id="funnel" class="funnel"></div></div>
+      </div>
+
+      <div class="tab" id="tab-checks"><div class="card"><table><thead><tr><th>Check</th><th>Before</th><th>After</th><th>Fix applied</th></tr></thead><tbody id="reptable"></tbody></table></div></div>
+
+      <div class="tab" id="tab-swarm">
+        <div class="card"><h2 style="margin-top:0">Outcomes by assistant</h2><div id="bars" class="bars"></div></div>
+        <h2>Highlights</h2>
+        <div class="card" style="font-size:13px;line-height:1.7" id="hl"></div>
+      </div>
+
+      <div class="tab" id="tab-demand">
+        <p class="lead" style="font-size:13px;margin:0 0 12px">Agents tell you what they wanted and didn't find. Each card is a product or data opportunity surfaced from unmet agent intent.</p>
+        <div class="demand">
+          <div class="card dcard"><div class="pill">14 queries / 7d</div><h3>Petite-length wide-leg knit trouser</h3><p>Perplexity &amp; ChatGPT shoppers asked for inseam / petite options under 700 USD. Goloso in L also sold out.</p><div class="dim mono" style="font-size:11px">est. unmet demand · $38k / qtr</div><button class="btn ghost" style="margin-top:10px">✦ Draft product brief</button></div>
+          <div class="card dcard"><div class="pill">3 of 18 agents</div><h3>Gift-wrap &amp; dimensions on accessories</h3><p>Gift intents couldn't verify wrapping; bag dimensions missing on Flint and Mini Cloud.</p><div class="dim mono" style="font-size:11px">data fix · 2 attributes</div><button class="btn ghost" style="margin-top:10px">✦ Add attributes</button></div>
+          <div class="card dcard"><div class="pill">occasion</div><h3>"Wedding guest" tagging on dresses &amp; coats</h3><p>Gemini shoppers search by occasion; none of 56 products carry occasion attributes.</p><div class="dim mono" style="font-size:11px">catalog enrichment · 56 items</div><button class="btn ghost" style="margin-top:10px">✦ Enrich catalog</button></div>
+        </div>
+      </div>
+
+      <div class="tab" id="tab-files">
+        <div class="card"><div class="files" id="files"></div></div>
+        <h2>Prompt for your engineering team <button class="btn ghost" style="padding:6px 12px;font-size:12px;margin-left:8px" onclick="navigator.clipboard&&navigator.clipboard.writeText($('prompt').textContent)">Copy</button></h2>
+        <pre id="prompt"></pre>
+      </div>
+    </div>
+
+    <div class="card" style="text-align:center;position:sticky;top:0">
+      <canvas id="qr" width="33" height="33"></canvas>
+      <div style="font-size:13px">Scan to take your report home</div>
+      <div class="dim mono" style="font-size:11px;margin-top:4px">agentstorefront.withgoogle.com/r/7F3K2Q</div>
+      <div class="dim" style="font-size:11px;margin-top:10px">Link expires in 7 days · your URL is not stored</div>
+      <hr style="border:0;border-top:1px solid var(--g100);margin:16px 0">
+      <button class="btn ghost" style="width:100%" onclick="location.reload()">Start over</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+/* ---------------- data ---------------- */
+const CF=[['robots.txt','pass','present'],['sitemap.xml','pass','present'],['Link headers (RFC 8288)','fail','none'],['AI bot rules in robots.txt','fail','GPTBot, Google-Extended unlisted'],['Content-Signals','fail','not declared'],['Markdown negotiation','fail','HTML only · ~48k tokens/page'],['llms.txt','fail','missing'],['Web Bot Auth','fail','missing'],['MCP Server Card','fail','missing'],['A2A Agent Card','fail','missing'],['Agent Skills index','fail','missing'],['API Catalog (RFC 9727)','fail','missing'],['OAuth discovery','fail','missing'],['UCP /.well-known/ucp','fail','404'],['ACP /.well-known/acp.json','fail','404']];
+const RT=[['Product schema (JSON-LD)','warn','partial · no material/fit'],['Per-variant inventory','pass','sizes + availability'],['Price & currency','pass','USD, consistent'],['Material / composition','fail','prose only'],['Fit & model info','fail','not published'],['Occasion / use attributes','fail','none'],['Promo legibility','fail','banner is an image · 0 chars'],['Returns & shipping as policy','fail','prose · parse confidence 0.82'],['Review prompt-injection scan','warn','1 suspicious review'],['Price lock / AP2 support','fail','none']];
+const FIX=[
+ ['proto','Publish agent protocols','/.well-known/ucp, acp.json, MCP server card, llms.txt, AI bot rules + Content-Signals, Web Bot Auth',true],
+ ['md','Serve Markdown to agents','Accept: text/markdown negotiation · ~80% fewer tokens per page',true],
+ ['enrich','Enrich catalog with Gemini','material, fit notes, occasion, care, inseam/petite — inferred from images + copy, each with a confidence score',true],
+ ['policy','Structure policies','Returns, shipping thresholds and promo rules as machine-readable JSON (promo OCR\'d from banner)',true],
+ ['ugc','Sanitize reviews','Quarantine prompt-injection attempts in UGC before serving to agents',true],
+ ['store','Enable store agent','Answers fit/gift questions, offers bundles, handles returns within house rules',true],
+ ['lock','Price lock at checkout','AP2 cart mandates + agentic tokens so what the agent sees is what it pays',true],
+ ['fitguide','Convert size guide to data','Model height / size worn per product',false],
+];
+const BUILD=['Fetching /products.json … 56 products, 176 images','Gemini: extracting attributes from product imagery (multimodal) … 56/56','  material: "faux fur (modacrylic)" · confidence 0.78 · inferred from image','  fit: "relaxed, runs oversized" · confidence 0.71 · inferred from copy + size guide','Generating /.well-known/ucp … catalog, cart, checkout, policies, identity_linking','Generating /.well-known/acp.json … transports: rest, mcp','Generating MCP server card + agent-skills index','Writing llms.txt (8 collections, 56 products)','OCR promo banner → structured_rule {free_ship_min:300, code:"FRANKIE15", pct:15}','Parsing returns prose → policies.json {returns_days:14, condition:"unworn+tags"}','Scanning 1,284 reviews for prompt injection … 1 quarantined','Enabling Markdown negotiation on twin','Provisioning store agent with house rules (returns ≤ $500 auto, verified agents only)','Re-scanning twin with isitagentready.com … Level 5 / 5 ✓','Digital twin ready → twin.agentstorefront.withgoogle.com/frankie'];
+
+/* ---------------- nav ---------------- */
+const $=id=>document.getElementById(id);
+function setUrl(u){$('url').value=u}
+function go(n){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$('s'+n).classList.add('on');
+  document.querySelectorAll('#steps span').forEach(s=>{const k=+s.dataset.s;s.classList.toggle('on',k===n);s.classList.toggle('done',k<n)});
+  if(n===1)audit();if(n===2)fixes();if(n===3)swarm();if(n===4)report();
+}
+/* ---------------- S1 ---------------- */
+let audited=false;
+function row(c,pending){const [n,st,why]=c;return `<div class="check ${pending?'pending':st}"><i>${pending?'':({pass:'✓',fail:'✕',warn:'!'})[st]}</i>${n}<span class="why">${pending?'':why}</span></div>`}
+async function audit(){
+  if(audited)return;audited=true;$('s1url').textContent=$('url').value;
+  $('cfchecks').innerHTML=CF.map(c=>row(c,true)).join('');$('rtchecks').innerHTML=RT.map(c=>row(c,true)).join('');
+  const all=[...CF.map(c=>['cf',c]),...RT.map(c=>['rt',c])];let i=0;
+  for(const [grp,c] of all){await new Promise(r=>setTimeout(r,140));const box=$(grp+'checks');const idx=(grp==='cf'?CF:RT).indexOf(c);box.children[idx].outerHTML=row(c,false);i++;$('p1').style.width=(i/all.length*100)+'%';
+    const sc=Math.round(i/all.length*34);$('score').textContent=sc;$('ring').style.setProperty('--v',sc)}
+  $('lvltxt').textContent='Cloudflare level 1 / 5 · Basic web presence';$('s1lead').innerHTML=`<span class="mono">${$('url').value}</span> — agents can find your products but can't reliably read, trust, or buy them.`;$('b1').disabled=false;
+}
+/* ---------------- S2 ---------------- */
+const ISSUES=[
+ {id:'promo',sev:'bad',t:'Promo trapped in an image',sub:'0 chars extractable',sees:'<img alt="ALT"> · 15% / FRANKIE15 not machine-readable',why:'Agents can\'t verify the offer, so they either ignore it or abandon the cart when the price doesn\'t match. (Mike\'s Musings: "agent abandonment")',fix:'OCR banner → structured_rule {free_ship_min:300, code:"FRANKIE15", pct:15} exposed via UCP policies'},
+ {id:'proto',sev:'bad',t:'No agent commerce protocols',sub:'/.well-known/ucp · acp.json → 404',sees:'GET /.well-known/ucp → 404\nGET /.well-known/acp.json → 404',why:'Without UCP/ACP an agent can\'t discover catalog, cart or checkout and falls back to scraping HTML — slow, fragile, and you stop being seller of record. (Wayfair, Google Cloud)',fix:'Generate /.well-known/ucp + acp.json + MCP server card from your Shopify catalog'},
+ {id:'md',sev:'warn',t:'HTML-only · ~48k tokens per page',sub:'no llms.txt · no Markdown negotiation',sees:'Accept: text/markdown → ignored\n/llms.txt → 404',why:'Agents pay for every token; Cloudflare measured up to 80% fewer tokens and 66% faster answers with Markdown.',fix:'Serve text/markdown on request; publish llms.txt per collection'},
+ {id:'bots',sev:'warn',t:'No rules for AI bots',sub:'robots.txt silent on GPTBot etc. · no Web Bot Auth',sees:'robots.txt: User-agent: * (no AI bot rules, no Content-Signal)\n/.well-known/http-message-signatures-directory → 404',why:'Good agents don\'t know what they may do; bad scrapers aren\'t distinguishable from real shoppers\' agents. (Cloudflare, Fiserv KYA)',fix:'AI bot rules + Content-Signals; verify agents with Web Bot Auth; house rules for unverified traffic'},
+ {id:'attrs',sev:'bad',t:'Material & fit not published',sub:'56 products · prose only',sees:'material: ?  fit: ?  model_height: ?  occasion: []',why:'Fit questions are the #1 reason fashion agents stall; Wayfair saw conversion rise when agents could parse depth of catalog. (Databricks: catalogs need intent/occasion)',fix:'Gemini infers material, fit notes, occasion from images + copy, with confidence scores for review'},
+ {id:'sizes',sev:'bad',t:'No length / petite data · restock not exposed',sub:'Goloso L sold out · no back-in-stock endpoint',sees:'inseam: ?  petite: ?\nback_in_stock.subscribe → n/a',why:'Agents acting for absent humans (Muse, Instinct) want to set a restock mandate; without an endpoint they recommend a competitor.',fix:'Expose inseam/length; publish back_in_stock.subscribe so AP2 intent mandates can wait for restock'},
+ {id:'acc',sev:'warn',t:'Accessories missing dimensions & gift options',sub:'Flint pouch · Mini Cloud clutch',sees:'dimensions: ?  gift_wrap: ?  fits_phone: ?',why:'Gift intents are a large share of agent traffic; unanswerable attributes drop the item from consideration.',fix:'Add dimensions + gift_wrap attributes; store agent answers from policy'},
+ {id:'price',sev:'warn',t:'No price lock at checkout',sub:'price can drift between discovery and purchase',sees:'AP2 cart_mandate: unsupported · price_lock: none',why:'Agents (and the networks) need a signed cart mandate so what the agent saw is what the card is charged. (Visa Payment Instructions API, AP2)',fix:'Support AP2 cart/intent mandates + agentic tokens on the twin'},
+ {id:'policy',sev:'bad',t:'Returns & shipping only in prose',sub:'parse confidence 0.82',sees:'policy.returns → "14 days… unworn… tags" (prose)\nfree_ship_min: 300? flat: 12?',why:'Every agent re-parses this paragraph and some get it wrong; a wrong return window is a chargeback waiting to happen. (Fiserv: clean data from a payment lens)',fix:'policies.json {returns_days:14, condition, free_ship_min:300, flat_rate:12} via UCP'},
+];
+const basket=new Set();let hot=null,patched=false;
+function fixes(){if(patched)return;patched=true;
+  $('issuecount').textContent=ISSUES.length;
+  $('issuelist').innerHTML=ISSUES.map((x,i)=>`<div class="irow ${x.sev}" id="row-${x.id}" onclick="focusIssue('${x.id}',true)"><span class="n">${i+1}</span><div>${x.t}<small>${x.sub}</small></div><button class="add" onclick="event.stopPropagation();addFix('${x.id}')">+ Fix</button></div>`).join('');
+  $('pins').innerHTML=ISSUES.map((x,i)=>`<div class="pin ${x.sev}" id="pin-${x.id}" onclick="focusIssue('${x.id}',true)">${i+1}</div>`).join('');
+  requestAnimationFrame(layoutPins);$('siteview').addEventListener('scroll',layoutPins);addEventListener('resize',layoutPins);
+  $('siteview').addEventListener('click',e=>{if(e.target===$('siteview')||e.target.closest('#mini'))closePop()});
+}
+function layoutPins(){
+  const sv=$('siteview').getBoundingClientRect(),svg=$('lines');svg.innerHTML='';
+  ISSUES.forEach(x=>{const el=$('mini').querySelector(`[data-i="${x.id}"]`),pin=$('pin-'+x.id);if(!el||!pin)return;
+    const r=el.getBoundingClientRect();
+    const px=r.right-sv.left+$('siteview').scrollLeft-6,py=r.top-sv.top+$('siteview').scrollTop+Math.min(18,r.height/2);
+    pin.style.left=px+'px';pin.style.top=py+'px';
+    // leader line from element right edge to the pin (short), and from pin to the side list row
+    const row=$('row-'+x.id).getBoundingClientRect();
+    const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',px);l.setAttribute('y1',py);l.setAttribute('x2',sv.width+$('siteview').scrollLeft);l.setAttribute('y2',row.top-sv.top+$('siteview').scrollTop+row.height/2);
+    l.id='ln-'+x.id;if(hot===x.id)l.classList.add('hot');svg.appendChild(l)});
+}
+function focusIssue(id,open){
+  hot=id;document.querySelectorAll('.irow,.pin,[data-i],#lines line').forEach(e=>e.classList.remove('hot'));
+  $('row-'+id).classList.add('hot');$('pin-'+id).classList.add('hot');const el=$('mini').querySelector(`[data-i="${id}"]`);el&&el.classList.add('hot');const ln=$('ln-'+id);ln&&ln.classList.add('hot');
+  $('row-'+id).scrollIntoView({block:'nearest',behavior:'smooth'});
+  if(open){const x=ISSUES.find(i=>i.id===id),pin=$('pin-'+id),sv=$('siteview');
+    const pop=$('pop');pop.innerHTML=`<h4>${x.t}</h4><div class="dim" style="font-size:11px">${x.sub}</div><div class="sees">${x.sees.replace(/\n/g,'<br>')}</div><p><b style="font-weight:500;color:var(--g900)">Why it matters.</b> ${x.why}</p><p><b style="font-weight:500;color:var(--g900)">Gemini will:</b> ${x.fix}</p><div class="act"><button class="btn ghost" style="padding:8px 14px;font-size:12px" onclick="closePop()">Close</button><button class="btn" style="padding:8px 14px;font-size:12px" onclick="addFix('${id}');closePop()">${basket.has(id)?'✓ In basket':'+ Add to fixes'}</button></div>`;
+    const left=Math.max(12,parseFloat(pin.style.left)-340),top=Math.min(parseFloat(pin.style.top)-10,sv.scrollTop+sv.clientHeight-280);pop.style.left=left+'px';pop.style.top=Math.max(12,top)+'px';pop.style.display='block'}
+}
+function closePop(){$('pop').style.display='none'}
+function addFix(id){basket.add(id);const x=ISSUES.find(i=>i.id===id);$('row-'+id).classList.add('done');$('pin-'+id).classList.add('done');$('row-'+id).querySelector('.add').textContent='✓ Added';
+  if(!$('chip-'+id)){const c=document.createElement('span');c.className='chip';c.id='chip-'+id;c.textContent=x.t;$('basketchips').appendChild(c)}
+  $('basketcount').textContent=basket.size;$('b2').disabled=false;$('b2').textContent=`✦ Build digital twin (${basket.size} fixes)`}
+async function build(){$('b2').disabled=true;$('build').style.display='block';
+  for(let i=0;i<BUILD.length;i++){await new Promise(r=>setTimeout(r,480));const d=document.createElement('div');d.innerHTML=(i===BUILD.length-1?'<span class="ok">✓ </span>':'<span class="dim">› </span>')+BUILD[i];$('buildlog').appendChild(d);$('buildlog').scrollTop=1e6;$('p2').style.width=((i+1)/BUILD.length*100)+'%'}
+  $('b2').style.display='none';$('b2b').style.display='inline-flex'}
+/* ---------------- S3 ---------------- */
+let K={orders:0,gmv:0,aband:0,missed:0,blocked:0};
+function swarm(){if(!$('frame').src)$('frame').src='../agent_xray_v2/index.html?embed=1&fixed=1&v='+Date.now()}
+addEventListener('message',e=>{const d=e.data;if(!d)return;
+  if(d.type==='tally'){K=d;$('t-orders').textContent=K.orders;$('t-gmv').textContent='$'+K.gmv.toLocaleString();$('t-aband').textContent=K.aband;$('t-blocked').textContent=K.blocked}
+  if(d.type==='log'){const l=document.createElement('div');l.className='ln';l.style.setProperty('--c',d.color);
+    const ic={ok:'✓',warn:'!',bad:'✕',info:'…'}[d.status]||'',cls={ok:'ok',warn:'warn',bad:'bad',info:'dim'}[d.status]||'dim';
+    l.innerHTML=`<i></i><div><b>${d.agent}</b><small>${d.who||''}</small><span class="st ${cls}">${ic}</span><div>${d.text}</div></div>`;
+    $('log').prepend(l);while($('log').children.length>80)$('log').lastChild.remove()}
+});
+/* ---------------- S4 ---------------- */
+let heatAfter=true;
+function report(){
+  $('r-orders').textContent=K.orders;$('r-gmv').textContent='$'+(K.gmv||0).toLocaleString();$('r-aband').textContent=K.aband;
+  let v=0;const iv=setInterval(()=>{v+=2;$('ra-n').textContent=Math.min(96,v);$('ra').style.setProperty('--v',Math.min(96,v));if(v>=96)clearInterval(iv)},18);
+  document.querySelectorAll('.tabs span').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tabs span').forEach(x=>x.classList.remove('on'));t.classList.add('on');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));$('tab-'+t.dataset.tab).classList.add('on')});
+  const all=[...CF,...RT];const colr=st=>({pass:'#34A853',warn:'#FBBC04',fail:'#EA4335'})[st];
+  const drawHeat=()=>{$('heat').innerHTML=all.map(c=>`<div style="background:${heatAfter?'#34A853':colr(c[1])}">${c[0]}</div>`).join('');$('heatlabel').textContent='Showing: '+(heatAfter?'after':'before')};
+  drawHeat();$('heat').onclick=()=>{heatAfter=!heatAfter;drawHeat()};
+  const F=[['Agents arrived',18,18],['Verified (KYA)',15,18],['Found a match',14,18],['Evaluated fully',13,18],['Completed checkout',Math.max(K.orders,1),18]];
+  $('funnel').innerHTML=F.map(([n,v,m])=>`<div><span>${n}</span><i data-w="${v/m*100}"></i><b>${v}</b></div>`).join('');setTimeout(()=>document.querySelectorAll('.funnel i').forEach(i=>i.style.width=i.dataset.w+'%'),100);
+  $('reptable').innerHTML=all.filter(c=>c[1]!=='pass').map(c=>`<tr><td>${c[0]}</td><td class="bad">✕</td><td class="ok">✓</td><td class="dim">${c[2]}</td></tr>`).join('');
+  const B=[['Gemini',3,0,0],['ChatGPT',3,0,0],['Perplexity',1,1,0],['Muse / Instinct',3,0,0],['Claude / Copilot',2,0,0],['Unverified bots',0,0,3]];
+  $('bars').innerHTML=B.map(([n,o,a,b])=>`<div><span style="display:block">${n}</span><span>${'<i style="background:#34A853;flex:'+o+'"></i>'.repeat(o?1:0)}${a?'<i style="background:#EA4335;flex:'+a+'"></i>':''}${b?'<i style="background:#9AA0A6;flex:'+b+'"></i>':''}<i style="flex:${8-o-a-b};background:transparent"></i></span></div>`).join('')+'<div class="dim" style="font-size:11px;display:block">green = orders · red = abandoned · grey = blocked</div>';
+  $('hl').innerHTML='• Gemini (for Maya) resolved a fit question via the store agent and completed a 550 USD order with an AP2 cart mandate.<br>• Perplexity (for Lena) could not find petite sizing and left — now logged as missed demand.<br>• Muse (for Sam) set a 30-day intent mandate for the Gina bomber XL restock.<br>• 3 unverified bots blocked by Web Bot Auth + robots rules; 0 prompt-injection attempts reached the store agent.';
+  const FILES=[['/.well-known/ucp','catalog · cart · checkout · policies','2 KB'],['/.well-known/acp.json','rest, mcp transports','1 KB'],['/.well-known/mcp/server-card.json','5 tools','1 KB'],['/llms.txt','8 collections · 56 products','6 KB'],['catalog.enriched.json','56 items · confidence scored','210 KB'],['policies.json','returns · shipping · promo rules','1 KB'],['robots.txt (patch)','AI bot rules · Content-Signals','1 KB'],['swarm-transcript.md','18 agents · 112 calls','38 KB']];
+  $('files').innerHTML=FILES.map(f=>`<div>📄<b>${f[0]}</b><span class="dim" style="font-size:11px">${f[1]}</span><small>${f[2]}</small></div>`).join('');
+  $('prompt').textContent=`You are upgrading ${$('url').value} for AI shopping agents.\nImplement, in order:\n1. /.well-known/ucp and /.well-known/acp.json per ucp.dev and agenticcommerce.dev (spec: isitagentready.com/.well-known/agent-skills/ucp/SKILL.md)\n2. Accept: text/markdown negotiation + /llms.txt for all collection and product pages\n3. robots.txt: AI bot rules for GPTBot, Google-Extended, Claude-SearchBot, PerplexityBot + Content-Signal: ai-input=yes, search=yes\n4. Product schema: add material, fit_notes, occasion[], inseam; source from attached catalog.enriched.json (review items with confidence < 0.8)\n5. Convert shipping/returns copy and promo banner to policies.json (attached) and expose via UCP policies\n6. Expose back_in_stock.subscribe and support AP2 cart/intent mandates at checkout\nVerify with: POST https://isitagentready.com/api/scan {"url":"<staging>"} → expect level 5.`;
+  const c=$('qr').getContext('2d'),N=33;let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  c.fillStyle='#fff';c.fillRect(0,0,N,N);c.fillStyle='#202124';for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(rnd()>.55)c.fillRect(x,y,1,1);
+  const f=(x,y)=>{c.fillStyle='#202124';c.fillRect(x,y,7,7);c.fillStyle='#fff';c.fillRect(x+1,y+1,5,5);c.fillStyle='#202124';c.fillRect(x+2,y+2,3,3)};
+  c.fillStyle='#fff';c.fillRect(0,0,8,8);c.fillRect(N-8,0,8,8);c.fillRect(0,N-8,8,8);f(0,0);f(N-7,0);f(0,N-7);
+}
+</script>
+</body>
+</html>

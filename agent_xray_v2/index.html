@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Agent X-Ray v2 — The Frankie Shop</title>
+<style>
+  :root{
+    --ink:#111;--paper:#fff;
+    /* Google palette */
+    --g-blue:#4285F4;--g-red:#EA4335;--g-yellow:#FBBC04;--g-green:#34A853;
+    --g-blue-50:#E8F0FE;--g-grey-50:#F8F9FA;--g-grey-100:#F1F3F4;--g-grey-300:#DADCE0;--g-grey-600:#5F6368;--g-grey-900:#202124;
+    --gem:linear-gradient(90deg,#4285F4 0%,#9B72CB 50%,#D96570 100%);
+    --xr-bg:var(--g-grey-50);--xr-ink:var(--g-grey-900);--xr-dim:var(--g-grey-600);--xr-line:rgba(66,133,244,.14);--xr-glow:var(--g-blue);
+    --maya:#4285F4;--dev:#34A853;--lena:#EA4335;--sam:#FBBC04;--store:#202124;--bot:#9AA0A6;
+    --ok:#1E8E3E;--warn:#E37400;--bad:#D93025;
+  }
+  *{box-sizing:border-box}
+  body{-webkit-user-select:none;user-select:none}
+  ::selection{background:transparent}
+  html,body{margin:0;background:#fff;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.02em;color:var(--ink)}
+  #wrap{position:relative;width:100%;min-height:100vh}
+
+  /* ============ shared page structure (rendered twice) ============ */
+  .page{width:100%}
+  .nav{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1.2fr;align-items:center;padding:14px 20px;font-size:10px;text-transform:uppercase}
+  .nav .logo{font-family:"Times New Roman",Times,serif;font-size:15px;text-transform:none;letter-spacing:0}
+  .nav .right{text-align:right}
+  .promo{margin:0 20px;height:26px;display:flex;align-items:center;justify-content:center;font:italic 9.5px Georgia,serif;letter-spacing:.14em;text-transform:uppercase;background:linear-gradient(90deg,#f1ede6,#e8e2d8);color:#4b4238}
+  .head{display:grid;grid-template-columns:1fr 1fr 1fr;padding:28px 20px 48px}
+  .head h1{font-weight:400;font-size:20px;margin:0;letter-spacing:0}
+  .head p{margin:0;font-size:10.5px;max-width:280px;line-height:1.5}
+  .crumbs{display:grid;grid-template-columns:1fr 1fr 1fr;padding:0 20px 10px;font-size:9px;text-transform:uppercase}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 20px 36px}
+  .tile .img{position:relative;aspect-ratio:5/7;background:#d9d9d9;overflow:hidden}
+  .tile img{width:100%;height:100%;object-fit:cover;display:block}
+  .meta{display:flex;flex-direction:column;gap:4px;padding:10px 0 16px;font-size:9.5px;text-transform:uppercase}
+  .meta .price{font-weight:600}
+  .sizes{display:flex;gap:9px;font-size:9px}
+  .sizes b{font-weight:400}.sizes b.oos{opacity:.38;text-decoration:line-through}
+  footer{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:36px 20px 70px;border-top:1px solid #e6e6e6;font-size:9.5px;line-height:1.7}
+  footer h5{margin:0 0 6px;font-size:9px;text-transform:uppercase;letter-spacing:.12em}
+
+  /* ============ HUMAN layer ============ */
+  #human{position:relative;background:var(--paper);z-index:1}
+
+  /* ============ X-RAY layer — Google light ============ */
+  #xray{position:absolute;inset:0;z-index:2;background:var(--xr-bg);color:var(--xr-ink);clip-path:inset(0 0 0 50%);
+        font-family:"Google Sans",Roboto,"Helvetica Neue",Arial,sans-serif;
+        background-image:linear-gradient(var(--xr-line) 1px,transparent 1px),linear-gradient(90deg,var(--xr-line) 1px,transparent 1px);background-size:48px 48px;background-position:20px 0}
+  #xray::before{content:"";position:absolute;inset:0;background:radial-gradient(90% 50% at 50% 0%,rgba(66,133,244,.10),transparent 60%);pointer-events:none}
+  #xray .nav .logo{font-family:"Times New Roman",Times,serif}
+  #xray .promo{background:repeating-linear-gradient(135deg,#fff 0 6px,var(--g-grey-100) 6px 12px);color:transparent;border:1.5px dashed var(--g-red);position:relative;border-radius:6px}
+  #xray .promo::after{content:"IMG · 0 CHARS EXTRACTED · ALT=\"ALT\"";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 10px Roboto Mono,ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--g-red)}
+  #xray footer{border-top-color:var(--g-grey-300)}
+  #xray .tile .img{background:#fff;border:1px solid var(--g-grey-300);border-radius:8px}
+  #xray .tile img{filter:grayscale(1) contrast(1.05) brightness(1.08);opacity:.42;mix-blend-mode:multiply}
+  #xray .tile .img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(66,133,244,.06),rgba(66,133,244,0) 40%,rgba(66,133,244,.10));pointer-events:none;border-radius:8px}
+  #xray .meta{font-family:"Roboto Mono",ui-monospace,Menlo,monospace;text-transform:none;letter-spacing:0;color:var(--xr-ink);font-size:9.5px}
+  #xray .meta .price::before{content:"price: "}#xray .meta .price::after{content:".00"}
+  #xray .sizes{gap:6px}#xray .sizes b.oos{color:var(--bad);opacity:.9;text-decoration:none}#xray .sizes b.oos::after{content:" oos"}
+  .data{position:absolute;left:8px;right:8px;bottom:8px;padding:9px 10px;background:rgba(255,255,255,.94);border:1px solid var(--g-grey-300);border-left:3px solid var(--g-blue);border-radius:8px;font:9.5px/1.6 "Roboto Mono",ui-monospace,Menlo,monospace;color:var(--xr-ink);letter-spacing:0;box-shadow:0 1px 3px rgba(60,64,67,.15),0 4px 10px rgba(60,64,67,.08)}
+  .data i{font-style:normal;color:var(--xr-dim)}.data .ok{color:var(--ok)}.data .warn{color:var(--warn)}.data .bad{color:var(--bad)}
+  .data .fix{display:none}
+  .tag{position:absolute;top:8px;left:8px;font:500 9px "Roboto Mono",ui-monospace,Menlo,monospace;color:var(--g-blue);letter-spacing:.06em;background:rgba(255,255,255,.9);padding:3px 6px;border-radius:999px;border:1px solid var(--g-blue-50)}
+  #xray .head p,#xray .crumbs,#xray footer{color:var(--xr-dim)}
+  #xray .head h1{color:var(--xr-ink);font-family:"Google Sans",Roboto,sans-serif}
+  #xray .nav{color:var(--xr-ink)}
+  #ret-x{position:relative}
+  #ret-x .ann{display:block;margin-top:6px;font:9.5px/1.5 "Roboto Mono",ui-monospace,Menlo,monospace;color:var(--warn)}
+
+  /* focus rings */
+  [data-t]{transition:box-shadow .3s}
+  [data-t].focus{box-shadow:0 0 0 2px var(--c),0 0 0 8px color-mix(in srgb,var(--c) 16%,transparent);border-radius:8px}
+
+  /* ============ cursors ============ */
+  .cur{position:absolute;left:0;top:0;transition:transform 1.1s cubic-bezier(.4,.1,.2,1);z-index:5;pointer-events:none}
+  .cur svg{display:block;width:22px;height:25px;filter:drop-shadow(0 1px 2px rgba(60,64,67,.4))}
+  .cur .pill{position:absolute;left:18px;top:18px;padding:5px 12px;border-radius:999px;color:#fff;font:600 12.5px "Google Sans",Roboto,sans-serif;letter-spacing:.02em;white-space:nowrap;background:var(--c);box-shadow:0 1px 3px rgba(60,64,67,.3)}
+  .cur .pill small{opacity:.85;font-weight:400;margin-left:4px}
+  .cur[style*="--sam"] .pill{color:#202124}
+  .cur.store .pill{background:var(--gem);border-radius:999px}
+  .cur .bubble{position:absolute;left:18px;top:48px;max-width:360px;background:#fff;border:1px solid var(--g-grey-300);border-left:3px solid var(--c);border-radius:10px;padding:10px 12px;font:12px/1.5 "Roboto Mono",ui-monospace,Menlo,monospace;color:var(--xr-ink);box-shadow:0 2px 6px rgba(60,64,67,.15),0 8px 24px rgba(60,64,67,.12);opacity:0;transform:translateY(-4px);transition:opacity .25s,transform .25s;letter-spacing:0}
+  .cur .bubble.show{opacity:1;transform:none}
+  .cur.flip .pill{left:auto;right:18px}.cur.flip .bubble{left:auto;right:18px}
+  .s{display:inline-block;margin-left:6px;font-weight:700}.s.ok{color:var(--ok)}.s.warn{color:var(--warn)}.s.bad{color:var(--bad)}.s.info{color:var(--xr-dim)}
+  .cur.think svg{animation:bob 1s infinite}@keyframes bob{50%{transform:translateY(-2px)}}
+  .cur.gone{opacity:0;transition:opacity .8s}
+
+  /* ============ seam (Gemini gradient) ============ */
+  #seam{position:fixed;top:0;bottom:0;left:50%;width:3px;background:linear-gradient(180deg,#4285F4,#9B72CB,#D96570,#FBBC04,#34A853);box-shadow:0 0 16px 2px rgba(66,133,244,.35);cursor:ew-resize;z-index:20}
+  #seam::after{content:"◂  AGENT X-RAY  ▸";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border:1px solid var(--g-grey-300);color:var(--g-grey-900);font:600 10px "Google Sans",Roboto,sans-serif;letter-spacing:.18em;padding:10px 16px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 8px rgba(60,64,67,.2)}
+
+  /* ============ HUD ============ */
+  #hud{position:fixed;left:0;right:0;bottom:0;z-index:4;display:grid;grid-template-columns:1fr 420px;background:rgba(255,255,255,.94);border-top:1px solid var(--g-grey-300);backdrop-filter:blur(8px);color:var(--xr-ink);height:132px;box-shadow:0 -2px 12px rgba(60,64,67,.08)}
+  #feed{overflow:hidden;padding:8px 0;font:10px/1.5 "Roboto Mono",ui-monospace,Menlo,monospace;letter-spacing:0}
+  .ln{display:grid;grid-template-columns:40px 8px 1fr;gap:8px;padding:3px 18px;color:var(--xr-ink);animation:in .5s}
+  .ln .t{color:#9AA0A6}.ln .d{width:7px;height:7px;border-radius:50%;background:var(--c);margin-top:4px}.ln em{font-style:normal;color:var(--xr-dim)}
+  @keyframes in{from{background:var(--g-blue-50)}to{background:transparent}}
+  #stats{border-left:1px solid var(--g-grey-300);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr}
+  #stats div{padding:10px 14px;border-bottom:1px solid var(--g-grey-100);border-right:1px solid var(--g-grey-100)}
+  #stats b{display:block;font:500 18px "Google Sans",Roboto,sans-serif;letter-spacing:-.01em;color:var(--g-grey-900)}
+  #stats span{font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:var(--xr-dim)}
+  #ctl{position:fixed;right:14px;top:12px;z-index:30;display:flex;gap:6px}
+  #ctl button{border:1px solid var(--g-grey-300);background:#fff;color:var(--g-grey-900);padding:8px 12px;font:600 10px "Google Sans",Roboto,sans-serif;letter-spacing:.02em;cursor:pointer;border-radius:999px;box-shadow:0 1px 2px rgba(60,64,67,.2)}
+  #ctl button.on{background:var(--g-blue);border-color:var(--g-blue);color:#fff}
+  #ctl #b-fix{background:var(--gem);color:#fff;border:0}
+  body.fixed .data .gap{display:none}body.fixed .data .fix{display:block}
+  body.fixed .data{border-left-color:var(--g-green)}
+  body.fixed #xray .promo{border-color:var(--g-green)}body.fixed #xray .promo::after{content:"structured_rule: free_ship ≥300 · FRANKIE15 → −15% first order ✓";color:var(--ok)}
+  body.fixed #ret-x .ann{color:var(--ok)}
+  body.embed #hud,body.embed #ctl{display:none!important}
+  /* ---- geometry lock: both layers must lay out identically regardless of font/content ---- */
+  .nav{height:44px}.nav>div{white-space:nowrap;overflow:hidden;text-overflow:clip}
+  .promo{height:26px;white-space:nowrap;overflow:hidden}
+  .head{height:106px}.head p{height:34px;overflow:hidden}
+  .crumbs{height:22px}
+  .tile .img{border:0!important;box-shadow:inset 0 0 0 1px transparent}
+  #xray .tile .img{box-shadow:inset 0 0 0 1px var(--g-grey-300)}
+  .meta{height:62px;padding:10px 0 0;gap:0}
+  .meta>span,.sizes{display:block;height:14px;line-height:14px;white-space:nowrap;overflow:hidden;font-size:9.5px}
+  .sizes{display:flex;align-items:center}
+  #xray .meta,#xray .sizes{font-size:9.5px}
+  footer{min-height:150px}
+</style>
+<script>if(new URLSearchParams(location.search).get('embed'))document.documentElement.addEventListener('DOMContentLoaded',()=>document.body.classList.add('embed'));</script>
+</head>
+<body class="">
+<script>if(new URLSearchParams(location.search).get('embed'))document.body.classList.add('embed');</script>
+<div id="wrap">
+  <div id="human" class="page"></div>
+  <div id="xray"  class="page"></div>
+</div>
+<div id="seam"></div>
+<div id="hud">
+  <div id="feed"></div>
+  <div id="stats">
+    <div><b id="k-orders">0</b><span>Orders</span></div>
+    <div><b id="k-gmv">$0</b><span>GMV</span></div>
+    <div><b id="k-aband">0</b><span>Abandoned</span></div>
+    <div><b id="k-missed">0</b><span>Missed demand</span></div>
+    <div><b id="k-blocked">0</b><span>Blocked bots</span></div>
+    <div><b id="k-tok">31%</b><span>Tokens useful</span></div>
+  </div>
+</div>
+<div id="ctl"><button id="b-fix">⚡ Make agent-native</button><button id="b-play" class="on">Pause</button><button id="b-speed">1×</button></div>
+
+<script>
+/* ---------------- real products pulled from the saved Frankie Shop page ---------------- */
+const P=[
+ {id:'gina',  t:'Gina Faux Fur Bomber Jacket',               price:535, style:'JAFS23043900', img:'img/gina.jpg',  sizes:[['XXS',1],['XS',1],['S',1],['M',1],['L',1],['XL',0]], mat:'?', fit:'?'},
+ {id:'rufina',t:'Rufina Double Breasted Faux Leather Jacket',price:465, style:'JAFS24067417', img:'img/rufina.jpg',sizes:[['XS/S',1],['M/L',1]], mat:'faux leather (PU)', fit:'?'},
+ {id:'cloud', t:'Mansur Gavriel Mini Cloud Clutch',          price:640, style:'BAMR00010017', img:'img/cloud.jpg', sizes:[['ONE SIZE',1]], mat:'?', fit:'n/a', gift:'?'},
+ {id:'eymi',  t:'Eymi Technical Trench Coat',                price:485, style:'TRFS23828100', img:'img/eymi.jpg',  sizes:[['S',1],['M',1],['L',1]], mat:'?', fit:'?'},
+ {id:'nolia', t:'Nolia Knit Long Cardigan Dress',            price:550, style:'MAFS22820100', img:'img/nolia.jpg', sizes:[['XXS',0],['XS',1],['S',1],['M',1],['L',0],['XL',0]], mat:'?', fit:'?'},
+ {id:'dana',  t:'Loulou de Saison Dana Faux Fur Collar Top', price:640, style:'COFS23403961', img:'img/dana.jpg',  sizes:[['S',1],['M',1],['L',0]], mat:'faux fur', fit:'?'},
+ {id:'flint', t:'Loulou de Saison Flint Faux Fur Pouch',     price:200, style:'SLFS23403200', img:'img/flint.jpg', sizes:[['ONE SIZE',1]], mat:'faux fur', fit:'n/a', gift:'?'},
+ {id:'goloso',t:'Sportmax Goloso Oversized Trousers',        price:995, style:'PASP00232203', img:'img/goloso.jpg',sizes:[['S',1],['M',1],['L',0]], mat:'?', fit:'?', inseam:'?'},
+];
+
+function page(xr){
+  const tiles=P.map(p=>`
+   <div class="tile" data-t="${p.id}">
+     <div class="img">
+       ${xr?`<span class="tag">${p.style} · 1000×1400 · alt="ALT"</span>`:''}
+       <img src="${p.img}" alt="">
+       ${xr?`<div class="data">
+         <i>title</i> ${p.t}<br>
+         <i>schema.org/Product</i> <span class="gap bad">✗ none</span><span class="fix ok">✓ UCP item</span><br>
+         <i>material</i> ${p.mat==='?'?'<span class="gap warn">? prose only</span><span class="fix ok">✓ declared</span>':'<span class="ok">'+p.mat+'</span>'}<br>
+         <i>fit / model</i> ${p.fit==='n/a'?'n/a':'<span class="gap warn">? not published</span><span class="fix ok">✓ 5\'10 wears S</span>'}
+         ${p.gift?`<br><i>gift_wrap</i> <span class="gap warn">? missing</span><span class="fix ok">✓ at checkout</span>`:''}
+         ${p.inseam?`<br><i>inseam / petite</i> <span class="gap bad">✗ not in schema</span><span class="fix ok">✓ 31" · petite 28"</span>`:''}
+       </div>`:''}
+     </div>
+     <div class="meta"><span>${p.t}</span><span class="price">${p.price.toLocaleString()} USD</span>
+       <div class="sizes" data-t="${p.id}-s">→ ${p.sizes.map(([s,a])=>`<b class="${a?'':'oos'}" data-t="${p.id}-${s}">${s}</b>`).join('')}</div></div>
+   </div>`).join('');
+  return `
+  <div class="nav" data-t="nav"><div class="logo">The Frankie Shop</div><div>Shop</div><div>Explore</div><div data-t="search">${xr?'search: /collections/… → catalog.search ?':'Search _'}</div>
+    <div class="right">US / EN &nbsp; ◯ &nbsp; ♡ [1] &nbsp; ▢ [0] &nbsp; <span data-t="cart">${xr?'cart: /.well-known/ucp → <span class="gap bad">404</span><span class="fix ok">200</span>':'Cart [0]'}</span></div></div>
+  <div class="promo" data-t="promo">Complimentary shipping over 300 USD &nbsp;·&nbsp; 15% off your first order with code FRANKIE15</div>
+  <div class="head"><h1>New Arrivals</h1><p>${xr?'<span style="font-family:ui-monospace,Menlo,monospace">llms.txt: — &nbsp; markdown negotiation: ✗ &nbsp; robots: default (AI bots unlisted)</span>':'Your weekly dose of everyday essentials. Subscribe to our newsletter for first-hand access.'}</p></div>
+  <div class="crumbs"><span>↪ Women / New Arrivals</span><span>View ▦▦</span><span>⚙ Filter and Sort</span></div>
+  <div class="grid" data-t="grid">${tiles}</div>
+  <footer>
+    <div><h5>Customer care</h5>Contact<br>FAQ<br>Size guide</div>
+    <div data-t="returns" ${xr?'id="ret-x"':''}><h5>Shipping &amp; returns</h5>We're happy to accept returns of unworn items with tags attached within 14 days of delivery. Final sale items are excluded. Complimentary shipping applies to US orders over 300 USD; otherwise a flat 12 USD.
+      ${xr?'<span class="ann gap">policy: prose → parsed {returns_days:14, condition:"unworn+tags", free_ship_min:300, flat:12} · confidence 0.82</span><span class="ann fix" style="display:none">policy JSON ✓ /.well-known/ucp → policies.returns</span>':''}</div>
+    <div><h5>The Frankie Shop</h5>About<br>Stores<br>Careers</div>
+    <div><h5>Newsletter</h5>Subscribe for first-hand access.</div>
+  </footer>`;
+}
+document.getElementById('human').innerHTML=page(false);
+document.getElementById('xray').innerHTML=page(true);
+
+/* ---------------- seam ---------------- */
+const seam=document.getElementById('seam'),xray=document.getElementById('xray');
+let drag=false,auto=true,t=0;
+const setSeam=x=>{x=Math.max(40,Math.min(innerWidth-40,x));seam.style.left=x+'px';xray.style.clipPath=`inset(0 0 0 ${x}px)`;};
+seam.onpointerdown=e=>{e.preventDefault();seam.setPointerCapture(e.pointerId);drag=true;auto=false};addEventListener('pointerup',()=>drag=false);
+addEventListener('pointermove',e=>{if(drag)setSeam(e.clientX)});
+setInterval(()=>{if(auto){t+=.008;setSeam(innerWidth*(0.5+0.22*Math.sin(t)))}},16);
+addEventListener('wheel',()=>auto=false,{passive:true});addEventListener('keydown',()=>auto=false);
+
+/* ---------------- agent scripts (grounded in behavior catalog) ---------------- */
+const AG=[
+ {id:'maya',name:'Gemini',who:'for Maya',color:'var(--maya)',start:800,steps:[
+  ['nav','GET /.well-known/ucp → 404 · falling back to HTML crawl (48k tokens)','warn',1800],
+  ['search','catalog.search {occasion:"autumn wedding guest", size:"M", budget≤600, deliver_by:"Fri", avoid:["real fur"]}','info',2600],
+  ['grid','ranking 8 items by fit-to-intent · 2 candidates','info',1400],
+  ['nolia','NOLIA KNIT DRESS 550 ✓ budget · material: prose only · occasion attr: none','warn',2400],
+  ['nolia-M','inventory.check {style:MAFS22820100, size:M} → available','ok',1700],
+  ['nolia','fit: model height / size worn not published → asking store agent','warn',2200],
+  ['nolia','store agent: "model 5\'10 wears S · relaxed fit" → M confirmed for Maya','ok',2100],
+  ['returns','policy.returns parsed from prose (conf 0.82): 14d unworn · no JSON','warn',2200],
+  ['cart','cart.create → AP2 cart_mandate · price locked 550.00 · dest hash ✓','ok',2000],
+  ['cart','Visa agentic token ····8910 · dynamic CVV · passkey ✓ (Maya confirmed)','ok',2100],
+  ['cart','checkout.complete → ORDER #FS-{n} · seller of record: The Frankie Shop','ok',2600,'order:550'],
+ ]},
+ {id:'dev',name:'ChatGPT',who:'for Dev',color:'var(--dev)',start:2600,steps:[
+  ['nav','GET /.well-known/acp.json → 404 · no ACP discovery doc','warn',1700],
+  ['search','catalog.search {intent:"gift for partner", budget≤250, ship_to:"Austin, TX", gift_wrap:true}','info',2500],
+  ['flint','FLINT FAUX FUR POUCH 200 ✓ · one size ✓ · gift_wrap: missing','warn',2200],
+  ['cloud','alt: MINI CLOUD CLUTCH 640 → over budget · skip','info',1600],
+  ['promo','promo: image, alt="ALT" · 0 chars · cannot verify FRANKIE15','bad',2300],
+  ['flint','store agent: "gift wrap at checkout · 15% applied server-side" ✓','ok',2000],
+  ['cart','ACP checkout_session (fallback: hosted) → Stripe shared payment token ✓','ok',2100],
+  ['cart','ORDER #FS-{n} · 170.00 after code · gift note attached','ok',2500,'order:170'],
+ ]},
+ {id:'lena',name:'Perplexity',who:'for Lena',color:'var(--lena)',start:4600,steps:[
+  ['grid','price compare: SPORTMAX GOLOSO across 4 retailers','info',2000],
+  ['goloso','995 USD · matches MSRP elsewhere · size L → sold out','bad',2100],
+  ['goloso-s','fit: inseam / petite length? not in schema','warn',2000],
+  ['search','catalog.search {query:"wide-leg knit trouser", length:"petite", budget≤700} → 0 results','bad',2400],
+  ['grid','AGENT ABANDONMENT · size OOS + no petite option · logging demand','bad',2600,'abandon','missed:Petite-length wide-leg knit trouser ≤ 700'],
+ ]},
+ {id:'sam',name:'Muse',who:'for Sam · human away',color:'var(--sam)',start:6800,steps:[
+  ['gina','restock watch: GINA FAUX FUR BOMBER size XL','info',1800],
+  ['gina-XL','AP2 intent_mandate: buy if XL in stock & ≤ 535 · TTL 30d · passkey pre-signed','ok',2600],
+  ['rufina','meanwhile: RUFINA FAUX LEATHER M/L ✓ 465 · material PU ✓','ok',2000],
+  ['rufina','store agent (B2A): "+ Mini Cloud Clutch as a set −10%" → 994 > ceiling 600 · declined','info',2300],
+  ['cart','ORDER #FS-{n} · 465 · Rufina M/L · XL bomber still on watch','ok',2500,'order:465'],
+ ]},
+ {id:'store',name:'Frankie Store Agent',who:'',color:'var(--store)',cls:'store',start:3400,steps:[
+  ['nolia','KYA: Gemini agent verified (Web Bot Auth) · answering fit from internal size notes','ok',2200],
+  ['flint','gift_wrap not in catalog → answering from policy: available at checkout','ok',2000],
+  ['rufina','offering B2A bundle to Muse: + Cloud Clutch −10% (margin ok)','info',2100],
+  ['returns','return #R-118 · 11 days · 180 USD · < 500 threshold → auto-approved','ok',2300],
+  ['promo','flag to merchant: promo trapped in image · 3 agents failed to parse today','warn',2300],
+  ['goloso-s','flag: "petite length" asked 14× this week → Missed Demand Map','warn',2300,'missed:Petite sizing for oversized knit trousers (14 queries / 7d)'],
+ ]},
+ {id:'bot',name:'crawler-7731',who:'unverified',color:'var(--bot)',start:9600,steps:[
+  ['nav','GET /collections/womens-new-arrivals · no Web Bot Auth signature','bad',1600],
+  ['nav','robots.txt: unverified agents disallowed → 403 · blocked','bad',2000,'blocked'],
+ ]},
+];
+
+
+const MORE=[
+ {id:'priya',name:'Gemini',who:'for Priya',color:'#1A73E8',start:1500,steps:[
+  ['search','catalog.search {intent:"rain-proof commuter coat", size:"S", budget≤500, color:"black"}','info',2400],
+  ['eymi','EYMI TECHNICAL TRENCH 485 ✓ · "technical" → waterproof? unverified','warn',2200],
+  ['eymi-S','inventory.check {TRFS23828100, S} → available','ok',1600],
+  ['returns','returns 14d ✓ · free ship ≥300 ✓ (parsed)','ok',1600],
+  ['cart','AP2 cart_mandate 485.00 · Visa token ····2210 · passkey ✓','ok',2000],
+  ['cart','ORDER #FS-{n} · 485 · Eymi Trench S','ok',2400,'order:485'],
+ ]},
+ {id:'marco',name:'ChatGPT',who:'for Marco',color:'#188038',start:3200,steps:[
+  ['search','catalog.search {intent:"anniversary gift", recipient_size:"M", budget≤700, style:"statement"}','info',2400],
+  ['dana','DANA FAUX FUR COLLAR TOP 640 ✓ · M available ✓','ok',2000],
+  ['dana','care instructions? not in schema → asking store agent','warn',2000],
+  ['cart','ACP checkout_session → Stripe SPT ✓ · Marco confirmed','ok',2000],
+  ['cart','ORDER #FS-{n} · 640 · gift receipt','ok',2400,'order:640'],
+ ]},
+ {id:'ana',name:'Perplexity',who:'for Ana',color:'#C5221F',start:5200,steps:[
+  ['cloud','compare: MANSUR GAVRIEL MINI CLOUD 640 vs brand site 640 vs 2 dept stores','info',2400],
+  ['cloud','parity ✓ · free ship ≥300 ✓ · loyalty? none linked','info',2000],
+  ['cloud','color "golden roccia" → hex / swatch not in schema','warn',1800],
+  ['cart','recommending Frankie (fastest delivery) → handing off to Ana','ok',2200],
+ ]},
+ {id:'jo',name:'Muse',who:'for Jo · human away',color:'#F29900',start:7400,steps:[
+  ['nolia-XS','restock watch: NOLIA DRESS XS → in stock ✓ (mandate active)','ok',2000],
+  ['nolia','AP2 intent_mandate satisfied: ≤ 550 · TTL ok · executing','ok',2200],
+  ['cart','ORDER #FS-{n} · 550 · Nolia XS · Jo notified','ok',2400,'order:550'],
+ ]},
+ {id:'theo',name:'Claude',who:'for Theo',color:'#9B72CB',start:2100,steps:[
+  ['search','catalog.search {intent:"vegan leather jacket", size:"M/L", budget≤500}','info',2400],
+  ['rufina','RUFINA 465 · material: PU ✓ vegan ✓ · M/L ✓','ok',2000],
+  ['rufina','sleeve length / shoulder measurements? not published','warn',1800],
+  ['cart','AP2 cart_mandate 465.00 · token ····7731 · passkey ✓','ok',2000],
+  ['cart','ORDER #FS-{n} · 465 · Rufina M/L','ok',2400,'order:465'],
+ ]},
+ {id:'nia',name:'Copilot',who:'for Nia',color:'#12B5CB',start:4100,steps:[
+  ['search','catalog.search {intent:"small evening bag", budget≤250, color:"brown"}','info',2200],
+  ['flint','FLINT POUCH 200 ✓ · dimensions? not in schema','warn',2000],
+  ['flint','store agent: 30×22 cm · fits phone + wallet','ok',1800],
+  ['cart','ORDER #FS-{n} · 200 · Flint Pouch','ok',2400,'order:200'],
+ ]},
+ {id:'hannah',name:'Gemini',who:'for Hannah',color:'#4285F4',start:8600,steps:[
+  ['gina','GINA FAUX FUR BOMBER 535 · M ✓ · "beige combo" → colorway attrs partial','warn',2200],
+  ['gina-M','inventory.check {JAFS23043900, M} → available','ok',1600],
+  ['returns','final sale? not flagged → eligible for return ✓','ok',1600],
+  ['cart','ORDER #FS-{n} · 535 · Gina M','ok',2400,'order:535'],
+ ]},
+ {id:'rob',name:'Instinct',who:'for Rob · human away',color:'#E8710A',start:9800,steps:[
+  ['goloso','GOLOSO TROUSERS M ✓ 995 · mandate ceiling 1,000 ✓','ok',2000],
+  ['goloso-M','inventory.check → available · price lock requested','ok',1600],
+  ['cart','ORDER #FS-{n} · 995 · Goloso M','ok',2400,'order:995'],
+ ]},
+ {id:'sofia',name:'ChatGPT',who:'for Sofia',color:'#34A853',start:11000,steps:[
+  ['search','catalog.search {intent:"petite-friendly knit dress", height:"5\'2", budget≤600}','info',2400],
+  ['nolia','NOLIA DRESS · length 125 cm? not published · petite? unknown','warn',2200],
+  ['grid','AGENT ABANDONMENT · no length / petite data · logging demand','bad',2400,'abandon','missed:Garment length + petite guidance on dresses'],
+ ]},
+ {id:'li',name:'Perplexity',who:'for Li',color:'#EA4335',start:12400,steps:[
+  ['dana','compare DANA TOP 640 · 3 retailers · size L sold out here','warn',2200],
+  ['dana-L','back-in-stock available? notify endpoint not exposed','warn',2000],
+  ['grid','recommending alternate retailer · lost sale','bad',2200,'abandon'],
+ ]},
+ {id:'bot2',name:'scraper-2210',who:'unverified',color:'#9AA0A6',start:15000,steps:[
+  ['grid','bulk GET /products.json · no signature · rate 40 rps','bad',1500],
+  ['nav','Web Bot Auth: unsigned → 403 · blocked','bad',1800,'blocked'],
+ ]},
+ {id:'bot3',name:'price-bot-88',who:'unverified',color:'#BDC1C6',start:19000,steps:[
+  ['promo','probing promo codes via /discount/* · unsigned','bad',1500],
+  ['nav','robots.txt disallow + KYA fail → 403 · blocked','bad',1800,'blocked'],
+ ]},
+];
+AG.push(...MORE);
+
+/* ---------------- engine ---------------- */
+const feed=document.getElementById('feed'),wrap=document.getElementById('wrap');
+let speed=1,playing=true,orderN=20931,K={orders:0,gmv:0,aband:0,missed:0,blocked:0};
+const $=id=>document.getElementById(id);
+const el=sel=>xray.querySelector(`[data-t="${sel}"]`);
+const rect=sel=>{const e=el(sel),r=e.getBoundingClientRect(),w=wrap.getBoundingClientRect();return{e,x:r.left-w.left,y:r.top-w.top,w:r.width,h:r.height,top:r.top,bottom:r.bottom}};
+const sleep=ms=>new Promise(res=>{let left=ms;const iv=setInterval(()=>{if(playing){left-=50*speed;if(left<=0){clearInterval(iv);res()}}},50)});
+const ts=()=>new Date().toTimeString().slice(3,8);
+const col=v=>v.startsWith('var(')?getComputedStyle(document.documentElement).getPropertyValue(v.slice(4,-1)).trim():v;
+
+function mkCursor(a){const c=document.createElement('div');c.className='cur '+(a.cls||'');c.style.setProperty('--c',a.color);
+ c.innerHTML=`<svg viewBox="0 0 14 16"><path d="M1 1l12 6.5-5.2 1.3L5 15z" fill="${col(a.color)}" stroke="#fff" stroke-width="1.2"/></svg><div class="pill">${a.name}<small>${a.who}</small></div><div class="bubble"></div>`;
+ c.style.transform='translate(-80px,-80px)';xray.appendChild(c);return c}
+function log(a,text,st){try{parent.postMessage({type:'log',agent:a.name,who:a.who,color:col(a.color)||a.color,text,status:st},'*')}catch(e){}const l=document.createElement('div');l.className='ln';l.style.setProperty('--c',a.color);l.innerHTML=`<span class="t">${ts()}</span><span class="d"></span><span><em>${a.name}</em> ${text}</span>`;feed.prepend(l);while(feed.children.length>7)feed.lastChild.remove()}
+function tally(){$('k-orders').textContent=K.orders;$('k-gmv').textContent='$'+K.gmv.toLocaleString();$('k-aband').textContent=K.aband;$('k-missed').textContent=K.missed;$('k-blocked').textContent=K.blocked;$('k-tok').textContent=(document.body.classList.contains('fixed')?94:31)+'%'}
+const seen=new Set();function missed(t){if(seen.has(t))return;seen.add(t);K.missed++}
+
+async function run(a){
+  const c=mkCursor(a),b=c.querySelector('.bubble');await sleep(a.start);
+  while(true){
+    for(const [sel,txt,st,dwell,...fx] of a.steps){
+      const r=rect(sel);
+      const jx=r.w*(0.2+Math.random()*0.6),jy=Math.min(r.h*(0.25+Math.random()*0.5),r.h-10);
+      c.style.transform=`translate(${r.x+jx}px,${r.y+jy}px)`;c.classList.toggle('flip',r.x+jx>innerWidth-400);c.classList.add('think');b.classList.remove('show');
+      await sleep(1150);c.classList.remove('think');
+      r.e.style.setProperty('--c',a.color);r.e.classList.add('focus');
+      const text=txt.replace('{n}',++orderN);
+      b.innerHTML=text+`<span class="s ${st}">${({ok:'✓',warn:'!',bad:'✗',info:'…'})[st]}</span>`;b.classList.add('show');log(a,text,st);
+      for(const f of fx){if(f.startsWith('order:')){K.orders++;K.gmv+=+f.slice(6)}else if(f==='abandon')K.aband++;else if(f==='blocked')K.blocked++;else if(f.startsWith('missed:'))missed(f.slice(7))}
+      tally();await sleep(dwell);r.e.classList.remove('focus');
+    }
+    if(a.id==='bot'){c.classList.add('gone');await sleep(16000);c.classList.remove('gone');continue}
+    b.classList.remove('show');await sleep(3000+Math.random()*4000);
+  }
+}
+AG.forEach(run);
+if(Q.get('fixed')){setTimeout(()=>$('b-fix').click(),200)}
+
+/* ---------------- embed hooks ---------------- */
+const Q=new URLSearchParams(location.search);
+if(Q.get('embed')){document.getElementById('ctl').style.display='none';document.getElementById('hud').style.display='none';auto=false;setSeam(innerWidth*0.38)}
+addEventListener('message',e=>{if(e.data==='fix')$('b-fix').click();if(e.data==='pause'&&playing)$('b-play').click();if(e.data==='play'&&!playing)$('b-play').click()});
+// report tallies upward for the simulator
+setInterval(()=>{try{parent.postMessage({type:'tally',...K,fixed:document.body.classList.contains('fixed')},'*')}catch(e){}},1000);
+/* ---------------- controls ---------------- */
+$('b-play').onclick=e=>{playing=!playing;e.target.textContent=playing?'Pause':'Play';e.target.classList.toggle('on',playing)};
+$('b-speed').onclick=e=>{speed=speed===1?2:speed===2?4:1;e.target.textContent=speed+'×'};
+$('b-fix').onclick=e=>{document.body.classList.add('fixed');e.target.textContent='✓ Agent-native';e.target.classList.add('on');
+  // after the fix, Lena's search succeeds and the UCP handshake passes
+  AG[2].steps[3]=['search','catalog.search {…petite…} → 1 result · GOLOSO petite 28" · S ✓','ok',2400];
+  AG[2].steps[4]=['cart','ORDER #FS-{n} · 995 · seller of record: The Frankie Shop','ok',2600,'order:995'];
+  AG[0].steps[0]=['nav','GET /.well-known/ucp → 200 · catalog, cart, checkout, policies · 9.6k tokens','ok',1800];
+  AG[1].steps[0]=['nav','GET /.well-known/acp.json → 200 · transports: rest, mcp','ok',1700];
+  AG[1].steps[4]=['promo','promo structured_rule: FRANKIE15 −15% first order ✓ verified','ok',2000];
+  const sofia=AG.find(a=>a.id==='sofia');sofia.steps[1]=['nolia','NOLIA DRESS · length 125 cm ✓ · petite guidance ✓ · XS recommended','ok',2200];sofia.steps[2]=['cart','ORDER #FS-{n} · 550 · Nolia XS','ok',2400,'order:550'];
+  const li=AG.find(a=>a.id==='li');li.steps[1]=['dana-L','back_in_stock.subscribe ✓ · intent mandate set for Li','ok',2000];li.steps[2]=['dana','handing off · will auto-buy on restock','ok',2200];
+  tally()};
+</script>
+</body>
+</html>
