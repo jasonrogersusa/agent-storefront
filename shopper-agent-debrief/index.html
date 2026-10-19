@@ -79,30 +79,43 @@
   .siglist{display:grid;gap:8px;margin-top:14px}
   .sigrow{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--g300);border-radius:12px;cursor:pointer;font-size:13px}
   .sigrow.on{border-color:var(--blue);background:var(--blue50)}.sigrow i{width:22px;height:22px;border-radius:6px}.sigrow small{display:block;color:var(--g600);font-size:11px}
-  /* S4 product */
-  .prod{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-  .sheet{border:1px solid var(--g300);border-radius:16px;overflow:hidden}
-  .sheet .shot{aspect-ratio:4/5;background:#e9e4dc;display:grid;place-items:center;position:relative;overflow:hidden}
-  .sheet .shot .sock{width:46%;height:70%;border-radius:38% 38% 50% 50%/22% 22% 60% 60%;background:linear-gradient(160deg,#cdb79f,#9d8468);box-shadow:inset -18px -14px 30px rgba(0,0,0,.12),0 30px 40px -30px rgba(0,0,0,.4);position:relative}
-  .sheet .shot .sock::after{content:"";position:absolute;left:10%;right:10%;top:8%;height:16%;border-radius:40%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 6px,transparent 6px 12px)}
-  .sheet .shot .gen{position:absolute;left:12px;top:12px;font-size:11px;background:#fff;border-radius:999px;padding:4px 10px;color:var(--g600)}
-  .sheet .body{padding:14px 16px}
-  .sheet .brand{font-family:"Times New Roman",serif;font-size:14px}.sheet h3{margin:4px 0 2px;font:500 18px "Google Sans",Roboto,sans-serif}.sheet .price{font-size:14px;margin-bottom:10px}
-  .spec{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:12.5px}.spec span:nth-child(odd){color:var(--g600)}
-  #cam{border:1px solid var(--g300);border-radius:16px;overflow:hidden;background:#111;aspect-ratio:4/5;position:relative;display:grid;place-items:center;color:#fff}
-  #cam video,#cam canvas,#cam img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  #cam .overlay{position:absolute;left:50%;bottom:10%;width:34%;aspect-ratio:1;transform:translateX(-50%);border-radius:38% 38% 50% 50%/22% 22% 60% 60%;background:linear-gradient(160deg,#cdb79f,#9d8468);opacity:.92;box-shadow:0 20px 40px -20px rgba(0,0,0,.6);display:none}
-  #cam .hint{position:relative;text-align:center;font-size:13px;color:#ccc;padding:20px}
-  #cam .badge{position:absolute;left:12px;top:12px;font-size:11px;background:var(--gem);color:#fff;border-radius:999px;padding:4px 10px;display:none}
-  .camctl{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-  .modes{display:flex;gap:6px;margin:0 0 10px}.modes span{border:1px solid var(--g300);border-radius:999px;padding:5px 12px;font-size:12px;cursor:pointer}.modes span.on{background:var(--blue);border-color:var(--blue);color:#fff}
-  #qr{width:150px;height:150px;image-rendering:pixelated;border:1px solid var(--g300);border-radius:10px;display:block;margin:0 auto 8px}
+  /* S4 product placeholder */
+  .prod{display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:stretch;max-width:1160px}
+  .sheet{border:1px solid var(--g300);border-radius:16px;padding:20px 22px;background:#fff;display:flex;flex-direction:column;gap:12px}
+  .sheet .brand{font-family:"Times New Roman",serif;font-size:14px;color:var(--g600)}
+  .sheet h3{margin:2px 0 0;font:500 20px "Google Sans",Roboto,sans-serif}
+  .sheet .price{font-size:14px;color:var(--g600);padding-bottom:12px;border-bottom:1px solid var(--g100)}
+  .spec{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:12.5px}.spec span:nth-child(odd){color:var(--g600)}
+  .omni-card{border:1.5px dashed #B8C7FA;border-radius:16px;background:linear-gradient(135deg,#F8FAFF 0%,#F5F0FF 52%,#FFF6F6 100%);padding:28px 32px;display:flex;flex-direction:column;justify-content:space-between;gap:20px;position:relative;overflow:hidden}
+  .omni-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .omni-badge{display:inline-flex;align-items:center;gap:6px;background:var(--gem);color:#fff;font-size:12px;font-weight:500;padding:5px 12px;border-radius:999px}
+  .omni-tag{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--g300);color:var(--g600);font-size:11.5px;padding:4px 10px;border-radius:999px}
+  .omni-hero h2{font:400 24px/1.3 "Google Sans",Roboto,sans-serif;margin:0 0 8px;color:var(--g900)}
+  .omni-hero p{font-size:14px;line-height:1.6;color:var(--g600);margin:0;max-width:600px}
+  .omni-flow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .omni-step{background:rgba(255,255,255,.88);border:1px solid var(--g300);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+  .omni-step .ico{width:32px;height:32px;border-radius:8px;background:var(--blue50);color:var(--blue);display:grid;place-items:center;font-size:15px;font-weight:500}
+  .omni-step b{font:500 13px "Google Sans",Roboto,sans-serif;color:var(--g900)}
+  .omni-step span{font-size:12px;line-height:1.45;color:var(--g600)}
+  .takehome{display:grid;grid-template-columns:96px 1fr auto;gap:16px;align-items:center;background:#fff;border:1px solid var(--g300);border-radius:14px;padding:14px 18px}
+  #qr{width:96px;height:96px;image-rendering:pixelated;border:1px solid var(--g300);border-radius:8px;display:block}
+  /* WIP Modal */
+  .wip-banner{display:inline-flex;align-items:center;gap:8px;background:#FEF7E0;border:1px solid #FDE293;color:#8A6400;padding:6px 14px;border-radius:999px;font-size:12.5px;font-weight:500;margin-bottom:10px;cursor:pointer}
+  #wip-modal{position:fixed;inset:0;background:rgba(32,33,36,.48);backdrop-filter:blur(4px);display:none;place-items:center;z-index:50;padding:24px;animation:fade .25s}
+  #wip-modal.on{display:grid}
+  .wip-box{background:#fff;border:1px solid var(--g300);border-radius:20px;max-width:540px;width:100%;padding:28px 30px;box-shadow:0 12px 48px rgba(32,33,36,.22)}
+  .wip-tag{display:inline-flex;align-items:center;gap:7px;background:#FEF7E0;border:1px solid #FDE293;color:#8A6400;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:500}
+  .wip-box h2{font:400 24px/1.3 "Google Sans",Roboto,sans-serif;margin:14px 0 8px;color:var(--g900)}
+  .wip-box p{font-size:14px;line-height:1.6;color:var(--g600);margin:0 0 16px}
+  .wip-Preview{background:linear-gradient(135deg,#F8FAFF 0%,#F5F0FF 52%,#FFF6F6 100%);border:1px dashed #B8C7FA;border-radius:14px;padding:14px 16px;margin-bottom:20px;font-size:13px;line-height:1.55;color:var(--g900)}
+  .wip-Preview b{display:flex;align-items:center;gap:6px;font-weight:500;margin-bottom:4px;color:var(--blue)}
+  .wip-actions{display:flex;gap:10px;justify-content:flex-end}
 </style>
 </head>
 <body>
 <div id="top">
-  <div class="brand"><i></i> Shopper Agent Debrief</div>
-  <div id="steps"><span data-s="1"><b>1</b> Shoppers</span><span data-s="2"><b>2</b> Swarm</span><span data-s="3"><b>3</b> Demand map</span><span data-s="4"><b>4</b> See it on you</span></div>
+  <div class="brand" style="cursor:pointer" onclick="go(0)"><i></i> Shopper Agent Debrief</div>
+  <div id="steps"><span data-s="1" style="cursor:pointer" onclick="go(1)"><b>1</b> Shoppers</span><span data-s="2" style="cursor:pointer" onclick="go(2)"><b>2</b> Swarm</span><span data-s="3" style="cursor:pointer" onclick="go(3)"><b>3</b> Demand map</span><span data-s="4" style="cursor:pointer" onclick="go(4)"><b>4</b> See it on you</span></div>
 </div>
 <main>
 
@@ -159,30 +172,87 @@
   <div class="foot"><button class="btn gem" id="b3" onclick="go(4)">✦ Design the product →</button></div>
 </section>
 
-<!-- ============ S4 product + try-on ============ -->
+<!-- ============ S4 product + Gemini Omni placeholder ============ -->
 <section id="s4" class="scr">
+  <div class="wip-banner" onclick="$('wip-modal').classList.add('on')">🚧 Work in progress · Step 4 (Gemini Omni visualization &amp; personal try‑on)</div>
   <h1>See the product — on you</h1>
-  <p class="lead">Gemini designed the product shopping agents wanted most. Step in front of the camera to see yourself with it, then scan to take the report and your image home.</p>
+  <p class="lead">Visualize the top unmet-demand product using <b>Gemini Omni</b> — and include yourself directly in the generated lookbook or video asset.</p>
   <div class="prod">
-    <div>
-      <div class="sheet">
-        <div class="shot"><span class="gen">✦ Generated by Gemini</span><div class="sock"></div></div>
-        <div class="body"><div class="brand">The Frankie Shop</div><h3 id="p-name">Loulou Ribbed Cashmere‑Blend Socks</h3><div class="price" id="p-price">28 USD</div>
-          <div class="spec" id="p-spec"></div></div>
+    <div class="sheet">
+      <div>
+        <span class="pill" style="background:var(--blue50);color:var(--blue);margin-bottom:8px">Top product from agent demand</span>
+        <div class="brand">The Frankie Shop</div>
+        <h3 id="p-name">Loulou Ribbed Cashmere‑Blend Socks</h3>
+        <div class="price" id="p-price">28 USD</div>
       </div>
-      <div class="card" style="margin-top:12px;font-size:12.5px;line-height:1.6"><b style="font-weight:500">Why this product</b><div id="p-why" class="dim"></div></div>
+      <div class="spec" id="p-spec"></div>
+      <div style="margin-top:auto;padding-top:14px;border-top:1px solid var(--g100);font-size:12.5px;line-height:1.55">
+        <b style="font-weight:500">Why agents asked for this</b>
+        <div id="p-why" class="dim" style="margin-top:4px"></div>
+      </div>
     </div>
-    <div>
-      <div class="modes"><span class="on" onclick="setMode('image',this)">Image</span><span onclick="setMode('video',this)">Short video</span></div>
-      <div id="cam"><div class="hint">Camera preview appears here.<br><span class="dim">Allow camera access, or upload a photo.</span></div><video id="video" autoplay playsinline muted style="display:none"></video><canvas id="snap" style="display:none"></canvas><div class="overlay" id="ov"></div><span class="badge" id="badge">✦ Gemini try‑on</span></div>
-      <div class="camctl"><button class="btn ghost" onclick="startCam()">Start camera</button><label class="btn ghost" style="cursor:pointer">Upload photo<input type="file" accept="image/*" style="display:none" onchange="upload(this)"></label><button class="btn gem" id="b-gen" onclick="generate()" disabled>✦ Put it on me</button></div>
-      <div class="card" style="margin-top:14px;display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center">
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="omni-card" style="flex:1">
+        <div class="omni-top">
+          <span class="omni-badge">✦ Gemini Omni · Live Booth Experience</span>
+          <span class="omni-tag">Product Visualization + Personal Try‑On</span>
+          <span class="omni-tag">Image &amp; Short Video</span>
+        </div>
+        <div class="omni-hero">
+          <h2>Visualize the top product with Gemini Omni — and step into the asset yourself</h2>
+          <p>In the live booth experience, <b>Gemini Omni</b> turns the #1 whitespace product surfaced by shopping agents into a studio-grade visual asset — and composites you right into the scene wearing or holding the newly minted product.</p>
+        </div>
+        <div class="omni-flow">
+          <div class="omni-step">
+            <div class="ico">1</div>
+            <b>Mint the top product</b>
+            <span>Gemini translates unmet agent queries and price ceilings into a complete product spec &amp; studio visual.</span>
+          </div>
+          <div class="omni-step">
+            <div class="ico">2</div>
+            <b>Include yourself in the asset</b>
+            <span>Step in front of the booth camera (or snap a quick photo) to place yourself into the lookbook or campaign.</span>
+          </div>
+          <div class="omni-step">
+            <div class="ico">3</div>
+            <b>Generate with Gemini Omni</b>
+            <span>Create a personalized editorial image or 8‑second video asset alongside the structured UCP product card.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="takehome">
         <canvas id="qr" width="33" height="33"></canvas>
-        <div style="font-size:13px"><b style="font-weight:500">Take it home</b><div class="dim" style="font-size:12px;margin-top:4px">Demand map · product brief · your try‑on image<br><span class="mono">demandsignals.withgoogle.com/r/3M8T</span></div><button class="btn ghost" style="margin-top:10px;padding:8px 14px;font-size:12px" onclick="location.reload()">Start over</button></div>
+        <div style="font-size:13px">
+          <b style="font-weight:500">Take the report &amp; your Gemini Omni asset home</b>
+          <div class="dim" style="font-size:12px;margin-top:4px">Includes the demand map, generated product brief, and your personalized Gemini Omni lookbook asset.<br><span class="mono">demandsignals.withgoogle.com/r/3M8T</span></div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn ghost" style="padding:9px 16px;font-size:12.5px" onclick="go(3)">← Demand map</button>
+          <button class="btn ghost" style="padding:9px 16px;font-size:12.5px" onclick="location.reload()">Start over</button>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- ============ WIP Modal for Step 4 ============ -->
+<div id="wip-modal" onclick="if(event.target===this)this.classList.remove('on')">
+  <div class="wip-box">
+    <span class="wip-tag">🚧 Work in Progress · Step 4</span>
+    <h2>See it on you — Gemini Omni Placeholder</h2>
+    <p>This final step of the <b>Shopper Agent Debrief</b> is currently a work in progress. In the live experience, you'll be able to visualize the top unmet-demand product using <b>Gemini Omni</b> and include yourself directly in the generated asset.</p>
+    <div class="wip-Preview">
+      <b>✦ What will happen here:</b>
+      Gemini Omni takes the #1 product brief surfaced by the shopping agent swarm (<span id="wip-pname" style="font-weight:500">Loulou Ribbed Cashmere‑Blend Socks</span>) and lets you step in front of the camera to generate a studio lookbook photo or short video with yourself wearing or holding the product.
+    </div>
+    <div class="wip-actions">
+      <button class="btn ghost" onclick="$('wip-modal').classList.remove('on');go(3)">← Back to Demand Map</button>
+      <button class="btn gem" onclick="$('wip-modal').classList.remove('on')">Preview placeholder page</button>
+    </div>
+  </div>
+</div>
 </main>
 
 <script>
@@ -210,6 +280,7 @@ function addPersona(){const v=$('addp').value.trim();if(!v)return;PERSONAS.push(
 /* ---------------- nav ---------------- */
 function go(n){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$('s'+n).classList.add('on');
   document.querySelectorAll('#steps span').forEach(s=>{const k=+s.dataset.s;s.classList.toggle('on',k===n);s.classList.toggle('done',k<n)});
+  if(n!==4)$('wip-modal').classList.remove('on');
   if(n===1)renderPersonas();if(n===2)swarm();if(n===3)demandMap();if(n===4)product()}
 
 /* ---------------- S2 swarm (embeds the X-ray engine, agent-native) ---------------- */
@@ -262,7 +333,7 @@ function pick(id){chosen=id;const s=SIGNALS.find(x=>x.id===id);document.querySel
    <div class="dim" style="font-size:10.5px;margin-top:8px">*intents × stated budget × assumed 1‑in‑5 conversion, scaled to real traffic</div>`;
   $('b3').textContent=s.type==='attr'?'✦ Fix the data →':'✦ Design the product →'}
 
-/* ---------------- S4 product + try-on ---------------- */
+/* ---------------- S4 product + Gemini Omni placeholder ---------------- */
 const PRODUCTS={
  socks:{name:'Loulou Ribbed Cashmere‑Blend Socks',price:'28 USD · 3‑pair set 75 USD',spec:[['Composition','70% merino · 30% cashmere'],['Colorways','oat · chocolate · black (matches FW knitwear)'],['Sizes','S/M · M/L'],['Target margin','62% at $28'],['Launch','gift set + add‑on at checkout']],why:'61 shopping agents asked for cashmere socks under $30 and found nothing. Budget clustered at $25–30 with 3‑pair gift intent; most were already buying knitwear. A low‑risk, high‑attach gift SKU in the brand\'s palette.'},
  petite:{name:'Goloso Oversized Trousers — Petite',price:'995 USD',spec:[['Change','28" inseam variant of existing style'],['Sizes','XS–L'],['Why now','38 intents, 0 matches; L sold out']],why:'38 agents filtered on petite length and left. Same product, shorter inseam.'},
@@ -272,16 +343,9 @@ const PRODUCTS={
  fit:{name:'Catalog fix: fit & model data',price:'—',spec:[['Action','publish model height, size worn, length per SKU'],['Impact','74 questions · 9 walk‑aways']],why:'Not a product — a data fix Gemini can draft from your size guide.'},
  bag:{name:'Catalog fix: dimensions & gift wrap',price:'—',spec:[['Action','add dimensions + gift_wrap attributes'],['Impact','22 questions']],why:'A data fix.'}};
 function product(){const p=PRODUCTS[chosen]||PRODUCTS.socks;$('p-name').textContent=p.name;$('p-price').textContent=p.price;$('p-spec').innerHTML=p.spec.map(([k,v])=>`<span>${k}</span><span>${v}</span>`).join('');$('p-why').textContent=p.why;
+  $('wip-pname').textContent=p.name;$('wip-modal').classList.add('on');
   const c=$('qr').getContext('2d'),N=33;let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;c.fillStyle='#fff';c.fillRect(0,0,N,N);c.fillStyle='#202124';for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(rnd()>.55)c.fillRect(x,y,1,1);const f=(x,y)=>{c.fillStyle='#202124';c.fillRect(x,y,7,7);c.fillStyle='#fff';c.fillRect(x+1,y+1,5,5);c.fillStyle='#202124';c.fillRect(x+2,y+2,3,3)};c.fillStyle='#fff';c.fillRect(0,0,8,8);c.fillRect(N-8,0,8,8);c.fillRect(0,N-8,8,8);f(0,0);f(N-7,0);f(0,N-7)}
-let mode='image',stream=null;
-function setMode(m,el){mode=m;document.querySelectorAll('.modes span').forEach(s=>s.classList.remove('on'));el.classList.add('on');$('b-gen').textContent=m==='video'?'✦ Make a short video':'✦ Put it on me'}
-async function startCam(){try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});const v=$('video');v.srcObject=stream;v.style.display='block';$('cam').querySelector('.hint').style.display='none';$('b-gen').disabled=false}catch(e){alert('Camera not available — upload a photo instead.')}}
-function upload(inp){const f=inp.files[0];if(!f)return;const img=new Image();img.onload=()=>{const cv=$('snap'),cx=cv.getContext('2d');cv.width=img.width;cv.height=img.height;cx.drawImage(img,0,0);cv.style.display='block';$('video').style.display='none';$('cam').querySelector('.hint').style.display='none';$('b-gen').disabled=false};img.src=URL.createObjectURL(f)}
-async function generate(){const b=$('b-gen');b.disabled=true;b.textContent='✦ Generating…';
-  if($('video').style.display==='block'){const v=$('video'),cv=$('snap'),cx=cv.getContext('2d');cv.width=v.videoWidth;cv.height=v.videoHeight;cx.drawImage(v,0,0);cv.style.display='block';v.style.display='none';if(stream)stream.getTracks().forEach(t=>t.stop())}
-  await new Promise(r=>setTimeout(r,1400));$('ov').style.display='block';$('badge').style.display='inline-block';b.textContent=mode==='video'?'✓ Video ready (8s)':'✓ Added to your report';
-  // vaporware: in production this frame + product sheet go to the image/video model (Omni / VTO)
-}
+if(/^#[1-4]$/.test(location.hash))go(+location.hash[1]);
 </script>
 </body>
 </html>
