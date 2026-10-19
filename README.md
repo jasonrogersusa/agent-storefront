@@ -19,10 +19,10 @@ The demos embed the X‑ray engine in an iframe, so they need to be served over 
 ```
 prototypes/
 ├── index.html              landing page linking both demos
-├── open-for-agents/        DEMO 1 · site readiness
-│   └── index.html          enter site → audit → pinned fixes + basket → build twin → swarm → report
-├── demand-signals/         DEMO 2 · demand listening
-│   └── index.html          generate shopping agents → swarm → demand map → product + try‑on
+├── open-for-agents/         DEMO 1 · site readiness
+│   └── index.html           enter site → audit → pinned fixes + basket → build twin → swarm → report
+├── shopper-agent-debrief/   DEMO 2 · demand listening
+│   └── index.html           generate shopping agents → swarm → demand map → product + try‑on
 ├── shared/
 │   └── agent_xray_v2/      THE ENGINE · Agent X‑Ray (used by both demos via iframe)
 │       ├── index.html      human site vs. agent view under a draggable seam; 18 scripted agents
