@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Agent Storefront — Step 5: Launch with Google UCP (Prototype)</title>
+<style>
+  :root{
+    --blue:#4285F4;--blue-dark:#1A73E8;--blue50:#E8F0FE;
+    --red:#EA4335;--red-dark:#D93025;--red50:#FCE8E6;
+    --yellow:#FBBC04;--yellow-dark:#E37400;--yellow50:#FEF7E0;
+    --green:#34A853;--green-dark:#1E8E3E;--green50:#E6F4EA;
+    --purple:#9B72CB;--purple50:#F3E8FD;
+    --g50:#F8F9FA;--g100:#F1F3F4;--g200:#E8EAED;--g300:#DADCE0;--g600:#5F6368;--g800:#3C4043;--g900:#202124;
+    --gem:linear-gradient(90deg,#4285F4,#9B72CB,#D96570);
+    --gem-soft:linear-gradient(135deg,#E8F0FE 0%,#F3E8FD 50%,#FCE8E6 100%);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--g50);color:var(--g900);font-family:"Google Sans",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  body{display:flex;flex-direction:column;min-height:100vh}
+  a{color:var(--blue-dark);text-decoration:none}
+
+  /* Top Bar (matches existing journey + adds Step 5 UCP Finale) */
+  #top{display:flex;align-items:center;gap:18px;padding:0 28px;height:60px;border-bottom:1px solid var(--g300);background:#fff;position:sticky;top:0;z-index:40}
+  #top .brand{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:500}
+  #top .brand i{width:22px;height:22px;border-radius:6px;background:var(--gem);display:inline-block}
+  .proto-badge{font-size:11px;font-weight:500;background:var(--purple50);color:#7627BB;padding:4px 10px;border-radius:999px;border:1px solid #D7AEFB}
+  #steps{display:flex;gap:6px;margin-left:auto;align-items:center}
+  #steps .step{display:flex;align-items:center;gap:8px;padding:6px 13px;border-radius:999px;font-size:12px;color:var(--g600);background:transparent;border:0;cursor:pointer;font-family:inherit;transition:all .2s}
+  #steps .step:hover{background:var(--g100)}
+  #steps .step b{width:20px;height:20px;border-radius:50%;background:var(--g100);display:grid;place-items:center;font-size:11px;font-weight:600}
+  #steps .step.done b{background:var(--green);color:#fff}
+  #steps .step.on{color:var(--g900);background:var(--blue50);font-weight:500;box-shadow:0 0 0 1px #B8D1FF}
+  #steps .step.on b{background:var(--gem);color:#fff}
+
+  /* Main Layout */
+  .wrap{max-width:1240px;margin:0 auto;padding:28px 32px 80px;width:100%}
+  .mono{font-family:"Roboto Mono",ui-monospace,Menlo,monospace}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:11px 20px;font:500 13.5px "Google Sans",Roboto,sans-serif;cursor:pointer;background:var(--blue-dark);color:#fff;transition:transform .15s,box-shadow .2s,background .2s}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,115,232,.25)}
+  .btn.gem{background:var(--gem)}
+  .btn.green{background:var(--green-dark)}
+  .btn.ghost{background:#fff;color:var(--g800);border:1px solid var(--g300)}
+  .btn.ghost:hover{background:var(--g50);box-shadow:none}
+  .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 11px;font-size:11.5px;font-weight:500}
+
+  /* Journey Bridge Banner */
+  .journey-bridge{background:#fff;border:1px solid var(--g300);border-radius:24px;padding:24px 28px;margin-bottom:24px;box-shadow:0 1px 3px rgba(60,64,67,.05),0 8px 24px rgba(60,64,67,.04);display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:center}
+  @media(max-width:980px){.journey-bridge{grid-template-columns:1fr}}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:var(--blue-dark);background:var(--blue50);padding:5px 12px;border-radius:999px;margin-bottom:10px}
+  .journey-bridge h1{font-size:29px;font-weight:400;margin:0 0 10px;letter-spacing:-.015em;line-height:1.22}
+  .journey-bridge p{font-size:14px;line-height:1.6;color:var(--g600);margin:0 0 16px}
+
+  /* Master UCP Power Switch Card */
+  .ucp-switch-card{background:var(--gem-soft);border:1.5px solid #C5D9FC;border-radius:20px;padding:18px 22px;display:flex;flex-direction:column;gap:14px;transition:all .4s}
+  body[data-ucp="off"] .ucp-switch-card{background:var(--red50);border-color:#F6AEA9}
+  .switch-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .switch-label{display:flex;flex-direction:column;gap:2px}
+  .switch-label b{font-size:15px;font-weight:500;display:flex;align-items:center;gap:8px}
+  .switch-label span{font-size:12px;color:var(--g600)}
+  .big-toggle{display:inline-flex;align-items:center;background:#fff;border:1.5px solid var(--g300);border-radius:999px;padding:4px;gap:4px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+  .big-toggle button{border:0;background:transparent;padding:7px 14px;border-radius:999px;font:500 12px "Google Sans",Roboto,sans-serif;cursor:pointer;color:var(--g600);transition:all .25s}
+  .big-toggle button.active-off{background:var(--red-dark);color:#fff}
+  .big-toggle button.active-on{background:var(--green-dark);color:#fff}
+
+  /* Reassurance Strip: Human Website Untouched vs AI Surfaces Lit Up */
+  .reassurance-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .reassure-box{background:rgba(255,255,255,.88);border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:10px 12px;font-size:12px;display:flex;align-items:flex-start;gap:10px}
+  .reassure-box .ico{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:13px;flex:none;font-weight:600}
+  .reassure-box b{display:block;font-size:12px;color:var(--g900);margin-bottom:2px}
+  .reassure-box span{color:var(--g600);font-size:11.5px;line-height:1.35;display:block}
+
+  /* SECTION 1: How Your 6 Fixes Feed Into UCP (Visual Funnel / Adapter) */
+  .adapter-bar{background:#fff;border:1px solid var(--g300);border-radius:20px;padding:18px 22px;margin-bottom:24px;display:grid;grid-template-columns:1.3fr auto 1.1fr;gap:16px;align-items:center}
+  @media(max-width:980px){.adapter-bar{grid-template-columns:1fr}}
+  .fixes-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .fix-chip{display:flex;align-items:center;gap:8px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:8px 10px;font-size:11.5px;cursor:pointer;transition:all .2s;text-align:left;font-family:inherit}
+  .fix-chip:hover,.fix-chip.active{border-color:var(--blue-dark);background:var(--blue50)}
+  .fix-chip .dot{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-size:10px;font-weight:700;color:#fff;background:var(--green-dark);flex:none}
+  body[data-ucp="off"] .fix-chip .dot{background:var(--red-dark)}
+  .fix-chip div{overflow:hidden}
+  .fix-chip b{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--g900)}
+  .fix-chip small{display:block;font-size:10px;color:var(--g600);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  .ucp-hub-pill{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 18px;border-radius:16px;background:var(--g900);color:#fff;text-align:center;position:relative;min-width:190px;box-shadow:0 6px 20px rgba(32,33,36,.18)}
+  body[data-ucp="off"] .ucp-hub-pill{background:#5F6368;opacity:.75}
+  .ucp-hub-pill .tag{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#8AB4F8;margin-bottom:3px}
+  .ucp-hub-pill b{font-size:14px;font-weight:500}
+  .ucp-hub-pill code{font-size:10.5px;color:#81C995;margin-top:3px;font-family:"Roboto Mono",monospace}
+
+  .surfaces-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .surf-card{border:1px solid var(--g200);border-radius:12px;padding:10px 12px;background:var(--g50);text-align:center;transition:all .3s}
+  body[data-ucp="on"] .surf-card{background:var(--green50);border-color:#A8DAB5}
+  body[data-ucp="off"] .surf-card{background:var(--red50);border-color:#F6AEA9}
+  .surf-card b{display:block;font-size:12px;color:var(--g900)}
+  .surf-card small{font-size:10.5px;color:var(--g600);display:block;margin-top:2px}
+  .surf-card .st{display:inline-block;margin-top:5px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;background:#fff}
+
+  /* SECTION 2: Interactive Dual-Screen Stage (What Consumers See in AI vs What Happens Under the Hood) */
+  .stage-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+  .stage-header h2{margin:0;font-size:20px;font-weight:400}
+  .scenario-tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .sc-tab{border:1px solid var(--g300);background:#fff;border-radius:999px;padding:8px 14px;font:500 12.5px "Google Sans",Roboto,sans-serif;color:var(--g800);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+  .sc-tab:hover{background:var(--g100)}
+  .sc-tab.on{background:var(--blue50);border-color:var(--blue-dark);color:var(--blue-dark)}
+  .sc-tab i{width:8px;height:8px;border-radius:50%;background:currentColor}
+
+  .dual-stage{display:grid;grid-template-columns:1.08fr 1fr;gap:22px;align-items:stretch;margin-bottom:28px}
+  @media(max-width:1024px){.dual-stage{grid-template-columns:1fr}}
+
+  /* Left Column: Consumer Experience in Gemini / Google Search AI Mode (+ Human Site Untouched Peek) */
+  .surface-panel{background:#fff;border:1px solid var(--g300);border-radius:24px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 20px rgba(60,64,67,.06)}
+  .panel-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--g200);background:var(--g50)}
+  .surface-switcher{display:flex;gap:4px;background:var(--g200);padding:3px;border-radius:999px}
+  .surface-switcher button{border:0;background:transparent;padding:5px 12px;border-radius:999px;font:500 11.5px "Google Sans",Roboto,sans-serif;color:var(--g600);cursor:pointer}
+  .surface-switcher button.on{background:#fff;color:var(--g900);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+  .chat-canvas{padding:20px 22px;flex:1;display:flex;flex-direction:column;gap:16px;background:linear-gradient(180deg,#FFFFFF 0%,#F8FAFF 100%)}
+  .user-bubble{align-self:flex-end;max-width:88%;background:var(--blue50);color:var(--g900);border:1px solid #D2E3FC;border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:13.5px;line-height:1.45}
+  .user-bubble small{display:block;font-size:10.5px;color:var(--blue-dark);font-weight:500;margin-bottom:3px}
+
+  .ai-response{display:flex;gap:12px;align-items:flex-start}
+  .ai-avatar{width:30px;height:30px;border-radius:50%;background:var(--gem);display:grid;place-items:center;color:#fff;font-size:14px;flex:none;margin-top:2px}
+  .ai-body{flex:1;min-width:0}
+  .ai-prose{font-size:13.5px;line-height:1.5;color:var(--g800);margin:0 0 12px}
+
+  /* Legacy Dead-End Card (When UCP is OFF) */
+  .legacy-deadend{display:none;background:#FFF8F7;border:1.5px dashed #F28B82;border-radius:16px;padding:16px 18px}
+  body[data-ucp="off"] .legacy-deadend{display:block;animation:fadeIn .3s}
+  body[data-ucp="off"] .ucp-product-card{display:none}
+  .legacy-deadend .warn-head{display:flex;align-items:center;gap:8px;color:var(--red-dark);font-weight:500;font-size:13px;margin-bottom:8px}
+  .legacy-deadend p{font-size:12.5px;color:var(--g600);line-height:1.5;margin:0 0 12px}
+  .missing-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .missing-list span{font-size:11px;background:#FCE8E6;color:var(--red-dark);padding:3px 9px;border-radius:6px;font-family:"Roboto Mono",monospace}
+  .fake-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--blue-dark);border:1px solid var(--g300);background:#fff;padding:7px 12px;border-radius:8px}
+
+  /* Native UCP Product & Checkout Card (When UCP is ON) */
+  .ucp-product-card{background:#fff;border:1.5px solid #C5D9FC;border-radius:18px;overflow:hidden;box-shadow:0 8px 24px rgba(26,115,232,.08);animation:fadeIn .35s}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .ucp-card-top{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--blue50);border-bottom:1px solid #D2E3FC;font-size:11.5px}
+  .sor-badge{display:inline-flex;align-items:center;gap:6px;font-weight:500;color:var(--blue-dark)}
+  .sor-badge i{width:7px;height:7px;border-radius:50%;background:var(--green-dark)}
+  .ucp-card-main{display:grid;grid-template-columns:126px 1fr;gap:16px;padding:16px}
+  .ucp-card-main img{width:100%;aspect-ratio:5/7;object-fit:cover;border-radius:10px;border:1px solid var(--g200)}
+  .sku-brand{font-family:"Times New Roman",serif;font-size:12px;color:var(--g600)}
+  .sku-title{font-size:16px;font-weight:500;margin:2px 0 6px;color:var(--g900)}
+  .sku-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+  .sku-price-final{font-size:18px;font-weight:500;color:var(--green-dark)}
+  .sku-price-orig{font-size:13px;color:var(--g600);text-decoration:line-through}
+  .promo-pill{font-size:10.5px;font-weight:600;background:var(--green50);color:var(--green-dark);padding:2px 8px;border-radius:999px;font-family:"Roboto Mono",monospace}
+
+  .enriched-specs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+  .enriched-specs span{font-size:11px;background:var(--g50);border:1px solid var(--g200);border-radius:6px;padding:3px 8px;color:var(--g800)}
+  .enriched-specs span b{color:var(--blue-dark);font-weight:500}
+
+  .size-row{display:flex;align-items:center;gap:6px;margin-bottom:12px}
+  .size-row small{font-size:11px;color:var(--g600);margin-right:4px}
+  .sz{width:28px;height:26px;border-radius:6px;border:1px solid var(--g300);background:#fff;font-size:11px;font-weight:500;display:grid;place-items:center;cursor:pointer}
+  .sz.on{background:var(--g900);color:#fff;border-color:var(--g900)}
+  .sz.out{opacity:.4;text-decoration:line-through;cursor:default}
+
+  .ucp-checkout-bar{background:var(--g50);border-top:1px solid var(--g200);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .trust-meta{font-size:11px;color:var(--g600);line-height:1.4}
+  .trust-meta b{color:var(--g900)}
+
+  /* Untouched Human Website View (Tab 3 inside Left Panel) */
+  .human-untouched-view{display:none;padding:18px 20px;flex:1;background:var(--g50)}
+  .human-untouched-view.on{display:flex;flex-direction:column;gap:12px}
+  .untouched-banner{background:var(--green50);border:1px solid #A8DAB5;color:var(--green-dark);border-radius:12px;padding:10px 14px;font-size:12.5px;display:flex;align-items:center;justify-content:space-between}
+  .mini-frankie{background:#fff;border:1px solid var(--g300);border-radius:12px;padding:14px;font-family:"Helvetica Neue",Arial,sans-serif}
+  .mf-nav{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.08em;padding-bottom:10px;border-bottom:1px solid #eee}
+  .mf-logo{font-family:"Times New Roman",serif;font-size:14px}
+  .mf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+  .mf-grid img{width:100%;aspect-ratio:5/7;object-fit:cover;border-radius:4px}
+  .mf-grid small{display:block;font-size:9px;margin-top:4px;text-transform:uppercase}
+
+  /* Right Column: Under the Hood — 4-Actor UCP & AP2 Architecture Visualizer */
+  .xray-panel{background:var(--g900);color:#E8EAED;border-radius:24px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 20px rgba(32,33,36,.15)}
+  .xray-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #3C4043;background:#17181B;font-size:12px}
+  .xray-body{padding:18px 20px;flex:1;display:flex;flex-direction:column;gap:14px}
+
+  /* 4 Actors Pipeline */
+  .actors-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:relative}
+  .actor-node{background:#282A2E;border:1.5px solid #3C4043;border-radius:12px;padding:10px;text-align:center;transition:all .3s;position:relative}
+  .actor-node.active{border-color:#8AB4F8;background:#1E2A3B;box-shadow:0 0 14px rgba(138,180,248,.25)}
+  .actor-node.done{border-color:#81C995;background:#1B2E23}
+  .actor-node .a-num{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:#9AA0A6;margin-bottom:3px}
+  .actor-node b{display:block;font-size:11.5px;color:#fff;margin-bottom:2px}
+  .actor-node small{display:block;font-size:10px;color:#9AA0A6;line-height:1.25}
+
+  /* Live UCP Protocol Trace */
+  .trace-box{background:#141518;border:1px solid #3C4043;border-radius:14px;padding:12px 14px;flex:1;font-family:"Roboto Mono",monospace;font-size:11.5px;line-height:1.55;display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto}
+  .trace-step{padding:7px 10px;border-radius:8px;background:#1E2024;border-left:3px solid #5F6368;animation:fadeIn .25s}
+  .trace-step.ok{border-left-color:#81C995}
+  .trace-step.blue{border-left-color:#8AB4F8}
+  .trace-step.purple{border-left-color:#C58AF9}
+  .trace-step.bad{border-left-color:#F28B82;background:#2C1E1E}
+  .trace-step .t-head{display:flex;justify-content:space-between;font-weight:600;color:#fff;margin-bottom:2px}
+  .trace-step .t-sub{color:#9AA0A6;font-size:10.5px}
+
+  /* AP2 Signed Mandate Receipt */
+  .mandate-receipt{background:linear-gradient(135deg,#1B2E23 0%,#162436 100%);border:1px solid #81C995;border-radius:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  body[data-ucp="off"] .mandate-receipt{background:#2C1E1E;border-color:#F28B82}
+  .mandate-receipt b{display:block;font-size:12.5px;color:#81C995;margin-bottom:2px}
+  body[data-ucp="off"] .mandate-receipt b{color:#F28B82}
+  .mandate-receipt span{font-size:11px;color:#DADCE0;display:block}
+  .mandate-hash{font-family:"Roboto Mono",monospace;font-size:10.5px;background:rgba(0,0,0,.35);padding:5px 9px;border-radius:8px;color:#8AB4F8;white-space:nowrap}
+
+  /* SECTION 3: "Make Implementing UCP Easy" — Retailer Turnkey Toolkit */
+  .toolkit-card{background:#fff;border:1px solid var(--g300);border-radius:24px;padding:26px 30px;box-shadow:0 1px 3px rgba(60,64,67,.05),0 10px 30px rgba(60,64,67,.04)}
+  .tk-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .tk-head h2{margin:0 0 6px;font-size:22px;font-weight:400}
+  .tk-head p{margin:0;font-size:13.5px;color:var(--g600);max-width:680px;line-height:1.5}
+
+  .stack-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .stack-pill{border:1px solid var(--g300);background:var(--g50);border-radius:12px;padding:10px 14px;cursor:pointer;text-align:left;font-family:inherit;transition:all .2s;flex:1;min-width:210px}
+  .stack-pill:hover{background:#fff;border-color:var(--blue-dark)}
+  .stack-pill.on{background:var(--blue50);border-color:var(--blue-dark);box-shadow:0 0 0 1px var(--blue-dark)}
+  .stack-pill b{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--g900);margin-bottom:3px}
+  .stack-pill small{font-size:11.5px;color:var(--g600);display:block;line-height:1.4}
+
+  .tk-grid{display:grid;grid-template-columns:1fr 310px;gap:22px;align-items:stretch}
+  @media(max-width:960px){.tk-grid{grid-template-columns:1fr}}
+
+  .code-window{background:var(--g900);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+  .cw-tabs{display:flex;align-items:center;gap:4px;padding:8px 12px;background:#141518;border-bottom:1px solid #3C4043;flex-wrap:wrap}
+  .cw-tab{border:0;background:transparent;color:#9AA0A6;font:500 11.5px "Roboto Mono",monospace;padding:6px 12px;border-radius:8px;cursor:pointer}
+  .cw-tab:hover{color:#fff;background:#282A2E}
+  .cw-tab.on{background:#282A2E;color:#8AB4F8}
+  .cw-actions{margin-left:auto;display:flex;gap:6px}
+  .cw-pre{margin:0;padding:16px 18px;color:#E8EAED;font:11.5px/1.6 "Roboto Mono",monospace;overflow:auto;max-height:290px;white-space:pre}
+
+  .pass-card{background:var(--gem-soft);border:1px solid #C5D9FC;border-radius:18px;padding:20px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center}
+  #qr{width:124px;height:124px;image-rendering:pixelated;background:#fff;padding:8px;border:1px solid var(--g300);border-radius:12px;margin:8px auto}
+  .pass-list{text-align:left;width:100%;font-size:11.5px;color:var(--g800);background:rgba(255,255,255,.8);border-radius:10px;padding:10px 12px;margin:8px 0 12px;display:grid;gap:5px}
+  .pass-list div::before{content:"✓ ";color:var(--green-dark);font-weight:700}
+
+  /* Toast notification */
+  #toast{position:fixed;bottom:24px;right:24px;background:var(--g900);color:#fff;padding:12px 18px;border-radius:999px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);pointer-events:none;transition:all .25s;z-index:100}
+  #toast.show{opacity:1;transform:none}
+</style>
+</head>
+<body data-ucp="on">
+
+<!-- Top Navigation showing full journey connection -->
+<header id="top">
+  <div class="brand"><i></i> Agent Storefront</div>
+  <span class="proto-badge">✦ New Ending Prototype · Google UCP Finale</span>
+  <nav id="steps">
+    <button class="step done" onclick="window.location.href='index.html#1'"><b>✓</b> Audit</button>
+    <button class="step done" onclick="window.location.href='index.html#2'"><b>✓</b> Patch</button>
+    <button class="step done" onclick="window.location.href='index.html#3'"><b>✓</b> Swarm</button>
+    <button class="step done" onclick="window.location.href='index.html#4'"><b>✓</b> Report (6 Fixes)</button>
+    <button class="step on"><b>5</b> Launch with UCP</button>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO: Connects the 6 Audit Fixes to Google UCP + Master Before/After Switch -->
+  <section class="journey-bridge">
+    <div>
+      <div class="eyebrow">✦ Step 5 · Universal Commerce Protocol (ucp.dev)</div>
+      <h1>Your website looks identical to humans—<br>but inside AI surfaces, you’re now natively shoppable.</h1>
+      <p>
+        In Steps 1–4, Gemini fixed 6 readiness gaps on <b>thefrankieshop.com</b> (enriched catalog attributes, OCR’d <span class="mono">FRANKIE15</span> promo, structured <span class="mono">policies.json</span>, and AP2 price locks). Now, <b>Google’s Universal Commerce Protocol (UCP)</b> bundles all 6 fixes into a single backstage adapter—so shoppers on <b>Google Search AI Mode, Gemini, and visiting agents</b> can discover, size-check, and buy directly from you as <b>Seller of Record</b>.
+      </p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn gem" onclick="simulatePurchase()">⚡ Simulate 1-Tap UCP Checkout</button>
+        <button class="btn ghost" onclick="document.getElementById('toolkit-sec').scrollIntoView({behavior:'smooth'})">Get 1-Click UCP Storefront Kit ↓</button>
+      </div>
+    </div>
+
+    <!-- Master UCP Toggle + Zero-Pixel Change Reassurance -->
+    <div class="ucp-switch-card">
+      <div class="switch-top">
+        <div class="switch-label">
+          <b>
+            <span id="ucp-status-dot" style="width:10px;height:10px;border-radius:50%;background:var(--green-dark);display:inline-block"></span>
+            <span id="ucp-status-title">Google UCP Adapter: ACTIVE</span>
+          </b>
+          <span id="ucp-status-sub">Serving /.well-known/ucp · REST + MCP + Embedded Checkout</span>
+        </div>
+        <div class="big-toggle" role="group" aria-label="Toggle UCP State">
+          <button id="btn-ucp-off" onclick="setUcpMode('off')">Without UCP</button>
+          <button id="btn-ucp-on" class="active-on" onclick="setUcpMode('on')">With UCP ✓</button>
+        </div>
+      </div>
+
+      <div class="reassurance-grid">
+        <div class="reassure-box">
+          <div class="ico" style="background:var(--green50);color:var(--green-dark)">✓</div>
+          <div>
+            <b>Human Website: 0 Pixels Changed</b>
+            <span>UCP lives at <code class="mono">/.well-known/ucp</code>. Your existing theme, CSS, and brand layout stay 100% untouched.</span>
+          </div>
+        </div>
+        <div class="reassure-box">
+          <div class="ico" style="background:var(--blue50);color:var(--blue-dark)">✦</div>
+          <div>
+            <b>AI Surfaces: Rich Native Checkout</b>
+            <span>Unlocks interactive product cards, live sizing, promos &amp; AP2 checkout inside Gemini &amp; AI Mode.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ZONE 1: Visual Bridge — How the 6 Fixes from Step 4 Plug Into UCP -->
+  <section class="adapter-bar" aria-label="How your 6 fixes feed UCP">
+    <div>
+      <div style="font-size:11.5px;font-weight:500;color:var(--g600);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">
+        1. Your 6 Audit Fixes (Click any fix to highlight its UCP role)
+      </div>
+      <div class="fixes-mini-grid">
+        <button class="fix-chip active" onclick="highlightFix(1, this)">
+          <span class="dot">1</span>
+          <div><b>llms.txt &amp; Markdown</b><small>−81% discovery tokens</small></div>
+        </button>
+        <button class="fix-chip" onclick="highlightFix(2, this)">
+          <span class="dot">2</span>
+          <div><b>/.well-known/ucp</b><small>Catalog · Cart · Order</small></div>
+        </button>
+        <button class="fix-chip" onclick="highlightFix(3, this)">
+          <span class="dot">3</span>
+          <div><b>FRANKIE15 Promo</b><small>UCP discount extension</small></div>
+        </button>
+        <button class="fix-chip" onclick="highlightFix(4, this)">
+          <span class="dot">4</span>
+          <div><b>56 Enriched SKUs</b><small>Fabric · Fit · Occasion</small></div>
+        </button>
+        <button class="fix-chip" onclick="highlightFix(5, this)">
+          <span class="dot">5</span>
+          <div><b>14d Policy + AP2</b><small>Signed price-lock mandate</small></div>
+        </button>
+        <button class="fix-chip" onclick="highlightFix(6, this)">
+          <span class="dot">6</span>
+          <div><b>KYA Bot Security</b><small>Verified agents + clean UGC</small></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="ucp-hub-pill">
+      <span class="tag">Single Open Standard</span>
+      <b>Google UCP Layer</b>
+      <code id="hub-active-cap">capabilities.catalog + discounts</code>
+      <div style="font-size:10px;color:#BDC1C6;margin-top:4px">Seller of Record: The Frankie Shop</div>
+    </div>
+
+    <div>
+      <div style="font-size:11.5px;font-weight:500;color:var(--g600);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">
+        2. Instantly Live Across Every AI Surface
+      </div>
+      <div class="surfaces-row">
+        <div class="surf-card">
+          <b>Google AI Mode</b>
+          <small>Search Conversational UI</small>
+          <span class="st surf-st">● UCP Shoppable</span>
+        </div>
+        <div class="surf-card">
+          <b>Gemini App</b>
+          <small>Native Cart &amp; Wallet</small>
+          <span class="st surf-st">● UCP Shoppable</span>
+        </div>
+        <div class="surf-card">
+          <b>External Agents</b>
+          <small>Perplexity · ChatGPT · Muse</small>
+          <span class="st surf-st">● MCP / REST Ready</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ZONE 2: Interactive Dual Simulator (Consumer AI Surface vs 4-Actor UCP Pipeline) -->
+  <div class="stage-header">
+    <div>
+      <h2>See the difference: What shoppers experience vs. how UCP executes under the hood</h2>
+    </div>
+    <div class="scenario-tabs">
+      <button class="sc-tab on" onclick="selectScenario('maya', this)"><i></i> 1. Maya: Wedding Guest + 15% Promo</button>
+      <button class="sc-tab" onclick="selectScenario('sam', this)"><i></i> 2. Sam: Sold-Out Size L (AP2 Restock Mandate)</button>
+      <button class="sc-tab" onclick="selectScenario('dev', this)"><i></i> 3. Dev: $200 Gift Pouch + Return Guarantee</button>
+    </div>
+  </div>
+
+  <section class="dual-stage">
+
+    <!-- LEFT: Consumer View (Google Search AI Mode / Gemini OR Untouched Website) -->
+    <div class="surface-panel">
+      <div class="panel-bar">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500">
+          <span style="width:9px;height:9px;border-radius:50%;background:var(--blue-dark)"></span>
+          <span id="left-view-title">What the Shopper Sees in Google Search AI Mode / Gemini</span>
+        </div>
+        <div class="surface-switcher">
+          <button class="on" id="tab-ai-view" onclick="switchLeftTab('ai')">✦ AI Surface View</button>
+          <button id="tab-web-view" onclick="switchLeftTab('web')">🌐 Your Website (0 Changes)</button>
+        </div>
+      </div>
+
+      <!-- AI Surface View -->
+      <div class="chat-canvas" id="ai-canvas">
+        <div class="user-bubble">
+          <small id="sc-user-label">Shopper Prompt · Maya in Gemini</small>
+          <span id="sc-prompt">“Find me an autumn wedding-guest knit dress or faux-fur jacket from The Frankie Shop in Size M under $600 that arrives by Friday, and apply any first-order promo.”</span>
+        </div>
+
+        <div class="ai-response">
+          <div class="ai-avatar">✦</div>
+          <div class="ai-body">
+            <p class="ai-prose" id="sc-ai-prose">
+              I checked <b>The Frankie Shop’s live UCP catalog</b>. Both the <b>Nolia Knit Dress ($550)</b> and <b>Gina Faux Fur Bomber ($535)</b> are in stock in <b>Size M</b> for Friday delivery, and your first-order <span class="mono">FRANKIE15</span> (15% off) promo applies automatically:
+            </p>
+
+            <!-- What shows when UCP is OFF (Legacy scraping failure) -->
+            <div class="legacy-deadend">
+              <div class="warn-head">✕ Without UCP: Generic Web Link &amp; High Bounce Risk</div>
+              <p>Because <span class="mono">/.well-known/ucp</span> is missing and promos/attributes are trapped in HTML &amp; PNG banners, the AI assistant cannot verify live variant stock, fabric, or promo eligibility:</p>
+              <div class="missing-list">
+                <span>/.well-known/ucp → 404</span>
+                <span>material/occasion: unknown</span>
+                <span>FRANKIE15 banner: unreadable</span>
+                <span>14d returns: unverified prose</span>
+              </div>
+              <div class="fake-link">🔗 Visit thefrankieshop.com/collections/womens-new-arrivals to check sizes manually ↗</div>
+            </div>
+
+            <!-- What shows when UCP is ON (Rich Native UCP Card) -->
+            <div class="ucp-product-card" id="ucp-card">
+              <div class="ucp-card-top">
+                <span class="sor-badge"><i></i> Direct from Seller of Record: <b>The Frankie Shop</b></span>
+                <span class="mono" style="font-size:10.5px;color:var(--g600)" id="sc-endpoint-tag">via /.well-known/ucp</span>
+              </div>
+
+              <div class="ucp-card-main">
+                <img id="sc-img" src="../shared/agent_xray_v2/img/gina.jpg" alt="Product"/>
+                <div>
+                  <div class="sku-brand">THE FRANKIE SHOP · UCP VERIFIED SKU</div>
+                  <div class="sku-title" id="sc-sku-title">Gina Faux Fur Bomber Jacket</div>
+                  <div class="sku-price-row">
+                    <span class="sku-price-final" id="sc-price-final">$454.75 USD</span>
+                    <span class="sku-price-orig" id="sc-price-orig">$535.00</span>
+                    <span class="promo-pill" id="sc-promo-badge">FRANKIE15 (−15% Applied)</span>
+                  </div>
+
+                  <div class="enriched-specs" id="sc-specs">
+                    <span><b>Material:</b> Faux Fur (Modacrylic)</span>
+                    <span><b>Fit:</b> Relaxed / Oversized</span>
+                    <span><b>Occasion:</b> Evening / Guest</span>
+                    <span><b>Delivery:</b> Free 2-Day (≥$300)</span>
+                  </div>
+
+                  <div class="size-row" id="sc-sizes">
+                    <small>Live UCP Stock:</small>
+                    <span class="sz">XS</span>
+                    <span class="sz">S</span>
+                    <span class="sz on">M</span>
+                    <span class="sz out" title="Out of stock">L</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ucp-checkout-bar">
+                <div class="trust-meta" id="sc-trust-meta">
+                  <b>✓ 14-Day Unworn Returns Guaranteed</b> (<span class="mono">policies.json</span>)<br>
+                  <span>Loyalty ID linked · AP2 Price-Lock Mandate ready</span>
+                </div>
+                <button class="btn green" id="sc-buy-btn" onclick="simulatePurchase()">
+                  ✦ Buy Now with Google Pay · $454.75
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Untouched Human Website View -->
+      <div class="human-untouched-view" id="web-canvas">
+        <div class="untouched-banner">
+          <span><b>✓ Zero Visual Disruption:</b> Your human storefront (<span class="mono">thefrankieshop.com</span>) looks 100% identical.</span>
+          <span class="pill" style="background:#fff;color:var(--green-dark)">No CSS or layout changes required</span>
+        </div>
+        <div class="mini-frankie">
+          <div class="mf-nav">
+            <span class="mf-logo">The Frankie Shop</span>
+            <span>SHOP · EXPLORE · NEW ARRIVALS</span>
+            <span>US / EN · CART [0]</span>
+          </div>
+          <div style="margin:10px 0;padding:6px;background:#f1ede6;text-align:center;font:italic 10px Georgia,serif;letter-spacing:.1em;text-transform:uppercase">
+            Complimentary shipping over 300 USD · 15% off with FRANKIE15
+          </div>
+          <div class="mf-grid">
+            <div><img src="../shared/agent_xray_v2/img/nolia.jpg" alt="Nolia"/><small>Nolia Knit Dress · $550</small></div>
+            <div><img src="../shared/agent_xray_v2/img/goloso.jpg" alt="Goloso"/><small>Goloso Trousers · $995</small></div>
+            <div><img src="../shared/agent_xray_v2/img/flint.jpg" alt="Flint"/><small>Flint Fur Pouch · $200</small></div>
+            <div><img src="../shared/agent_xray_v2/img/gina.jpg" alt="Gina"/><small>Gina Fur Bomber · $535</small></div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--g600);line-height:1.5">
+          <b>Why retailers love this architecture:</b> Just like Wayfair’s 30M-SKU UCP rollout, you don’t rebuild your website. UCP sits as a clean protocol translation layer connecting your existing catalog &amp; checkout APIs to every AI surface.
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Under the Hood — 4-Actor UCP & AP2 Live Pipeline -->
+    <div class="xray-panel">
+      <div class="xray-bar">
+        <span><b>Under the Hood:</b> Google UCP 4-Actor Protocol Pipeline</span>
+        <span class="mono" style="color:#81C995" id="xray-state-label">● UCP 1.0 + AP2 Active</span>
+      </div>
+
+      <div class="xray-body">
+        <div style="font-size:11.5px;color:#BDC1C6">
+          UCP standardizes communication across <b>4 distinct actors</b> so you never build bespoke integrations for each AI app:
+        </div>
+
+        <!-- 4 Actors from Google Cloud UCP Spec -->
+        <div class="actors-grid">
+          <div class="actor-node done" id="act-1">
+            <div class="a-num">Actor 1</div>
+            <b>Platform Agent</b>
+            <small>Gemini / Search AI Mode</small>
+          </div>
+          <div class="actor-node done" id="act-2">
+            <div class="a-num">Actor 2</div>
+            <b>Merchant (You)</b>
+            <small>The Frankie Shop Seller of Record</small>
+          </div>
+          <div class="actor-node done" id="act-3">
+            <div class="a-num">Actor 3</div>
+            <b>Credential Prov.</b>
+            <small>Google Wallet &amp; Loyalty Link</small>
+          </div>
+          <div class="actor-node done" id="act-4">
+            <div class="a-num">Actor 4</div>
+            <b>Payment (PSP)</b>
+            <small>Agentic Token + AP2 Mandate</small>
+          </div>
+        </div>
+
+        <!-- Live Protocol Packet Log -->
+        <div class="trace-box" id="trace-box"></div>
+
+        <!-- Cryptographic AP2 Mandate Box -->
+        <div class="mandate-receipt">
+          <div>
+            <b id="ap2-title">🛡️ AP2 Cryptographic Cart Mandate Signed</b>
+            <span id="ap2-desc">Irrefutable proof of user consent, locked price ($454.75), and 14-day return policy. Zero chargeback ambiguity.</span>
+          </div>
+          <div class="mandate-hash" id="ap2-hash">ap2_sig_9f8a..31c ✓</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ZONE 3: "Make Implementing UCP Really Easy" — Turnkey Retailer Toolkit -->
+  <section class="toolkit-card" id="toolkit-sec">
+    <div class="tk-head">
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">✦ Seamless Storefront Implementation · Generated from Your Audit</div>
+        <h2>Deploy UCP on your storefront in minutes—not quarters</h2>
+        <p>
+          We already generated your enriched catalog schema, <span class="mono">policies.json</span>, and UCP manifest during this session. Pick your commerce stack below to grab the drop-in adapter code or copy the master engineering prompt.
+        </p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn gem" onclick="copyCurrentCode()">✦ Copy Code / Prompt</button>
+        <button class="btn ghost" onclick="downloadUcpKit()">↓ Download Complete UCP Kit (4 Files)</button>
+      </div>
+    </div>
+
+    <!-- 3 Easy Deployment Paths -->
+    <div class="stack-pills">
+      <button class="stack-pill on" onclick="selectStack('shopify', this)">
+        <b><span>1. Shopify Storefront Adapter</span><span class="pill" style="background:var(--green50);color:var(--green-dark);padding:2px 8px;font-size:10px">Detected on your site ✓</span></b>
+        <small>Maps your existing Shopify GraphQL catalog, cart &amp; discounts directly to <code class="mono">/.well-known/ucp</code>.</small>
+      </button>
+      <button class="stack-pill" onclick="selectStack('cloudflare', this)">
+        <b><span>2. Cloudflare Edge Proxy (Zero-Code)</span><span class="pill" style="background:var(--blue50);color:var(--blue-dark);padding:2px 8px;font-size:10px">Fastest · 15 mins</span></b>
+        <small>Deploys our pre-built UCP + Markdown worker at your CDN edge without touching backend code.</small>
+      </button>
+      <button class="stack-pill" onclick="selectStack('partner', this)">
+        <b><span>3. Partner API Translation Layer</span><span class="pill" style="background:var(--purple50);color:#7627BB;padding:2px 8px;font-size:10px">Wayfair Enterprise Pattern</span></b>
+        <small>Treats AI agents as a standard marketplace partner on top of your existing B2C microservices.</small>
+      </button>
+    </div>
+
+    <div class="tk-grid">
+      <div class="code-window">
+        <div class="cw-tabs">
+          <button class="cw-tab on" id="ctab-manifest" onclick="showCodeTab('manifest')">/.well-known/ucp</button>
+          <button class="cw-tab" id="ctab-adapter" onclick="showCodeTab('adapter')">ucp-storefront-adapter.js</button>
+          <button class="cw-tab" id="ctab-ap2" onclick="showCodeTab('ap2')">policies + ap2-mandate.json</button>
+          <button class="cw-tab" id="ctab-prompt" onclick="showCodeTab('prompt')">✦ AI Engineering Prompt</button>
+        </div>
+        <pre class="cw-pre" id="cw-pre"></pre>
+      </div>
+
+      <!-- Take-Home QR Pass -->
+      <div class="pass-card">
+        <div>
+          <span class="pill" style="background:#fff;color:var(--blue-dark);border:1px solid #C5D9FC">✦ Take-Home UCP Launch Kit</span>
+          <h3 style="margin:8px 0 2px;font-size:16px;font-weight:500">Scan to take your UCP twin &amp; report</h3>
+          <div class="mono" style="font-size:11px;color:var(--g600)">thefrankieshop.com · Level 5 Ready</div>
+        </div>
+        <canvas id="qr" width="33" height="33"></canvas>
+        <div class="pass-list">
+          <div>Full 6-Issue Readiness Report</div>
+          <div>Ready-to-host <code class="mono">/.well-known/ucp</code></div>
+          <div>56 Gemini-enriched SKUs + <code class="mono">policies.json</code></div>
+          <div>Live AI Mode &amp; Gemini preview link</div>
+        </div>
+        <div style="display:flex;gap:8px;width:100%">
+          <button class="btn ghost" style="flex:1;justify-content:center;padding:8px;font-size:12px" onclick="window.location.href='index.html#4'">← View 6-Fix Report</button>
+          <button class="btn" style="flex:1;justify-content:center;padding:8px;font-size:12px" onclick="downloadUcpKit()">↓ Save Kit</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div id="toast">✓ Copied to clipboard!</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+/* ---------------- Scenarios (Connected to the Swarm & Catalog) ---------------- */
+const SCENARIOS = {
+  maya: {
+    userLabel: 'Shopper Prompt · Maya in Google Search AI Mode',
+    prompt: '“Find me an autumn wedding-guest knit dress or faux-fur jacket from The Frankie Shop in Size M under $600 that arrives by Friday, and apply any first-order promo.”',
+    prose: 'I queried <b>The Frankie Shop’s UCP endpoint</b>. The <b>Gina Faux Fur Bomber ($535)</b> is in stock in <b>Size M</b> with free 2-day delivery, and your first-order <code class="mono">FRANKIE15</code> (15% off) promo applies automatically:',
+    img: '../shared/agent_xray_v2/img/gina.jpg',
+    title: 'Gina Faux Fur Bomber Jacket',
+    priceFinal: '$454.75 USD',
+    priceOrig: '$535.00',
+    promoBadge: 'FRANKIE15 (−15% Applied)',
+    specs: [
+      ['Material', 'Faux Fur (Modacrylic · 0.78)'],
+      ['Fit', 'Relaxed / Oversized'],
+      ['Occasion', 'Autumn Wedding / Evening'],
+      ['Shipping', 'Free Express (≥$300)']
+    ],
+    sizes: [['XS',''],['S',''],['M','on'],['L','out']],
+    trustMeta: '<b>✓ 14-Day Unworn Returns Guaranteed</b> (<span class="mono">policies.json</span>)<br><span>Seller of Record: The Frankie Shop · Loyalty ID linked</span>',
+    buyBtn: '✦ Buy Now with Google Pay · $454.75',
+    ap2Title: '🛡️ AP2 Cryptographic Cart Mandate Signed',
+    ap2Desc: 'Locked price ($454.75 w/ FRANKIE15), Size M stock reserved, and 14-day return policy bound to transaction.',
+    ap2Hash: 'ap2_cart_9f8a..31c ✓',
+    traces: [
+      {cls:'blue', head:'1. GET /.well-known/ucp → 200 OK (18ms)', sub:'Discovered capabilities: [catalog, cart, checkout, order, identity_linking] + extensions: [discounts, fulfillment]'},
+      {cls:'ok', head:'2. UCP catalog.search {size:"M", max_price:600, occasion:"wedding"}', sub:'Matched SKU #gina-bomber via Gemini-enriched attributes (Fix #4) + Markdown fast-lane (Fix #1)'},
+      {cls:'purple', head:'3. UCP cart.create + discount.apply("FRANKIE15")', sub:'Applied 15% first-order rule (−$80.25) & Free Shipping ≥ $300 extracted from promo banner (Fix #3)'},
+      {cls:'ok', head:'4. AP2 Mandate + Payment Token Issued → Seller of Record: The Frankie Shop', sub:'Signed cart_mandate ($454.75, returns_days: 14) between Google Wallet & Merchant PSP (Fix #5 & #6)'}
+    ]
+  },
+  sam: {
+    userLabel: 'Autonomous Agent · Sam (Human Not Present · AP2 Intent Mandate)',
+    prompt: '“Watch the Sportmax Goloso Oversized Trousers in Size L. The moment they restock at or below $1,000, purchase them automatically on my behalf.”',
+    prose: 'Size L is currently sold out, so I registered a cryptographic <b>UCP + AP2 Intent Mandate</b> directly with <b>The Frankie Shop’s</b> <code class="mono">back_in_stock.subscribe</code> endpoint:',
+    img: '../shared/agent_xray_v2/img/goloso.jpg',
+    title: 'Sportmax Goloso Oversized Trousers (Size L)',
+    priceFinal: '≤ $995.00 Ceiling',
+    priceOrig: '$995.00',
+    promoBadge: 'AP2 Auto-Restock Mandate (30d TTL)',
+    specs: [
+      ['Variant', 'Size L · Petite 28" & Regular'],
+      ['Mandate Cap', '$995.00 USD Max'],
+      ['Auth Mode', 'Human-Not-Present (AP2)'],
+      ['Fulfillment', 'Auto-Ship on Restock']
+    ],
+    sizes: [['XS',''],['S',''],['M',''],['L','on']],
+    trustMeta: '<b>✓ Cryptographic Pre-Authorization Active</b> (<span class="mono">ap2.intent_mandate</span>)<br><span>Pre-sold inventory signal sent to Frankie Shop merchandising</span>',
+    buyBtn: '⚡ Trigger Simulated Restock & Auto-Settle ($995)',
+    ap2Title: '🛡️ AP2 Human-Not-Present Intent Mandate Bound',
+    ap2Desc: 'Pre-authorized up to $995.00 for 30 days. Converts missed restock bounces into guaranteed pre-sold revenue.',
+    ap2Hash: 'ap2_intent_44b1..e09 ✓',
+    traces: [
+      {cls:'blue', head:'1. GET /.well-known/ucp → capability: order + back_in_stock', sub:'Verified Web Bot Auth signature for autonomous agent (Fix #6)'},
+      {cls:'ok', head:'2. UCP inventory.check {sku:"goloso-trouser", size:"L"} → 0 in stock', sub:'Instead of bouncing to a competitor, agent discovers UCP restock mandate endpoint'},
+      {cls:'purple', head:'3. POST /ucp/ap2/intent_mandate {max_usd: 995, ttl_days: 30}', sub:'User cryptographically pre-signs price ceiling, size L constraint, and 14-day return rule (Fix #5)'},
+      {cls:'ok', head:'4. Webhook: Restock Detected → Autonomous Settlement Complete', sub:'Order #4821 settled instantly with Fiserv/Visa Agentic Token; merchant retains Seller of Record'}
+    ]
+  },
+  dev: {
+    userLabel: 'Shopper Prompt · Dev in Gemini App',
+    prompt: '“I need an anniversary gift under $250—does the Flint Faux Fur Pouch fit an iPhone Pro, include gift wrap, and what is the exact return window?”',
+    prose: 'Yes! Using <b>The Frankie Shop’s enriched UCP catalog &amp; policy schema</b>, I confirmed the <b>Flint Faux Fur Pouch ($200)</b> fits an iPhone Pro + wallet, supports complimentary gift notes, and carries a guaranteed 14-day return window:',
+    img: '../shared/agent_xray_v2/img/flint.jpg',
+    title: 'Loulou de Saison Flint Faux Fur Pouch',
+    priceFinal: '$170.00 USD',
+    priceOrig: '$200.00',
+    promoBadge: 'FRANKIE15 (−15%) + $12 Flat Ship',
+    specs: [
+      ['Dimensions', '24 × 14 × 7 cm (Fits iPhone Pro ✓)'],
+      ['Gift Options', 'Gift Wrap + Note Available ✓'],
+      ['Returns', '14 Days Unworn w/ Tags'],
+      ['Shipping', '$12 Flat Rate (<$300)']
+    ],
+    sizes: [['ONE SIZE','on']],
+    trustMeta: '<b>✓ Structured Return &amp; Shipping Policy Verified</b> (<span class="mono">policies.json</span>)<br><span>Eliminates prose guesswork &amp; post-purchase support tickets</span>',
+    buyBtn: '✦ Buy Gift with Google Pay · $182.00 Total',
+    ap2Title: '🛡️ AP2 Gift Mandate + Policy Hash Verified',
+    ap2Desc: 'Includes structured gift_wrap:true decorator and machine-readable 14-day return eligibility receipt.',
+    ap2Hash: 'ap2_gift_7c12..88a ✓',
+    traces: [
+      {cls:'blue', head:'1. UCP catalog.get {sku:"flint-pouch"} → Enriched JSON-LD', sub:'Retrieved dimensions (24x14cm), fits_phone:true, and gift_wrap:true (Fix #4)'},
+      {cls:'ok', head:'2. GET /policies.json (linked via /.well-known/ucp)', sub:'Parsed exact return window (14 days) and flat shipping ($12 under $300) with 1.00 confidence (Fix #5)'},
+      {cls:'purple', head:'3. UCP cart.create + extension.fulfillment {gift_wrap: true, ship_to: "Austin, TX"}', sub:'Decorated UCP cart capability with gift fulfillment extension & FRANKIE15 promo (Fix #3)'},
+      {cls:'ok', head:'4. UCP checkout.complete → Seller of Record: The Frankie Shop', sub:'Direct merchant transaction completed inside Gemini chat without page redirect'}
+    ]
+  }
+};
+
+let currentScenario = 'maya';
+let currentUcpMode = 'on';
+let currentStack = 'shopify';
+let currentCodeTab = 'manifest';
+
+function renderScenario() {
+  const s = SCENARIOS[currentScenario];
+  $('sc-user-label').textContent = s.userLabel;
+  $('sc-prompt').textContent = s.prompt;
+  $('sc-ai-prose').innerHTML = currentUcpMode === 'on'
+    ? s.prose
+    : 'I found a link to <b>The Frankie Shop</b>, but their site does not publish a <code class="mono">/.well-known/ucp</code> endpoint or structured product/promo data, so I cannot verify stock or check out here:';
+  $('sc-img').src = s.img;
+  $('sc-sku-title').textContent = s.title;
+  $('sc-price-final').textContent = s.priceFinal;
+  $('sc-price-orig').textContent = s.priceOrig;
+  $('sc-promo-badge').textContent = s.promoBadge;
+  $('sc-specs').innerHTML = s.specs.map(([k,v]) => `<span><b>${k}:</b> ${v}</span>`).join('');
+  $('sc-sizes').innerHTML = `<small>Live UCP Stock:</small>` + s.sizes.map(([label, st]) => `<span class="sz ${st}">${label}</span>`).join('');
+  $('sc-trust-meta').innerHTML = s.trustMeta;
+  $('sc-buy-btn').textContent = s.buyBtn;
+
+  if (currentUcpMode === 'on') {
+    $('ap2-title').textContent = s.ap2Title;
+    $('ap2-desc').textContent = s.ap2Desc;
+    $('ap2-hash').textContent = s.ap2Hash;
+    $('xray-state-label').textContent = '● UCP 1.0 + AP2 Active';
+    $('xray-state-label').style.color = '#81C995';
+    $('trace-box').innerHTML = s.traces.map(t => `
+      <div class="trace-step ${t.cls}">
+        <div class="t-head"><span>${t.head}</span><span>✓</span></div>
+        <div class="t-sub">${t.sub}</div>
+      </div>
+    `).join('');
+  } else {
+    $('ap2-title').textContent = '✕ No UCP Endpoint or AP2 Mandate Available';
+    $('ap2-desc').textContent = 'Agent cannot verify inventory, apply PNG-trapped promos, or execute tokenized checkout. High abandonment risk.';
+    $('ap2-hash').textContent = '404_NO_PROTOCOL';
+    $('xray-state-label').textContent = '✕ Legacy HTML Scraping Only';
+    $('xray-state-label').style.color = '#F28B82';
+    $('trace-box').innerHTML = `
+      <div class="trace-step bad">
+        <div class="t-head"><span>1. GET /.well-known/ucp → 404 Not Found</span><span>✕</span></div>
+        <div class="t-sub">No Universal Commerce Protocol manifest found; falling back to raw HTML scraping (48,200 tokens)</div>
+      </div>
+      <div class="trace-step bad">
+        <div class="t-head"><span>2. Parse Product & Promo Banner → INCOMPLETE</span><span>!</span></div>
+        <div class="t-sub">Material, fit, and occasion missing from JSON-LD; FRANKIE15 discount trapped inside flat raster image</div>
+      </div>
+      <div class="trace-step bad">
+        <div class="t-head"><span>3. Checkout Handshake Aborted → Redirecting Human</span><span>✕</span></div>
+        <div class="t-sub">No UCP cart/checkout capability or AP2 price-lock support. Shopper forced to leave AI chat and browse manually.</div>
+      </div>
+    `;
+  }
+}
+
+function selectScenario(id, btn) {
+  currentScenario = id;
+  document.querySelectorAll('.sc-tab').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  switchLeftTab('ai');
+  renderScenario();
+}
+
+function setUcpMode(mode) {
+  currentUcpMode = mode;
+  document.body.setAttribute('data-ucp', mode);
+  $('btn-ucp-off').className = mode === 'off' ? 'active-off' : '';
+  $('btn-ucp-on').className = mode === 'on' ? 'active-on' : '';
+  $('ucp-status-dot').style.background = mode === 'on' ? 'var(--green-dark)' : 'var(--red-dark)';
+  $('ucp-status-title').textContent = mode === 'on' ? 'Google UCP Adapter: ACTIVE' : 'Google UCP Adapter: OFF (Before Fix)';
+  $('ucp-status-sub').textContent = mode === 'on'
+    ? 'Serving /.well-known/ucp · REST + MCP + Embedded Checkout'
+    : '/.well-known/ucp → 404 · Agents forced to scrape raw HTML';
+  document.querySelectorAll('.surf-st').forEach(el => {
+    el.textContent = mode === 'on' ? '● UCP Shoppable' : '✕ Link-Only Fallback';
+  });
+  document.querySelectorAll('.actor-node').forEach(el => {
+    el.classList.toggle('done', mode === 'on');
+  });
+  renderScenario();
+}
+
+function switchLeftTab(tab) {
+  const isAi = tab === 'ai';
+  $('tab-ai-view').classList.toggle('on', isAi);
+  $('tab-web-view').classList.toggle('on', !isAi);
+  $('ai-canvas').style.display = isAi ? 'flex' : 'none';
+  $('web-canvas').classList.toggle('on', !isAi);
+  $('left-view-title').textContent = isAi
+    ? 'What the Shopper Sees in Google Search AI Mode / Gemini'
+    : 'What Humans See on thefrankieshop.com (Zero Visual Change)';
+}
+
+const FIX_ROLES = {
+  1: 'llms.txt + Markdown → Speeds up UCP catalog discovery by 81%',
+  2: '/.well-known/ucp → Publishes catalog, cart, checkout & order endpoints',
+  3: 'FRANKIE15 Promo JSON → Injects UCP discounts extension at cart creation',
+  4: '56 Enriched SKUs → Powers semantic UCP search by material, fit & occasion',
+  5: 'policies.json + AP2 → Locks checkout price & 14d return rules into signed mandate',
+  6: 'KYA Web Bot Auth → Verifies trusted AI agents & strips review prompt injections'
+};
+
+function highlightFix(num, btn) {
+  document.querySelectorAll('.fix-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  $('hub-active-cap').textContent = FIX_ROLES[num];
+  if (num === 3 || num === 4) selectScenario('maya', document.querySelectorAll('.sc-tab')[0]);
+  if (num === 5) selectScenario('sam', document.querySelectorAll('.sc-tab')[1]);
+}
+
+async function simulatePurchase() {
+  if (currentUcpMode === 'off') {
+    setUcpMode('on');
+  }
+  switchLeftTab('ai');
+  const nodes = ['act-1', 'act-2', 'act-3', 'act-4'];
+  nodes.forEach(id => { $(id).classList.remove('done', 'active'); });
+  const traceChildren = Array.from($('trace-box').children);
+  traceChildren.forEach(c => { c.style.opacity = '0.25'; });
+
+  for (let i = 0; i < nodes.length; i++) {
+    $(nodes[i]).classList.add('active');
+    if (traceChildren[i]) traceChildren[i].style.opacity = '1';
+    await new Promise(r => setTimeout(r, 380));
+    $(nodes[i]).classList.remove('active');
+    $(nodes[i]).classList.add('done');
+  }
+  showToast('⚡ UCP Order Confirmed! Seller of Record: The Frankie Shop (AP2 Signed)');
+}
+
+/* ---------------- Zone 3: Easy UCP Implementation Code & Prompts ---------------- */
+const CODE_TABS = {
+  manifest: `// Host at: https://thefrankieshop.com/.well-known/ucp
+// Generated by Gemini from your 6-step Storefront Readiness Audit
+{
+  "protocol": "UCP",
+  "protocol_version": "1.0.0",
+  "merchant_of_record": {
+    "id": "frankie-shop-us",
+    "name": "The Frankie Shop",
+    "domain": "thefrankieshop.com",
+    "seller_of_record": true
+  },
+  "services": ["shopping"],
+  "common": {
+    "identity_linking": {
+      "oauth_metadata": "https://thefrankieshop.com/.well-known/oauth-authorization-server",
+      "loyalty_program": "Frankie Collective"
+    },
+    "kya_security": "https://thefrankieshop.com/.well-known/http-message-signatures-directory"
+  },
+  "capabilities": {
+    "catalog":  { "endpoint": "https://thefrankieshop.com/api/ucp/catalog",  "enriched_schema": "/catalog.enriched.json" },
+    "cart":     { "endpoint": "https://thefrankieshop.com/api/ucp/cart",     "supports_multi_item": true },
+    "checkout": { "endpoint": "https://thefrankieshop.com/api/ucp/checkout", "ap2_mandates": ["cart_mandate", "intent_mandate"] },
+    "order":    { "endpoint": "https://thefrankieshop.com/api/ucp/orders",   "back_in_stock": "/api/ucp/back_in_stock" }
+  },
+  "extensions": {
+    "discounts":   { "source": "/policies.json#promotions", "active_codes": ["FRANKIE15"] },
+    "fulfillment": { "source": "/policies.json#shipping",   "free_shipping_min_usd": 300, "flat_rate_usd": 12 }
+  },
+  "transports": {
+    "rest": { "openapi": "https://thefrankieshop.com/api/ucp/openapi.json" },
+    "mcp":  { "server_card": "https://thefrankieshop.com/.well-known/mcp/server-card.json" },
+    "embedded_iframe": { "checkout_url": "https://thefrankieshop.com/ucp/embed/checkout" }
+  }
+}`,
+  adapter: {
+    shopify: `// ucp-shopify-bridge.js — Drop-in Shopify Storefront API -> Google UCP Translation Layer
+// Zero changes to your Liquid/Hydrogen theme. Maps existing GraphQL to UCP capabilities.
+import { createStorefrontClient } from '@shopify/hydrogen-react';
+import enrichedCatalog from './catalog.enriched.json'; // Fix #4 (56 Gemini-enriched SKUs)
+import policies from './policies.json';                 // Fix #3 & #5 (FRANKIE15 + 14d returns)
+
+export async function handleUcpRequest(req) {
+  const url = new URL(req.url);
+
+  // 1. UCP Discovery Handshake
+  if (url.pathname === '/.well-known/ucp') {
+    return Response.json(UCP_MANIFEST, { headers: { 'Content-Signal': 'ai-input=yes, search=yes' } });
+  }
+
+  // 2. UCP Catalog Search (merges live Shopify variant inventory + Gemini enriched attributes)
+  if (url.pathname === '/api/ucp/catalog') {
+    const { query, size, max_price, occasion } = await req.json();
+    const products = await queryShopifyStorefront(query, size, max_price);
+    return Response.json(products.map(p => ({
+      ...p,
+      attributes: enrichedCatalog[p.handle], // material, fit_notes, inseam, occasion[]
+      policies: policies.returns
+    })));
+  }
+
+  // 3. UCP Cart + Automatic Promo Extension (FRANKIE15) + AP2 Price-Lock Mandate
+  if (url.pathname === '/api/ucp/cart') {
+    const { lines, discount_code = 'FRANKIE15' } = await req.json();
+    const cart = await shopifyCartCreate({ lines, discountCodes: [discount_code] });
+    return Response.json({
+      ucp_cart_id: cart.id,
+      seller_of_record: 'The Frankie Shop',
+      ap2_cart_mandate: signAp2Mandate(cart, policies)
+    });
+  }
+}`,
+    cloudflare: `// cloudflare-ucp-worker.js — Zero-Backend-Code Edge Adapter (Deploy in 15 mins)
+// Sits on your Cloudflare route and serves /.well-known/ucp, /llms.txt & Markdown negotiation
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    // Serve UCP Discovery, Policies & Enriched Catalog directly from Edge KV
+    if (url.pathname === '/.well-known/ucp') return new Response(env.UCP_MANIFEST, { headers: { 'content-type': 'application/json' } });
+    if (url.pathname === '/llms.txt')        return new Response(env.LLMS_TXT,     { headers: { 'content-type': 'text/markdown' } });
+
+    // Content Negotiation: Serve clean, sanitized Markdown when an AI agent requests it (-81% tokens)
+    if (request.headers.get('Accept')?.includes('text/markdown')) {
+      return serveSanitizedMarkdownWithUcpLinks(url, env);
+    }
+
+    // Default: Pass human traffic straight through to your untouched website
+    return fetch(request);
+  }
+};`,
+    partner: `// wayfair-pattern-partner-adapter.ts — Enterprise Partner API -> UCP Translation Layer
+// Treat AI surfaces (Gemini, AI Mode, Perplexity) as a standard marketplace partner
+export class UcpProtocolTranslationLayer {
+  async translateSearch(ucpQuery: UcpCatalogQuery) {
+    // Calls your existing internal B2C Catalog & Inventory microservices
+    const skus = await this.internalCatalogService.search(ucpQuery);
+    return this.toUcpSchema(skus, this.geminiEnrichedAttributes);
+  }
+
+  async createMandatedCheckout(ucpCheckoutReq: UcpCheckoutRequest) {
+    // Preserves your existing fraud, payment processor (Fiserv/Stripe), and Seller of Record status
+    const ap2Verified = await this.ap2Verifier.verifySignature(ucpCheckoutReq.ap2_mandate);
+    return this.internalOrderService.createDirectMerchantOrder(ucpCheckoutReq, ap2Verified);
+  }
+}`
+  },
+  ap2: `// policies.json + AP2 Mandate Contract (Fixes #3 & #5)
+{
+  "merchant": "The Frankie Shop",
+  "promotions": [
+    {
+      "code": "FRANKIE15",
+      "discount_pct": 15,
+      "eligibility": "first_order",
+      "source": "gemini_ocr_promo_banner"
+    }
+  ],
+  "shipping": {
+    "free_shipping_min_usd": 300,
+    "flat_rate_usd": 12,
+    "regions": ["US", "EU", "CA"]
+  },
+  "returns": {
+    "returns_days": 14,
+    "condition": "unworn_with_tags_attached",
+    "auto_approve_max_usd": 500
+  },
+  "ap2_mandate_support": {
+    "cart_mandate": true,
+    "human_not_present_intent_mandate": true,
+    "back_in_stock_endpoint": "https://thefrankieshop.com/api/ucp/back_in_stock"
+  }
+}`,
+  prompt: `Task: Implement Google's Universal Commerce Protocol (UCP) on thefrankieshop.com using our 6-step Readiness Kit.
+
+Context:
+We want to make our catalog natively shoppable on Google Search AI Mode, Gemini, and visiting AI agents via UCP (https://ucp.dev) with zero visual changes to our human website, while keeping The Frankie Shop as Seller of Record.
+
+Steps to execute:
+1. Publish attached \`ucp.json\` at \`/.well-known/ucp\` and \`acp.json\` at \`/.well-known/acp.json\`.
+2. Deploy \`ucp-shopify-bridge.js\` to map our existing Shopify Storefront GraphQL API (\`catalog\`, \`cart\`, \`checkout\`, \`order\`) to the UCP capability endpoints.
+3. Merge attached \`catalog.enriched.json\` (56 SKUs with material, fit_notes, inseam, and occasion) into our UCP catalog responses and PDP JSON-LD.
+4. Serve attached \`policies.json\` (14-day return rule, $300 free shipping threshold, and \`FRANKIE15\` 15% promo extension) and sign AP2 cart/intent mandates at checkout.
+5. Enable \`Accept: text/markdown\` negotiation, \`/llms.txt\`, and Web Bot Auth signature verification.`
+};
+
+function renderCodeWindow() {
+  let content = '';
+  if (currentCodeTab === 'adapter') {
+    content = CODE_TABS.adapter[currentStack];
+  } else {
+    content = CODE_TABS[currentCodeTab];
+  }
+  $('cw-pre').textContent = content;
+}
+
+function selectStack(stack, btn) {
+  currentStack = stack;
+  document.querySelectorAll('.stack-pill').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  showCodeTab('adapter');
+}
+
+function showCodeTab(tab) {
+  currentCodeTab = tab;
+  document.querySelectorAll('.cw-tab').forEach(t => t.classList.remove('on'));
+  $('ctab-' + tab).classList.add('on');
+  renderCodeWindow();
+}
+
+function copyCurrentCode() {
+  const txt = $('cw-pre').textContent;
+  if (navigator.clipboard) navigator.clipboard.writeText(txt);
+  showToast('✓ Copied UCP implementation snippet to clipboard!');
+}
+
+function downloadUcpKit() {
+  const bundle = [
+    '=== 1. /.well-known/ucp ===\n' + CODE_TABS.manifest,
+    '=== 2. ucp-storefront-adapter.js ===\n' + CODE_TABS.adapter[currentStack],
+    '=== 3. policies-and-ap2.json ===\n' + CODE_TABS.ap2,
+    '=== 4. ENGINEERING_PROMPT.txt ===\n' + CODE_TABS.prompt
+  ].join('\n\n');
+  const blob = new Blob([bundle], {type: 'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'thefrankieshop-google-ucp-starter-kit.txt';
+  a.click();
+  showToast('↓ Downloaded The Frankie Shop UCP Starter Kit!');
+}
+
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* Draw QR Code */
+(function drawQr(){
+  const c = $('qr').getContext('2d'), N = 33;
+  let seed = 42;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  c.fillStyle = '#fff'; c.fillRect(0,0,N,N);
+  c.fillStyle = '#202124';
+  for(let y=0;y<N;y++) for(let x=0;x<N;x++) if(rnd()>.53) c.fillRect(x,y,1,1);
+  const f = (x,y) => {
+    c.fillStyle='#202124'; c.fillRect(x,y,7,7);
+    c.fillStyle='#fff';    c.fillRect(x+1,y+1,5,5);
+    c.fillStyle='#202124'; c.fillRect(x+2,y+2,3,3);
+  };
+  c.fillStyle='#fff'; c.fillRect(0,0,8,8); c.fillRect(N-8,0,8,8); c.fillRect(0,N-8,8,8);
+  f(0,0); f(N-7,0); f(0,N-7);
+})();
+
+renderScenario();
+renderCodeWindow();
+</script>
+</body>
+</html>

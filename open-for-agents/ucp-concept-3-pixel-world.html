@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Concept 3: Pixel UCP Express Lane — Inspired by ucp.dev Pixel Art</title>
+<style>
+  :root{
+    --navy:#071429;
+    --ucp-blue:#2B7DE9;
+    --ucp-shadow:#85B4F8;
+    --ucp-ice:#F4FAFF;
+    --ucp-cyan:#4CE0E6;
+    --red:#D93025;
+    --red-shadow:#F6AEA9;
+    --red-ice:#FFF5F5;
+    --green:#1E8E3E;
+    --g100:#F1F3F4;--g300:#DADCE0;--g600:#5F6368;--g900:#202124;
+    --gem:linear-gradient(90deg,#4285F4,#9B72CB,#D96570);
+  }
+  *{box-sizing:border-box}
+  html,body{
+    margin:0;min-height:100vh;
+    background:#F7FAFF;
+    background-image:radial-gradient(#D2E3FC 1.2px, transparent 1.2px);
+    background-size:24px 24px;
+    color:var(--g900);
+    font-family:"Google Sans",Roboto,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* Concept Switcher Topbar */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:#fff;border-bottom:1px solid var(--g300);position:sticky;top:0;z-index:100}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15px}
+  .brand i{width:20px;height:20px;border-radius:6px;background:var(--gem);display:inline-block}
+  .concept-nav{display:flex;gap:6px;background:var(--g100);padding:4px;border-radius:999px}
+  .c-link{padding:6px 14px;border-radius:999px;font-size:12.5px;font-weight:500;color:var(--g600);text-decoration:none;transition:all .2s}
+  .c-link:hover{color:var(--g900)}
+  .c-link.active{background:#fff;color:var(--ucp-blue);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+  /* Crisp Pixel Art SVG rule */
+  .px-svg{shape-rendering:crispEdges;image-rendering:pixelated;overflow:visible}
+
+  .wrap{max-width:1160px;margin:0 auto;padding:28px 24px 110px}
+  .head-center{text-align:center;max-width:740px;margin:0 auto 28px}
+  .head-center h1{font-size:30px;font-weight:400;margin:0 0 8px;letter-spacing:-.015em}
+  .head-center p{font-size:15px;color:var(--g600);margin:0;line-height:1.5}
+
+  /* =========================================================
+     MAIN PIXEL-ART STAGE (2 Worlds: Human Boutique vs Agent Path)
+     ========================================================= */
+  .world-grid{display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:stretch}
+  @media(max-width:960px){.world-grid{grid-template-columns:1fr}}
+
+  /* LEFT: HUMAN STOREFRONT CARD (Matches zoomedcheckoutlight + universalcart style) */
+  .human-card{
+    background:#fff;
+    border:2.5px solid var(--ucp-blue);
+    border-radius:22px;
+    box-shadow:7px 7px 0 var(--ucp-shadow);
+    padding:20px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    position:relative;
+  }
+  .hc-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#E6F4EA;color:var(--green);border:1.5px solid #A8DAB5;
+    padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:600;
+    align-self:flex-start;margin-bottom:12px;
+  }
+  .hc-art{
+    background:#DCE8F5;border-radius:14px;height:185px;
+    display:grid;place-items:center;position:relative;margin-bottom:14px;
+    border:2px solid var(--navy);
+  }
+  .hc-store-chip{
+    position:absolute;top:-12px;left:14px;
+    background:#137356;color:#fff;border:2px solid var(--navy);
+    padding:3px 9px;border-radius:6px;font:700 10px "Roboto Mono",monospace;
+    text-transform:uppercase;letter-spacing:.05em;
+  }
+  .hc-meta small{color:var(--g600);font-size:12.5px;display:block;margin-bottom:2px}
+  .hc-meta h3{margin:0 0 6px;font-size:19px;font-weight:600;color:var(--g900)}
+  .hc-meta .price{font:600 16px "Roboto Mono",monospace;color:var(--g900);margin-bottom:12px}
+  .hc-note{
+    font-size:12px;color:var(--g600);background:#F8FAFF;
+    border:1.5px dashed #B8D1FF;border-radius:12px;padding:10px 12px;line-height:1.45;
+  }
+
+  /* RIGHT: WHAT THE SHOPPER AGENT SEES (Pixel Robot + 4 UCP Flow Stations + Checkout Card) */
+  .agent-world{
+    background:#fff;
+    border:2.5px solid var(--ucp-blue);
+    border-radius:22px;
+    box-shadow:7px 7px 0 var(--ucp-shadow);
+    padding:24px 28px;
+    display:flex;flex-direction:column;justify-content:space-between;gap:22px;
+    position:relative;overflow:hidden;
+    transition:border-color .35s, box-shadow .35s, background .35s;
+  }
+  body[data-ucp="off"] .agent-world{
+    border-color:var(--red);
+    box-shadow:7px 7px 0 var(--red-shadow);
+    background:#FFFCFC;
+  }
+
+  /* Top Row: Pixel Robot Agent Avatar + Speech Bubble + AP2 Key */
+  .agent-top-row{
+    display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+    padding-bottom:16px;border-bottom:2px dashed #CFE2FF;
+  }
+  body[data-ucp="off"] .agent-top-row{border-bottom-color:#FAD2CF}
+
+  .robot-actor{display:flex;align-items:center;gap:16px}
+  .robot-box{
+    width:82px;height:74px;display:grid;place-items:center;
+    animation:robotBob 2.4s ease-in-out infinite;
+  }
+  @keyframes robotBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  body[data-ucp="off"] .robot-box{animation:robotShake 1.8s ease-in-out infinite}
+  @keyframes robotShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px) rotate(-2deg)}75%{transform:translateX(3px) rotate(2deg)}}
+
+  .ucp-pill-box{
+    background:var(--ucp-ice);
+    border:2px solid var(--ucp-blue);
+    box-shadow:4px 4px 0 var(--ucp-shadow);
+    border-radius:16px;
+    padding:8px 16px;
+    font:500 15px "Roboto Mono",ui-monospace,monospace;
+    color:var(--g900);
+    transition:all .3s;
+  }
+  body[data-ucp="off"] .ucp-pill-box{
+    background:var(--red-ice);
+    border-color:var(--red);
+    box-shadow:4px 4px 0 var(--red-shadow);
+  }
+
+  .agent-speech{
+    flex:1;min-width:240px;
+    background:#F4FAFF;border:2px solid var(--ucp-blue);border-radius:16px;
+    padding:12px 16px;font-size:13.5px;line-height:1.45;color:var(--g900);
+  }
+  body[data-ucp="off"] .agent-speech{
+    background:#FFF5F5;border-color:var(--red);color:#8C1D18;
+  }
+
+  /* MIDDLE: The 4-Station UCP Flow (Matches ucp-flow-4-light: discovery -> cart -> checkout -> orders) */
+  .flow-track{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative;
+    padding:8px 0;
+  }
+  @media(max-width:760px){.flow-track{grid-template-columns:repeat(2,1fr)}}
+
+  .station{
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+    cursor:pointer;position:relative;transition:transform .2s;
+  }
+  .station:hover{transform:translateY(-4px)}
+  .station-sprite{
+    height:92px;display:grid;place-items:center;margin-bottom:10px;position:relative;
+  }
+
+  /* Connector arrows between stations */
+  .station:not(:last-child)::after{
+    content:"▶";
+    position:absolute;right:-14px;top:114px;
+    color:var(--ucp-blue);font-size:14px;
+  }
+  body[data-ucp="off"] .station:not(:last-child)::after{
+    content:"✕";color:var(--red);font-weight:700;
+  }
+
+  .station-pill{
+    width:100%;
+    background:var(--ucp-ice);
+    border:2px solid var(--ucp-blue);
+    box-shadow:5px 5px 0 var(--ucp-shadow);
+    border-radius:16px;
+    padding:10px 8px;
+    font:500 15px "Roboto Mono",ui-monospace,monospace;
+    color:var(--g900);
+    transition:all .3s;
+  }
+  body[data-ucp="off"] .station-pill{
+    background:var(--red-ice);
+    border-color:var(--red);
+    box-shadow:5px 5px 0 var(--red-shadow);
+  }
+  .station.selected .station-pill{
+    background:#D2E3FC;transform:translate(2px,2px);box-shadow:3px 3px 0 var(--ucp-blue);
+  }
+
+  .station-caption{
+    margin-top:10px;font-size:12px;line-height:1.35;font-weight:500;
+    color:var(--green);min-height:34px;
+  }
+  body[data-ucp="off"] .station-caption{color:var(--red)}
+
+  /* BOTTOM: Inspectable Station Detail + Zoomed Checkout Card (from zoomedcheckoutlight) */
+  .bottom-split{
+    display:grid;grid-template-columns:1.15fr 1fr;gap:18px;align-items:center;
+    background:#F4FAFF;border:2px solid #CFE2FF;border-radius:18px;padding:16px 20px;
+  }
+  body[data-ucp="off"] .bottom-split{background:#FFF5F5;border-color:#FAD2CF}
+  @media(max-width:820px){.bottom-split{grid-template-columns:1fr}}
+
+  .zoom-checkout{
+    background:#EBF5FF;border:2px solid var(--ucp-blue);
+    box-shadow:5px 5px 0 var(--ucp-shadow);border-radius:16px;padding:14px 16px;
+    position:relative;
+  }
+  body[data-ucp="off"] .zoom-checkout{
+    background:#FCE8E6;border-color:var(--red);box-shadow:5px 5px 0 var(--red-shadow);
+  }
+  .zc-head{text-align:center;font-size:12.5px;font-weight:600;color:var(--ucp-blue);margin-bottom:10px}
+  body[data-ucp="off"] .zc-head{color:var(--red)}
+  .zc-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .zc-thumb{width:44px;height:44px;background:#D2E3FC;border:1.5px solid var(--navy);border-radius:8px;display:grid;place-items:center}
+  .zc-bars{flex:1;display:grid;gap:5px}
+  .zc-pay-btn{
+    width:100%;border:0;border-radius:8px;padding:9px;
+    background:#3B8EEA;color:#fff;font:600 13px "Google Sans",sans-serif;cursor:pointer;
+    position:relative;
+  }
+  body[data-ucp="off"] .zc-pay-btn{background:var(--red);cursor:not-allowed}
+
+  /* Toggle visibility helpers */
+  body[data-ucp="off"] .on-ucp{display:none!important}
+  body[data-ucp="on"] .off-ucp{display:none!important}
+
+  /* Floating Bottom Switch Dock */
+  .dock{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+    background:#fff;border:2.5px solid var(--navy);
+    box-shadow:6px 6px 0 var(--ucp-shadow);border-radius:999px;
+    padding:8px 12px 8px 22px;display:flex;align-items:center;gap:18px;z-index:90;
+  }
+  .dock-btn{
+    border:2px solid var(--navy);border-radius:999px;padding:10px 22px;
+    font:700 13.5px "Google Sans",sans-serif;cursor:pointer;
+    background:#4CE0E6;color:var(--navy);box-shadow:3px 3px 0 var(--navy);
+    transition:transform .12s, box-shadow .12s;
+  }
+  .dock-btn:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--navy)}
+</style>
+</head>
+<body data-ucp="off">
+
+<header class="topbar">
+  <div class="brand"><i></i> Agent Storefront · Visual Ending Explorations</div>
+  <nav class="concept-nav">
+    <a class="c-link" href="ucp-concept-1-spotlight.html">1. Agent Spotlight Lens</a>
+    <a class="c-link active" href="ucp-concept-3-pixel-world.html">3. Pixel UCP Express Lane</a>
+    <a class="c-link" href="ucp-concept-4-deconstruct.html">4. Page Deconstruction</a>
+  </nav>
+  <button class="dock-btn" style="padding:6px 14px;font-size:12px;background:#fff" onclick="downloadUcp()">↓ Save UCP Kit</button>
+</header>
+
+<div class="wrap">
+  <div class="head-center">
+    <h1>Same Storefront. Two Completely Different Journeys.</h1>
+    <p>Humans browse your visual storefront on the left. Shopper agents need the <b>4-step Google UCP Express Lane</b> on the right.</p>
+  </div>
+
+  <div class="world-grid">
+
+    <!-- LEFT: WHAT HUMANS SEE (Never Changes) -->
+    <aside class="human-card">
+      <div>
+        <span class="hc-badge">👁️ Human View · 0 Pixels Changed</span>
+        <div class="hc-art">
+          <span class="hc-store-chip">The Frankie Shop</span>
+          <!-- Crisp 16-bit Pixel Bomber Jacket (inspired by zoomedcheckoutlight shirt/jacket) -->
+          <svg class="px-svg" width="120" height="112" viewBox="0 0 24 22">
+            <!-- Dark Navy Pixel Outline -->
+            <path d="M7 2h10v2h3v3h2v9h-4v-6h-1v10H7V10H6v6H2V7h2V4h3V2z" fill="#071429"/>
+            <!-- Collar -->
+            <rect x="8" y="3" width="8" height="2" fill="#8D6E63"/>
+            <!-- Espresso Faux Fur Body -->
+            <rect x="7" y="5" width="10" height="14" fill="#4E342E"/>
+            <!-- Sleeves -->
+            <rect x="3" y="7" width="3" height="8" fill="#5D4037"/>
+            <rect x="18" y="7" width="3" height="8" fill="#3E2723"/>
+            <!-- Center Satin Zip Line & Highlights -->
+            <rect x="11" y="5" width="2" height="14" fill="#D7CCC8"/>
+            <rect x="8" y="6" width="2" height="5" fill="#6D4C41"/>
+          </svg>
+        </div>
+        <div class="hc-meta">
+          <small>thefrankieshop.com</small>
+          <h3>Gina Faux Fur Bomber</h3>
+          <div class="price">$535.00 · Code: FRANKIE15</div>
+        </div>
+      </div>
+
+      <div class="hc-note">
+        <b>Zero visual disruption:</b> Adding Google UCP does not change a single pixel of your human website. It opens a backstage express lane exclusively for AI agents.
+      </div>
+    </aside>
+
+    <!-- RIGHT: WHAT THE SHOPPER AGENT SEES (Pixel Robot + 4 UCP Stations) -->
+    <section class="agent-world">
+
+      <!-- Robot Agent Header -->
+      <div class="agent-top-row">
+        <div class="robot-actor">
+          <div class="robot-box">
+            <!-- Exact Pixel Robot Head from visual_refs/pixelated/agents-auth-light -->
+            <svg class="px-svg" width="76" height="68" viewBox="0 0 20 18">
+              <!-- Outer Navy Pixel Frame -->
+              <path d="M4 1h12v1h2v3h1v7h-1v3h-2v1H4v-1H2v-3H1V5h1V2h2V1z" fill="#071429"/>
+              <!-- Ears -->
+              <rect x="1" y="6" width="1" height="5" fill="#54B8FF"/>
+              <rect x="18" y="6" width="1" height="5" fill="#2B7DE9"/>
+              <!-- Outer Head Shell -->
+              <rect x="3" y="2" width="14" height="13" fill="#54B8FF"/>
+              <rect x="4" y="2" width="12" height="1" fill="#99DAFF"/>
+              <!-- Inner Face Screen Border -->
+              <rect x="5" y="4" width="10" height="9" fill="#071429"/>
+              <rect x="6" y="5" width="8" height="7" fill="#8CE0FF"/>
+              <!-- Eyes & Mouth (Happy when UCP ON) -->
+              <g class="on-ucp">
+                <rect x="7" y="7" width="2" height="2" fill="#071429"/>
+                <rect x="11" y="7" width="2" height="2" fill="#071429"/>
+                <rect x="8" y="10" width="4" height="1" fill="#071429"/>
+              </g>
+              <!-- Eyes & Mouth (Dizzy/Blocked when UCP OFF) -->
+              <g class="off-ucp">
+                <rect x="7" y="7" width="2" height="1" fill="#D93025"/>
+                <rect x="11" y="7" width="2" height="1" fill="#D93025"/>
+                <rect x="8" y="10" width="4" height="1" fill="#D93025"/>
+              </g>
+            </svg>
+          </div>
+          <div class="ucp-pill-box">agent</div>
+        </div>
+
+        <div class="agent-speech" id="speech-bubble">
+          <span class="off-ucp"><b>🤖 Shopper Agent (Blocked):</b> “I’m trying to buy the Gina Bomber in Size M with the 15% promo, but I’m stuck in 48,000 tokens of HTML, a locked PNG banner, and a 404 checkout wall!”</span>
+          <span class="on-ucp"><b>🤖 Shopper Agent (Connected via UCP!):</b> “Found <code style="font-family:monospace">/.well-known/ucp</code>! Verified faux-fur specs, applied <b>FRANKIE15 (−15%)</b>, and signed the <b>AP2 Mandate</b>—checking out directly with The Frankie Shop!”</span>
+        </div>
+      </div>
+
+      <!-- THE 4 PIXEL UCP STATIONS (discovery -> cart -> checkout -> orders) -->
+      <div class="flow-track">
+
+        <!-- STATION 1: DISCOVERY -->
+        <div class="station selected" onclick="inspectStation(1, this)">
+          <div class="station-sprite">
+            <!-- UCP ON: Pixel Magnifying Glass (from ucp-flow-4-light) -->
+            <svg class="px-svg on-ucp" width="78" height="78" viewBox="0 0 20 20">
+              <path d="M6 2h6v1h2v2h1v6h-1v2h2v2h2v2h-2v2h-2v-2h-2v-2H6v-1H4v-2H3V5h1V3h2V2z" fill="#071429"/>
+              <rect x="6" y="3" width="6" height="1" fill="#4285F4"/>
+              <rect x="5" y="4" width="8" height="8" fill="#4CE0E6"/>
+              <rect x="6" y="5" width="3" height="2" fill="#FFFFFF"/>
+              <rect x="13" y="13" width="3" height="3" fill="#1A56DB"/>
+            </svg>
+            <!-- UCP OFF: Tangled HTML Fog Block -->
+            <svg class="px-svg off-ucp" width="78" height="78" viewBox="0 0 20 20">
+              <rect x="3" y="3" width="14" height="14" fill="#071429"/>
+              <rect x="4" y="4" width="12" height="12" fill="#FAD2CF"/>
+              <text x="10" y="12" text-anchor="middle" font-family="monospace" font-size="6" font-weight="bold" fill="#D93025">???</text>
+            </svg>
+          </div>
+          <div class="station-pill">discovery</div>
+          <div class="station-caption">
+            <span class="off-ucp">✕ 48k HTML tokens<br>Fabric &amp; fit missing</span>
+            <span class="on-ucp">✓ llms.txt + Enriched<br>56 SKUs (−81% tok)</span>
+          </div>
+        </div>
+
+        <!-- STATION 2: CART -->
+        <div class="station" onclick="inspectStation(2, this)">
+          <div class="station-sprite">
+            <!-- UCP ON: Pixel Shopping Cart + Coin (from ucp-flow-4-light + coin.png) -->
+            <svg class="px-svg on-ucp" width="84" height="78" viewBox="0 0 22 20">
+              <path d="M2 3h4v3h13v7H7v2h10v2H6v-4H5V5H2V3z" fill="#071429"/>
+              <rect x="7" y="7" width="10" height="4" fill="#FFFFFF"/>
+              <rect x="7" y="6" width="11" height="1" fill="#4285F4"/>
+              <rect x="7" y="16" width="3" height="3" fill="#071429"/>
+              <rect x="14" y="16" width="3" height="3" fill="#071429"/>
+              <!-- Golden Promo Coin -->
+              <rect x="15" y="1" width="5" height="5" fill="#071429"/>
+              <rect x="16" y="2" width="3" height="3" fill="#FBBC04"/>
+            </svg>
+            <!-- UCP OFF: Locked PNG Promo Crate -->
+            <svg class="px-svg off-ucp" width="78" height="78" viewBox="0 0 20 20">
+              <rect x="4" y="6" width="12" height="11" fill="#071429"/>
+              <rect x="5" y="7" width="10" height="9" fill="#F6AEA9"/>
+              <rect x="7" y="3" width="6" height="4" fill="#071429"/>
+              <rect x="8" y="4" width="4" height="2" fill="#FFF"/>
+              <rect x="9" y="10" width="2" height="3" fill="#D93025"/>
+            </svg>
+          </div>
+          <div class="station-pill">cart</div>
+          <div class="station-caption">
+            <span class="off-ucp">✕ Promo locked in PNG<br>0 chars extracted</span>
+            <span class="on-ucp">✓ FRANKIE15 (−15%)<br>Auto-applied JSON</span>
+          </div>
+        </div>
+
+        <!-- STATION 3: CHECKOUT -->
+        <div class="station" onclick="inspectStation(3, this)">
+          <div class="station-sprite">
+            <!-- UCP ON: Pixel Receipt ($) + Golden AP2 Key -->
+            <svg class="px-svg on-ucp" width="78" height="78" viewBox="0 0 20 20">
+              <rect x="4" y="2" width="12" height="16" fill="#071429"/>
+              <rect x="5" y="3" width="10" height="14" fill="#4CE0E6"/>
+              <path d="M9 6h2v1h1v2H9v1h3v3h-1v1H9v-1H8v-1h3v-1H8V7h1V6z" fill="#071429"/>
+            </svg>
+            <!-- UCP OFF: 404 Brick Wall -->
+            <svg class="px-svg off-ucp" width="78" height="78" viewBox="0 0 20 20">
+              <rect x="3" y="4" width="14" height="12" fill="#071429"/>
+              <rect x="4" y="5" width="12" height="10" fill="#EA4335"/>
+              <line x1="3" y1="9" x2="17" y2="9" stroke="#071429" stroke-width="1"/>
+              <line x1="3" y1="13" x2="17" y2="13" stroke="#071429" stroke-width="1"/>
+              <text x="10" y="12" text-anchor="middle" font-family="monospace" font-size="4.5" font-weight="bold" fill="#FFF">404</text>
+            </svg>
+          </div>
+          <div class="station-pill">checkout</div>
+          <div class="station-caption">
+            <span class="off-ucp">✕ /.well-known/ucp 404<br>No agent checkout</span>
+            <span class="on-ucp">✓ Direct UCP + AP2<br>Price-lock mandate</span>
+          </div>
+        </div>
+
+        <!-- STATION 4: ORDERS -->
+        <div class="station" onclick="inspectStation(4, this)">
+          <div class="station-sprite">
+            <!-- UCP ON: Pixel Cardboard Shipping Box (from ucp-flow-4-light) -->
+            <svg class="px-svg on-ucp" width="78" height="78" viewBox="0 0 20 20">
+              <rect x="3" y="4" width="14" height="13" fill="#071429"/>
+              <rect x="4" y="5" width="12" height="11" fill="#E6B980"/>
+              <rect x="9" y="5" width="2" height="11" fill="#071429"/>
+              <rect x="4" y="8" width="12" height="2" fill="#C69C6D"/>
+            </svg>
+            <!-- UCP OFF: Unverified Scroll / Abandoned -->
+            <svg class="px-svg off-ucp" width="78" height="78" viewBox="0 0 20 20">
+              <rect x="5" y="3" width="10" height="14" fill="#071429"/>
+              <rect x="6" y="4" width="8" height="12" fill="#FCE8E6"/>
+              <line x1="7" y1="7" x2="13" y2="13" stroke="#D93025" stroke-width="1.5"/>
+              <line x1="13" y1="7" x2="7" y2="13" stroke="#D93025" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="station-pill">orders</div>
+          <div class="station-caption">
+            <span class="off-ucp">✕ Prose return policy<br>Cart abandoned</span>
+            <span class="on-ucp">✓ Seller of Record:<br>The Frankie Shop</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BOTTOM: Station Explanation + Zoomed Checkout Card (from zoomedcheckoutlight) -->
+      <div class="bottom-split">
+        <div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ucp-blue);margin-bottom:4px" id="st-eyebrow">
+            ✦ Station 1 of 4 · UCP Discovery
+          </div>
+          <h4 style="margin:0 0 6px;font-size:17px;font-weight:500" id="st-title">
+            How UCP fixes Discovery on your storefront
+          </h4>
+          <p style="margin:0;font-size:13px;color:var(--g600);line-height:1.5" id="st-desc">
+            Instead of forcing agents to scrape 48,200 tokens of raw HTML and guess fabric from photos, publishing <code style="font-family:monospace">/.well-known/ucp</code> + <code style="font-family:monospace">/llms.txt</code> serves all 56 Gemini-enriched SKUs in one clean read.
+          </p>
+        </div>
+
+        <!-- Zoomed Checkout Card (Matches zoomedcheckoutlight-6vMgJOBz.jpeg) -->
+        <div class="zoom-checkout">
+          <div class="zc-head" id="zc-head-txt">UCP Checkout · Blocked (404)</div>
+          <div class="zc-row">
+            <div class="zc-thumb">
+              <img src="coin-DltQpDF4.png" onerror="this.style.display='none'" style="display:none" alt=""/>
+              <span style="font-size:20px">🧥</span>
+            </div>
+            <div class="zc-bars">
+              <div style="font-size:12.5px;font-weight:600;color:var(--g900)">Gina Bomber (Size M)</div>
+              <div style="font-size:11.5px;color:var(--g600)" class="off-ucp">$535.00 · Promo unreadable</div>
+              <div style="font-size:11.5px;color:var(--green);font-weight:600" class="on-ucp">$454.75 (FRANKIE15 −15% ✓)</div>
+            </div>
+          </div>
+          <button class="zc-pay-btn" id="zc-btn" onclick="toggleUcp()">
+            <span class="off-ucp">✕ Checkout Unavailable (Click to Enable UCP)</span>
+            <span class="on-ucp">✓ Pay now · $454.75 (Seller of Record: Frankie Shop)</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+</div>
+
+<!-- Bottom Floating Switch -->
+<div class="dock">
+  <span style="font-size:13.5px;font-weight:500" id="dock-status">
+    🔴 <b>Before UCP:</b> The Shopper Agent hits 4 red roadblocks
+  </span>
+  <button class="dock-btn" id="main-switch" onclick="toggleUcp()">
+    ⚡ Enable Google UCP Express Lane
+  </button>
+</div>
+
+<script>
+const STATIONS = {
+  1: {
+    eyebrow: '✦ Station 1 of 4 · UCP Discovery (Fixes #1 & #4)',
+    title: 'Instant catalog & attribute discovery via /.well-known/ucp',
+    desc: 'Instead of forcing agents to scrape 48,200 tokens of raw HTML and guess fabric from photos, UCP links directly to your /llms.txt index and 56 Gemini-enriched SKUs (material, fit, inseam, occasion).'
+  },
+  2: {
+    eyebrow: '✦ Station 2 of 4 · UCP Cart & Promo Extension (Fix #3)',
+    title: 'Machine-readable promotions that never get lost in PNG banners',
+    desc: 'Gemini extracted your 15% FRANKIE15 offer and $300 free-shipping threshold from your image banner into the UCP discounts extension—so agents apply it automatically in the cart.'
+  },
+  3: {
+    eyebrow: '✦ Station 3 of 4 · UCP Checkout & AP2 Key (Fixes #2 & #5)',
+    title: '1-Tap Agent Checkout with cryptographic AP2 price locks',
+    desc: 'UCP exposes a clean checkout endpoint backed by Google AP2 Cart & Restock Mandates—giving you cryptographic proof of user authorization, locked pricing, and 14-day return terms.'
+  },
+  4: {
+    eyebrow: '✦ Station 4 of 4 · UCP Orders & Identity (Fixes #2 & #6)',
+    title: 'You remain the Seller of Record on every AI surface',
+    desc: 'Whether a customer buys inside Google Search AI Mode, Gemini, or Perplexity, UCP links their loyalty account and routes the order directly to The Frankie Shop.'
+  }
+};
+
+function inspectStation(n, el) {
+  document.querySelectorAll('.station').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  const d = STATIONS[n];
+  document.getElementById('st-eyebrow').textContent = d.eyebrow;
+  document.getElementById('st-title').textContent = d.title;
+  document.getElementById('st-desc').textContent = d.desc;
+}
+
+function toggleUcp() {
+  const isOff = document.body.getAttribute('data-ucp') === 'off';
+  const next = isOff ? 'on' : 'off';
+  document.body.setAttribute('data-ucp', next);
+  document.getElementById('zc-head-txt').textContent = next === 'on'
+    ? '✓ UCP Express Checkout · AP2 Signed'
+    : '✕ UCP Checkout · Blocked (404)';
+  document.getElementById('dock-status').innerHTML = next === 'on'
+    ? '🟢 <b>With Google UCP:</b> All 4 stations open! Human site untouched, agent checks out in 1 tap'
+    : '🔴 <b>Before UCP:</b> The Shopper Agent hits 4 red roadblocks';
+  document.getElementById('main-switch').textContent = next === 'on'
+    ? '↺ Compare Before UCP'
+    : '⚡ Enable Google UCP Express Lane';
+}
+
+function downloadUcp() {
+  const blob = new Blob([JSON.stringify({
+    protocol: 'UCP/1.0',
+    merchant: 'The Frankie Shop',
+    capabilities: ['discovery', 'cart', 'checkout', 'orders'],
+    ap2_mandates: true
+  }, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'frankieshop-ucp-manifest.json';
+  a.click();
+}
+</script>
+</body>
+</html>
