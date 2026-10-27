@@ -494,21 +494,27 @@
      HERO PLAYER AVATAR: STORE ARCHITECT + HOVERING START POINTER
      ========================================================= */
   #architect-avatar{
-    position:absolute;left:22%;top:76%;transform:translate(-50%,-50%);
+    position:absolute;left:22%;top:76%;
+    width:58px;height:58px;
+    transform:translate(-50%,-50%);
     z-index:34;pointer-events:none;
-    display:flex;flex-direction:column;align-items:center;
+    display:flex;align-items:center;justify-content:center;
     will-change:left,top;
   }
   #arch-start-pointer{
+    position:absolute;
+    bottom:calc(100% + 32px);
+    left:50%;
     display:flex;flex-direction:column;align-items:center;gap:4px;
-    margin-bottom:6px;
     animation:startPointerHover .85s ease-in-out infinite;
     transition:opacity .25s ease, transform .25s ease;
+    pointer-events:none;
   }
   #arch-start-pointer.gone{
     opacity:0!important;
-    transform:translateY(-12px) scale(.7)!important;
+    transform:translate(-50%,-12px) scale(.7)!important;
     animation:none!important;
+    pointer-events:none!important;
   }
   .asp-pill{
     background:#FBBC04;color:var(--navy);border:2.5px solid var(--navy);
@@ -518,13 +524,18 @@
     white-space:nowrap;
   }
   @keyframes startPointerHover{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-9px)}
+    0%,100%{transform:translate(-50%,0)}
+    50%{transform:translate(-50%,-9px)}
   }
   .arch-tag{
+    position:absolute;
+    bottom:calc(100% + 5px);
+    left:50%;
+    transform:translateX(-50%);
     background:var(--navy);color:#FBBC04;border:2px solid #FBBC04;
     border-radius:999px;padding:3px 10px;font:700 10px "Roboto Mono",monospace;
-    box-shadow:2px 2px 0 var(--navy);margin-bottom:4px;white-space:nowrap;
+    box-shadow:2px 2px 0 var(--navy);white-space:nowrap;
+    pointer-events:none;
   }
   .arch-body{
     width:58px;height:58px;border-radius:50%;
@@ -1991,6 +2002,7 @@ function tickPlayboard() {
       if (keysHeld.left) dx -= baseSpeed;
       if (keysHeld.right) dx += baseSpeed;
 
+      let arrivedThisFrame = false;
       if (targetX !== null && targetY !== null) {
         const rx = targetX - archX;
         const ry = targetY - archY;
@@ -2001,6 +2013,7 @@ function tickPlayboard() {
           archY = targetY;
           targetX = null;
           targetY = null;
+          arrivedThisFrame = true;
           if (pendingQuestOnArrive !== null) {
             const qId = pendingQuestOnArrive;
             pendingQuestOnArrive = null;
@@ -2012,7 +2025,7 @@ function tickPlayboard() {
         }
       }
 
-      if (dx !== 0 || dy !== 0) {
+      if (dx !== 0 || dy !== 0 || arrivedThisFrame) {
         const ptr = document.getElementById('arch-start-pointer');
         if (ptr && !ptr.classList.contains('gone')) ptr.classList.add('gone');
 
@@ -2029,9 +2042,9 @@ function tickPlayboard() {
 
         checkFloorPickups();
 
-        if (targetX === null) {
+        if (targetX === null && !modalOpen) {
           QUESTS.forEach(q => {
-            if (!solved.has(q.id) && Math.hypot(archX - q.x, archY - q.y) < 5.5) {
+            if (!solved.has(q.id) && Math.hypot(archX - q.x, archY - q.y) < 6.2) {
               keysHeld = { up: false, down: false, left: false, right: false };
               openQuestModal(q.id);
             }
@@ -2056,11 +2069,29 @@ function spawnFootstep(x, y) {
 }
 
 function checkFloorPickups() {
+  const archBody = document.querySelector('#architect-avatar .arch-body');
+  const archRect = archBody ? archBody.getBoundingClientRect() : null;
+  const archCx = archRect ? (archRect.left + archRect.width / 2) : 0;
+  const archCy = archRect ? (archRect.top + archRect.height / 2) : 0;
+
   PICKUPS.forEach(p => {
     if (p.collected) return;
-    if (Math.hypot(archX - p.x, archY - p.y) < 5.5) {
+    const el = document.getElementById(p.id);
+    let hit = Math.hypot(archX - p.x, archY - p.y) < 7.0;
+
+    if (!hit && archRect && el) {
+      const pRect = el.getBoundingClientRect();
+      if (pRect.width > 0) {
+        const pCx = pRect.left + pRect.width / 2;
+        const pCy = pRect.top + pRect.height / 2;
+        const distPx = Math.hypot(archCx - pCx, archCy - pCy);
+        // Avatar radius (29px) + pickup orb radius (25px) = 54px edge touch; 68px adds a 14px magnetic pickup halo
+        if (distPx <= 68) hit = true;
+      }
+    }
+
+    if (hit) {
       p.collected = true;
-      const el = document.getElementById(p.id);
       if (el) el.classList.add('collected');
 
       if (p.type === 'speed') {
