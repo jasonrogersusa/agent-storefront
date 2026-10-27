@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Agent Storefront Quest — Website Overworld & Executive Opportunity Demo</title>
+<title>Agent Storefront Quest — Simplified 3-Zone MMORPG Demo</title>
 <style>
   :root{
     --navy:#071429;
@@ -25,9 +25,9 @@
   *{box-sizing:border-box}
   html,body{
     margin:0;height:100%;
-    background:#F5F9FF;
-    background-image:radial-gradient(#CFE2FF 1.25px, transparent 1.25px);
-    background-size:22px 22px;
+    background-color:#F2F7FF;
+    background-image:radial-gradient(#C2DAFF 1.5px, transparent 1.5px);
+    background-size:20px 20px;
     color:var(--g900);
     font-family:"Google Sans",Roboto,"Helvetica Neue",Arial,sans-serif;
     -webkit-font-smoothing:antialiased;
@@ -35,61 +35,66 @@
   }
   body{display:flex;flex-direction:column}
   .mono{font-family:"Roboto Mono",ui-monospace,Menlo,monospace}
-  .px-svg{shape-rendering:crispEdges;image-rendering:pixelated;overflow:visible}
-  .px-img{image-rendering:pixelated}
+  .px-svg{shape-rendering:crispEdges;image-rendering:pixelated;overflow:visible;display:block}
+  .px-img{image-rendering:pixelated;display:block}
 
-  /* Top Navigation Bar (4 Steps) */
+  /* Top Navigation Bar */
   #top{
-    display:flex;align-items:center;gap:16px;padding:0 26px;height:56px;
-    background:#fff;border-bottom:2px solid var(--navy);z-index:60;flex:none;
+    display:flex;align-items:center;gap:14px;padding:0 26px;height:54px;
+    background:#fff;border-bottom:2.5px solid var(--navy);z-index:60;flex:none;
   }
-  .brand{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;cursor:pointer}
+  .brand{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:var(--navy);cursor:pointer}
   .brand i{width:22px;height:22px;border-radius:6px;background:var(--gem);display:inline-block;border:1.5px solid var(--navy)}
-  .mode-pill{
-    font-size:11px;font-weight:600;background:#E8F0FE;color:var(--ucp-blue);
-    padding:4px 10px;border-radius:999px;border:1.5px solid var(--ucp-blue);
-    box-shadow:2px 2px 0 var(--ucp-shadow);
-  }
-  #steps{display:flex;gap:8px;margin-left:auto}
+  #steps{display:flex;gap:6px;margin-left:auto}
   #steps span{
-    display:flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;
-    font-size:12.5px;font-weight:500;color:var(--g600);cursor:pointer;
+    display:flex;align-items:center;gap:7px;padding:5px 13px;border-radius:999px;
+    font-size:12px;font-weight:600;color:var(--g600);cursor:pointer;
     border:1.5px solid transparent;transition:all .18s;user-select:none;
   }
   #steps span:hover{background:var(--g100)}
   #steps span b{
-    width:20px;height:20px;border-radius:50%;background:var(--g200);
-    display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--g800);
+    width:19px;height:19px;border-radius:50%;background:var(--g200);
+    display:grid;place-items:center;font-size:10.5px;font-weight:700;color:var(--g800);
   }
   #steps span.on{
     background:#fff;color:var(--navy);border-color:var(--ucp-blue);
-    box-shadow:3px 3px 0 var(--ucp-shadow);font-weight:600;
+    box-shadow:3px 3px 0 var(--ucp-shadow);
   }
   #steps span.on b{background:var(--ucp-blue);color:#fff}
   #steps span.done b{background:var(--green);color:#fff}
 
-  main{flex:1;position:relative;overflow:hidden}
+  main{flex:1;position:relative;overflow:hidden;z-index:2}
   .scr{position:absolute;inset:0;overflow:auto;padding:22px 30px 28px;display:none}
-  .scr.on{display:block;animation:fadeIn .22s ease}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .scr.on{display:block;animation:fadeIn .24s cubic-bezier(.22,1,.36,1)}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
   /* Pixel-Styled Buttons */
   .px-btn{
-    display:inline-flex;align-items:center;gap:8px;
-    border:2px solid var(--navy);border-radius:14px;padding:11px 20px;
-    font:600 13.5px "Google Sans",Roboto,sans-serif;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    border:2.5px solid var(--navy);border-radius:14px;padding:12px 22px;
+    font:700 14px "Google Sans",Roboto,sans-serif;cursor:pointer;
     background:var(--ucp-blue);color:#fff;
     box-shadow:4px 4px 0 var(--navy);
     transition:transform .12s,box-shadow .12s,background .15s;
+    white-space:nowrap;
   }
-  .px-btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--navy)}
+  .px-btn:hover{transform:translate(-1.5px,-1.5px);box-shadow:5.5px 5.5px 0 var(--navy)}
   .px-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--navy)}
   .px-btn.gem{background:var(--gem)}
   .px-btn.green{background:var(--green)}
-  .px-btn.ghost{background:#fff;color:var(--navy);border-color:var(--ucp-blue);box-shadow:3px 3px 0 var(--ucp-shadow)}
+  .px-btn.ghost{background:#fff;color:var(--navy);border-color:var(--navy);box-shadow:3px 3px 0 var(--ucp-shadow)}
+
+  .star-pill{
+    font:700 10.5px "Roboto Mono",monospace;padding:4px 10px;border-radius:8px;
+    border:1.5px solid var(--navy);color:#fff;white-space:nowrap;
+    box-shadow:2px 2px 0 var(--navy);
+  }
+  .star-pill.s1{background:#2B7DE9}
+  .star-pill.s2{background:#E37400}
+  .star-pill.s3{background:#7627BB}
 
   /* =========================================================
-     SHARED EXACT CLONE OF THE FRANKIE SHOP PAGE STRUCTURE
+     SHARED EXACT CLONE OF THE FRANKIE SHOP PAGE (3 ZONES)
      ========================================================= */
   .fs-clone{
     background:#fff;color:#111;
@@ -98,277 +103,273 @@
     display:flex;flex-direction:column;justify-content:space-between;
     width:100%;height:100%;
   }
+  .fs-zone{
+    position:relative;
+    transition:filter .45s ease, opacity .45s ease, background .35s ease, box-shadow .35s ease, border-color .35s ease;
+    border:2.5px solid transparent;
+    border-radius:10px;
+  }
+  .overworld-viewport .fs-zone.unfixed{
+    filter:grayscale(85%) contrast(0.92);
+    opacity:0.42;
+  }
+  .overworld-viewport .fs-zone.fixed{
+    filter:none;
+    opacity:1;
+    background:rgba(230,244,234,.25);
+    border-color:rgba(30,142,62,.5);
+  }
+  .fs-zone.scan-active{
+    border-color:var(--ucp-blue)!important;
+    background:rgba(43,125,233,.06)!important;
+    box-shadow:inset 0 0 0 3px rgba(43,125,233,.2)!important;
+  }
+
+  .fs-header-zone{padding:4px 0 6px}
   .fs-nav{
     display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1.2fr;
     align-items:center;padding:8px 18px;font-size:10px;text-transform:uppercase;
-    border-radius:8px;border:2px solid transparent;transition:all .35s;
   }
   .fs-nav .logo{font-family:"Times New Roman",Times,serif;font-size:16px;text-transform:none;letter-spacing:0}
-  .fs-nav .right{text-align:right}
+  .fs-nav .right{text-align:right;font-weight:600}
   .fs-promo{
-    margin:0 18px;height:26px;display:flex;align-items:center;justify-content:center;
+    margin:0 18px;height:24px;display:flex;align-items:center;justify-content:center;
     font:italic 9.5px Georgia,serif;letter-spacing:.14em;text-transform:uppercase;
     background:linear-gradient(90deg,#f1ede6,#e8e2d8);color:#4b4238;
-    border-radius:6px;border:2px solid transparent;transition:all .35s;
+    border-radius:6px;
   }
+  .fs-body-zone{flex:1;display:flex;flex-direction:column;min-height:0;padding:4px 0}
   .fs-head{
     display:grid;grid-template-columns:1fr 1.5fr 1fr;align-items:baseline;
-    padding:8px 18px 4px;
+    padding:4px 18px 4px;
   }
-  .fs-head h1{font-weight:400;font-size:17px;margin:0;letter-spacing:0}
-  .fs-head p{margin:0;font-size:10px;color:#555;line-height:1.35}
-  .fs-crumbs{
-    display:flex;justify-content:space-between;padding:0 18px 6px;
-    font-size:8.5px;text-transform:uppercase;color:#666;
-  }
+  .fs-head h1{font-weight:400;font-size:16px;margin:0;letter-spacing:0}
+  .fs-head p{margin:0;font-size:9.5px;color:#555;line-height:1.3}
   .fs-grid{
     flex:1;display:grid;grid-template-columns:repeat(4,1fr);
-    column-gap:16px;row-gap:10px;padding:0 18px 8px;min-height:0;align-items:stretch;
+    column-gap:16px;row-gap:8px;padding:0 18px 6px;min-height:0;align-items:stretch;
   }
-  .fs-tile{
-    display:flex;flex-direction:column;min-height:0;
-    border-radius:10px;padding:4px;border:2px solid transparent;
-    transition:all .35s;position:relative;
-  }
-  .fs-tile .img-wrap{
-    flex:1;min-height:0;background:#ececec;overflow:hidden;border-radius:6px;position:relative;
-  }
-  .fs-tile img{
-    width:100%;height:100%;object-fit:cover;object-position:top center;display:block;
-  }
-  .fs-meta{
-    padding-top:4px;font-size:9px;text-transform:uppercase;line-height:1.3;
-  }
+  .fs-tile{display:flex;flex-direction:column;min-height:0;border-radius:8px;padding:3px;position:relative}
+  .fs-tile .img-wrap{flex:1;min-height:0;background:#ececec;overflow:hidden;border-radius:6px;position:relative}
+  .fs-tile img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+  .fs-meta{padding-top:4px;font-size:8.5px;text-transform:uppercase;line-height:1.25}
   .fs-meta-top{display:flex;justify-content:space-between;gap:4px}
   .fs-meta-top span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .fs-meta-top b{font-weight:600;flex:none}
-  .fs-sizes{display:flex;gap:6px;font-size:8.5px;color:#555;margin-top:1px}
+  .fs-sizes{display:flex;gap:5px;font-size:8px;color:#555;margin-top:1px}
   .fs-sizes s{opacity:.38}
-  .fs-footer{
+  .fs-footer-zone{
     display:grid;grid-template-columns:1fr 1.3fr 1fr 1.2fr;gap:14px;
-    padding:8px 18px 10px;border-top:1px solid #e6e6e6;font-size:9px;line-height:1.4;
+    padding:8px 18px 10px;border-top:1px solid #e6e6e6;font-size:8.5px;line-height:1.35;
     background:#FAFAFA;
   }
-  .fs-footer > div{
-    border-radius:8px;padding:4px 8px;border:2px solid transparent;transition:all .35s;
-  }
-  .fs-footer h5{margin:0 0 2px;font-size:8.5px;text-transform:uppercase;letter-spacing:.1em}
-
-  /* Live Webpage Element Highlight when Shopper Agents Probe, Get Stuck, or Succeed! */
-  .zone-solved{
-    border-color:rgba(30,142,62,.45)!important;
-    background:#F4FBF6!important;
-  }
-  .zone-agent-probing{
-    border-color:#2B7DE9!important;
-    border-style:dashed!important;
-    background:rgba(43,125,233,.06)!important;
-    box-shadow:0 0 0 3px rgba(43,125,233,.18)!important;
-  }
-  .zone-agent-frustrated{
-    border-color:#D93025!important;
-    background:rgba(217,48,37,.08)!important;
-    box-shadow:0 0 0 4px rgba(217,48,37,.24)!important;
-    animation:zoneShake .36s ease-in-out;
-  }
-  @keyframes zoneShake{
-    0%,100%{transform:translateX(0)}
-    25%{transform:translateX(-3px)}
-    50%{transform:translateX(3px)}
-    75%{transform:translateX(-2px)}
-  }
-  .zone-agent-touch{
-    border-color:#1E8E3E!important;
-    background:#E6F4EA!important;
-    box-shadow:0 0 0 4px rgba(52,168,83,.28), 0 4px 16px rgba(30,142,62,.18)!important;
-  }
+  .fs-footer-zone h5{margin:0 0 2px;font-size:8.5px;text-transform:uppercase;letter-spacing:.1em}
 
   /* =========================================================
-     STEP 1: ULTRA-CLEAN ENTER YOUR SITE MODAL
+     STEP 1: RADICALLY SIMPLIFIED, COHESIVE HOMEPAGE TITLE SCREEN
      ========================================================= */
-  #s1{max-width:820px;margin:0 auto;display:none;flex-direction:column;justify-content:center;min-height:100%}
+  #s1{max-width:740px;margin:0 auto;display:none;flex-direction:column;justify-content:center;min-height:100%}
   #s1.on{display:flex}
   .s1-card{
-    background:#fff;border:2.5px solid var(--ucp-blue);border-radius:26px;
-    box-shadow:8px 8px 0 var(--ucp-shadow);padding:34px 40px;
+    background:#fff;border:3px solid var(--navy);border-radius:28px;
+    box-shadow:10px 10px 0 var(--ucp-blue);padding:38px 44px 40px;
+    text-align:center;position:relative;
+  }
+  /* Cohesive Pixel Overworld Stage Header inside the Home Card */
+  .s1-stage-banner{
+    background:linear-gradient(180deg,#DCEBFF 0%,#EFF6FF 72%,#E2EEFF 72%,#E2EEFF 100%);
+    border:2.5px solid var(--navy);border-radius:20px;
+    padding:20px 28px 16px;margin-bottom:26px;
+    box-shadow:inset 0 3px 0 rgba(255,255,255,.7), 4px 4px 0 var(--ucp-shadow);
+    display:flex;align-items:center;justify-content:center;gap:22px;
     position:relative;overflow:hidden;
   }
-  .s1-eyebrow-row{
-    display:flex;align-items:center;justify-content:space-between;gap:12px;
-    margin-bottom:16px;flex-wrap:wrap;
+  .s1-stage-path{
+    position:absolute;left:12%;right:12%;bottom:24px;height:4px;
+    background:repeating-linear-gradient(90deg,#FBBC04 0 10px,transparent 10px 18px);
+    z-index:1;
   }
-  .s1-quest-badge{
-    display:inline-flex;align-items:center;gap:8px;
-    background:var(--ucp-ice);border:2px solid var(--ucp-blue);border-radius:999px;
-    padding:5px 14px;font:700 11.5px "Roboto Mono",monospace;color:var(--ucp-blue);
-    box-shadow:3px 3px 0 var(--ucp-shadow);
+  .dio-node{
+    position:relative;z-index:2;
+    width:60px;height:60px;border-radius:18px;
+    background:#fff;border:2.5px solid var(--navy);
+    box-shadow:0 0 0 3px #CFE2FF, 4px 4px 0 var(--navy);
+    display:grid;place-items:center;
+    animation:charBounce 2.4s ease-in-out infinite;
   }
-  .s1-tier-dots{
-    display:flex;align-items:center;gap:6px;
+  .dio-node.gold{
+    background:radial-gradient(circle,#FFFDF5 0%,#FFE082 100%);
+    box-shadow:0 0 0 3px #FDE293, 4px 4px 0 var(--navy);
+    animation-delay:.35s;
   }
-  .s1-Title{margin-bottom:22px}
-  .s1-Title h1{
-    font-size:34px;font-weight:500;margin:0 0 12px;
-    letter-spacing:-.02em;line-height:1.15;color:var(--navy);
+  .dio-node.cyan{
+    background:radial-gradient(circle,#F0FCFF 0%,#B2F5EA 100%);
+    box-shadow:0 0 0 3px #81E6D9, 4px 4px 0 var(--navy);
+    animation-delay:.7s;
   }
-  .s1-pitch{
-    font-size:20.5px;font-weight:400;color:var(--g800);margin:0;line-height:1.48;
-    max-width:700px;
-  }
-  .s1-pitch .acc-blue{
-    font-weight:600;color:var(--ucp-blue);
-    text-decoration:underline;text-decoration-color:var(--ucp-shadow);
-    text-decoration-thickness:2.5px;text-underline-offset:4px;
-  }
-  .s1-pitch .acc-navy{
-    font-weight:600;color:var(--navy);
-    text-decoration:underline;text-decoration-color:#FDE293;
-    text-decoration-thickness:3px;text-underline-offset:4px;
-  }
-  .s1-pitch .acc-gem{
-    font-weight:700;
-    background:var(--gem);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+  @keyframes charBounce{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-5px)}
   }
 
-  /* Pixel Art Scene Strip on Step 1 */
-  .s1-art-strip{
-    display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px;
-    background:var(--ucp-ice);
-    background-image:radial-gradient(#CFE2FF 1.25px, transparent 1.25px);
-    background-size:16px 16px;
-    border:2px solid var(--ucp-blue);border-radius:18px;
-    padding:14px 18px;margin-bottom:22px;
-    box-shadow:4px 4px 0 var(--ucp-shadow);
+  .s1-card h1{
+    font-size:36px;font-weight:700;margin:0 0 16px;
+    letter-spacing:-.02em;line-height:1.15;color:var(--navy);
   }
-  @media(max-width:720px){
-    .s1-art-strip{grid-template-columns:1fr;gap:12px}
-    .s1-art-arrow{display:none}
+  /* Clean, Unified Typography & Consistent Accent Formatting (No Orphaned Words!) */
+  .s1-pitch{
+    font-size:21px;font-weight:400;color:var(--g800);
+    margin:0 auto 30px;line-height:1.65;max-width:620px;
+    text-wrap:balance;
   }
-  .s1-art-step{
-    display:flex;align-items:center;gap:11px;
-    background:#fff;border:2px solid var(--navy);border-radius:13px;
-    padding:8px 12px;box-shadow:3px 3px 0 var(--ucp-shadow);
-  }
-  .s1-sprite-box{
-    width:42px;height:42px;border-radius:10px;border:1.5px solid var(--navy);
-    display:grid;place-items:center;flex:none;
-  }
-  .s1-art-step b{display:block;font-size:12px;color:var(--navy);line-height:1.25}
-  .s1-art-step small{display:block;font:600 10px "Roboto Mono",monospace;color:var(--g600);margin-top:2px}
-  .s1-art-arrow{
-    font:700 13px "Roboto Mono",monospace;color:var(--ucp-blue);
-    letter-spacing:-2px;user-select:none;
+  .s1-pitch .acc{
+    font-weight:700;color:var(--ucp-blue);
+    background:#EBF3FF;
+    border-bottom:2.5px solid var(--ucp-shadow);
+    padding:2px 7px;border-radius:6px;
+    white-space:nowrap;
   }
 
   .url-box{
     display:flex;gap:10px;padding:8px;border:2.5px solid var(--navy);
     border-radius:18px;background:#F8FAFF;box-shadow:4px 4px 0 var(--ucp-shadow);
+    text-align:left;
   }
   .url-box input{
     flex:1;border:0;outline:0;background:transparent;
-    font:500 15px "Roboto Mono",monospace;padding:0 14px;color:var(--navy);
+    font:500 14.5px "Roboto Mono",monospace;padding:0 14px;color:var(--navy);
   }
 
   /* =========================================================
-     STEP 2: ANALYZING THE SITE (Cloned Site Fitted Inside Scanner)
+     STEP 2: SUPER CLEAN, FUN "HOW TO PLAY" INTERSTITIAL STEP
      ========================================================= */
-  .s2-wrap{max-width:1220px;margin:0 auto;display:flex;flex-direction:column;gap:20px;justify-content:center;min-height:100%}
+  #s2{max-width:920px;margin:0 auto;display:none;flex-direction:column;justify-content:center;min-height:100%}
+  #s2.on{display:flex}
+  .howto-card{
+    background:#fff;border:3px solid var(--navy);border-radius:28px;
+    box-shadow:10px 10px 0 var(--ucp-blue);padding:36px 40px;text-align:center;
+  }
+  .howto-eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    background:#FFF8E1;border:2px solid var(--navy);border-radius:999px;
+    padding:5px 16px;font:700 11.5px "Roboto Mono",monospace;color:var(--navy);
+    box-shadow:3px 3px 0 var(--amber-shadow);margin-bottom:14px;
+  }
+  .howto-card h2{
+    font-size:31px;font-weight:700;color:var(--navy);margin:0 0 26px;letter-spacing:-.015em;
+  }
+  .howto-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:28px;
+  }
+  @media(max-width:780px){.howto-grid{grid-template-columns:1fr}}
+  .ht-step{
+    background:var(--ucp-ice);border:2.5px solid var(--navy);border-radius:22px;
+    padding:24px 18px;box-shadow:5px 5px 0 var(--ucp-shadow);
+    display:flex;flex-direction:column;align-items:center;gap:12px;
+    transition:transform .18s;
+  }
+  .ht-step:hover{transform:translateY(-4px)}
+  .ht-num{
+    font:700 11px "Roboto Mono",monospace;background:var(--navy);color:#FBBC04;
+    padding:3px 10px;border-radius:999px;
+  }
+  .ht-art{
+    width:72px;height:72px;border-radius:20px;background:#fff;
+    border:2.5px solid var(--navy);box-shadow:0 0 0 3px #CFE2FF, 4px 4px 0 var(--navy);
+    display:grid;place-items:center;
+    animation:charBounce 2.6s ease-in-out infinite;
+  }
+  .ht-step h3{margin:0;font-size:18px;font-weight:700;color:var(--navy)}
+  .ht-step p{margin:0;font-size:13.5px;color:var(--g600);line-height:1.45;max-width:220px}
+
+  /* =========================================================
+     STEP 3: SCAN PAGE (Aligned Columns + Center-Aligned Pills)
+     ========================================================= */
+  .s3-wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;min-height:100%}
   .scanner-stage{
-    background:#fff;border:2.5px solid var(--ucp-blue);border-radius:26px;
-    box-shadow:8px 8px 0 var(--ucp-shadow);padding:24px 28px;
-    display:grid;grid-template-columns:1.32fr 1fr;gap:26px;align-items:center;
+    background:#fff;border:3px solid var(--navy);border-radius:28px;
+    box-shadow:10px 10px 0 var(--ucp-blue);padding:26px 30px;
+    display:grid;grid-template-columns:1.25fr 1fr;gap:28px;
+    align-items:stretch;
   }
   @media(max-width:980px){.scanner-stage{grid-template-columns:1fr}}
 
   .site-scan-frame{
-    position:relative;width:100%;aspect-ratio:16 / 10;background:#fff;border:3px solid var(--navy);
-    border-radius:20px;overflow:hidden;box-shadow:0 8px 24px rgba(7,20,41,.12);
+    position:relative;width:100%;height:100%;min-height:410px;
+    background:#fff;border:3px solid var(--navy);
+    border-radius:20px;overflow:hidden;box-shadow:5px 5px 0 var(--ucp-shadow);
   }
-  #s2-clone-mount{
+  #s3-scan-clone-mount{
     width:1280px;height:800px;
     transform-origin:top left;
     pointer-events:none;
+    position:absolute;top:0;left:0;
   }
-  .site-scan-overlay{
-    position:absolute;inset:0;pointer-events:none;z-index:3;
-    background:linear-gradient(180deg, rgba(43,125,233,.04) 0%, rgba(76,224,230,.10) 100%);
-  }
-  .scan-laser{
-    position:absolute;left:0;right:0;height:6px;z-index:5;pointer-events:none;
-    background:linear-gradient(90deg,transparent,#2B7DE9,#4CE0E6,#fff,#4CE0E6,#2B7DE9,transparent);
-    box-shadow:0 0 20px 4px rgba(43,125,233,.65);
-    animation:scanUpDown 2.8s ease-in-out infinite;
-  }
-  @keyframes scanUpDown{0%,100%{top:4%}50%{top:93%}}
-
-  .radar-mag{
-    position:absolute;width:54px;height:54px;z-index:7;
-    transition:left .45s cubic-bezier(.34,1.56,.64,1),top .45s cubic-bezier(.34,1.56,.64,1);
-    pointer-events:none;
+  .calm-scan-bar{
+    position:absolute;left:0;right:0;height:4px;z-index:5;pointer-events:none;
+    background:linear-gradient(90deg,transparent,var(--ucp-blue),var(--ucp-cyan),var(--ucp-blue),transparent);
+    box-shadow:0 0 12px 2px rgba(43,125,233,.35);
+    top:90%;opacity:0;
+    transition:top 1.1s cubic-bezier(.4,0,.2,1), opacity .4s ease;
   }
   .r-pin{
-    position:absolute;transform:translate(-50%,-50%) scale(0);
-    padding:4px 9px;border-radius:8px;font:700 10px "Roboto Mono",monospace;
-    border:2px solid var(--navy);box-shadow:3px 3px 0 var(--navy);
-    transition:transform .32s cubic-bezier(.34,1.56,.64,1);z-index:6;white-space:nowrap;
+    position:absolute;left:50%;transform:translate(-50%,-50%) scale(0);
+    padding:7px 16px;border-radius:999px;font:700 11.5px "Roboto Mono",monospace;
+    border:2.5px solid var(--navy);box-shadow:4px 4px 0 var(--navy);
+    transition:transform .38s cubic-bezier(.34,1.56,.64,1);z-index:6;white-space:nowrap;
   }
   .r-pin.show{transform:translate(-50%,-50%) scale(1)}
   .r-pin.lvl1{background:#2B7DE9;color:#fff}
   .r-pin.lvl2{background:#E37400;color:#fff}
   .r-pin.lvl3{background:#7627BB;color:#fff}
 
-  .scan-hud{display:flex;flex-direction:column;gap:14px}
-  .scan-prog-bar{height:16px;border:2px solid var(--navy);border-radius:999px;background:#E8F0FE;overflow:hidden;padding:2px}
-  .scan-prog-bar i{display:block;height:100%;width:0%;border-radius:999px;background:var(--gem);transition:width .35s}
-  .tier-discover-list{display:flex;flex-direction:column;gap:10px}
+  .scan-hud{display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+  .scan-prog-bar{height:12px;border:2px solid var(--navy);border-radius:999px;background:#E8F0FE;overflow:hidden;padding:1.5px}
+  .scan-prog-bar i{display:block;height:100%;width:0%;border-radius:999px;background:var(--gem);transition:width .6s ease}
+  .tier-discover-list{display:flex;flex-direction:column;gap:12px}
   .td-item{
-    border:2px solid var(--g300);border-radius:14px;padding:11px 14px;
+    border:2.5px solid var(--g200);border-radius:18px;padding:13px 16px;
     background:var(--g50);display:flex;align-items:center;justify-content:space-between;
-    opacity:.45;transform:translateX(8px);transition:all .3s;
+    opacity:.4;transition:all .4s ease;
   }
-  .td-item.ready{opacity:1;transform:none;background:#fff;border-color:var(--ucp-blue);box-shadow:4px 4px 0 var(--ucp-shadow)}
-  .td-left{display:flex;align-items:center;gap:10px}
-  .star-pill{
-    font:700 11px "Roboto Mono",monospace;padding:3px 8px;border-radius:8px;
-    border:1.5px solid var(--navy);color:#fff;
-  }
-  .star-pill.s1{background:#2B7DE9}
-  .star-pill.s2{background:#E37400}
-  .star-pill.s3{background:#7627BB}
+  .td-item.ready{opacity:1;background:#fff;border-color:var(--navy);box-shadow:4px 4px 0 var(--ucp-shadow)}
+  .td-left{display:flex;align-items:center;gap:12px}
 
   /* =========================================================
-     STEP 3: STOREFRONT QUEST ON THE CLONED SITE (No Highway Lanes!)
+     STEP 4: MMORPG STOREFRONT PLAYBOARD (Unified 24x24 Coin-Style Sprites!)
      ========================================================= */
   .game-layout{
-    max-width:1380px;margin:0 auto;height:calc(100vh - 96px);
+    max-width:1340px;margin:0 auto;height:calc(100vh - 86px);
     display:flex;flex-direction:column;gap:10px;
   }
 
   .arcade-hud{
-    background:#fff;border:2.5px solid var(--navy);border-radius:18px;
-    box-shadow:5px 5px 0 var(--ucp-shadow);padding:8px 16px;
-    display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;flex:none;
+    background:#fff;border:2.5px solid var(--navy);border-radius:16px;
+    box-shadow:4px 4px 0 var(--ucp-shadow);padding:7px 16px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex:none;
   }
-  .hud-player{display:flex;align-items:center;gap:10px}
-  .hud-avatar-badge{
-    display:flex;align-items:center;gap:8px;background:#FFF8E1;
-    border:2px solid var(--navy);border-radius:10px;padding:4px 10px;
+  .hud-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .hud-avatar-pill{
+    display:inline-flex;align-items:center;gap:7px;background:#FFF8E1;
+    border:2px solid var(--navy);border-radius:999px;padding:4px 12px;
     font-size:12px;font-weight:700;color:var(--navy);
   }
-  .key-cap{
-    display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 5px;
-    border:1.5px solid var(--navy);border-radius:5px;background:#fff;
-    box-shadow:0 2px 0 var(--navy);font:700 10.5px "Roboto Mono",monospace;color:var(--navy);
+  .hud-speed-badge{
+    display:none;align-items:center;gap:5px;background:#E8F8FF;
+    border:1.5px solid var(--navy);border-radius:999px;padding:3px 10px;
+    font:700 11px "Roboto Mono",monospace;color:var(--navy);
+    box-shadow:2px 2px 0 var(--ucp-shadow);
   }
-  .hud-stats{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .hud-speed-badge.on{display:inline-flex}
+  .hud-hint{font-size:12.5px;color:var(--g600);font-weight:500}
+
+  .hud-stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .hud-stat-box{
-    display:flex;align-items:center;gap:7px;background:var(--ucp-ice);
-    border:2px solid var(--ucp-blue);border-radius:12px;padding:4px 11px;
-    font-size:12px;
+    display:flex;align-items:center;gap:6px;background:var(--ucp-ice);
+    border:2px solid var(--navy);border-radius:11px;padding:4px 11px;
+    font-size:12px;font-weight:600;box-shadow:2px 2px 0 var(--ucp-shadow);
   }
-  .hud-stat-box b{font:700 14.5px "Roboto Mono",monospace;color:var(--navy)}
+  .hud-stat-box b{font:700 14px "Roboto Mono",monospace;color:var(--navy)}
   .hud-stat-box.lift{background:#E6F4EA;border-color:var(--green)}
   .hud-stat-box.lift b{color:var(--green)}
 
@@ -376,602 +377,499 @@
     position:relative;flex:1;min-height:0;
     background:#fff;border:3px solid var(--navy);border-radius:22px;
     box-shadow:8px 8px 0 var(--ucp-shadow);overflow:hidden;
-    user-select:none;outline:none;cursor:crosshair;
+    user-select:none;outline:none;cursor:pointer;
   }
 
   /* =========================================================
-     DEMURE, BACKGROUND SHOPPER AGENTS (United with Milestone Flags)
+     MMORPG PHYSICAL OBSTACLE NODES (Matched to Coin Medallion Style!)
      ========================================================= */
-  #agent-fx-svg{
-    position:absolute;inset:0;width:100%;height:100%;
-    pointer-events:none;z-index:15;
-  }
-  #agents-layer{
-    position:absolute;inset:0;pointer-events:none;z-index:16;
-  }
-  .roaming-agent{
+  .mmorpg-obstacle{
     position:absolute;transform:translate(-50%,-50%);
-    display:flex;flex-direction:column;align-items:center;gap:2px;
-    opacity:.76;
-    transition:opacity .3s;
-    will-change:left,top;
+    z-index:24;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    animation:obstacleBob 2.5s ease-in-out infinite;
   }
-  .roaming-agent.st-probing,
-  .roaming-agent.st-frustrated,
-  .roaming-agent.st-succeeded{
-    opacity:.92;
+  @keyframes obstacleBob{
+    0%,100%{transform:translate(-50%,-50%) translateY(0)}
+    50%{transform:translate(-50%,-50%) translateY(-5px)}
   }
-  .ra-body{
-    display:flex;align-items:center;gap:4px;
-    background:rgba(255,255,255,.92);border:1.5px solid #80868B;
-    border-radius:999px;padding:2px 7px;
-    box-shadow:0 2px 6px rgba(7,20,41,.10);
-    transition:border-color .25s,background .25s,box-shadow .25s;
+  .mmorpg-obstacle:hover .obs-totem{
+    transform:scale(1.08);
+    box-shadow:0 0 0 4px #FBBC04, 0 0 0 6.5px var(--navy), 6px 6px 0 rgba(7,20,41,.35);
   }
-  .roaming-agent.st-probing .ra-body{
-    border-color:var(--ucp-blue);background:#F4FAFF;
+  .obs-totem{
+    width:68px;height:68px;border-radius:20px;
+    background:radial-gradient(circle,#FFFDF9 0%,#FFE8E5 100%);
+    border:3px solid var(--navy);
+    box-shadow:0 0 0 3.5px #F6AEA9, 0 0 0 6px var(--navy), 5px 5px 0 rgba(7,20,41,.3);
+    display:grid;place-items:center;position:relative;
+    transition:transform .18s, background .3s, box-shadow .3s;
   }
-  .roaming-agent.st-frustrated .ra-body{
-    border-color:#D93025;background:#FFF5F5;
+  .obs-alert-badge{
+    position:absolute;top:-10px;right:-10px;
+    width:26px;height:26px;border-radius:50%;
+    background:#FCE8E6;border:2.5px solid var(--navy);
+    display:grid;place-items:center;
+    box-shadow:2px 2px 0 var(--navy);
   }
-  .roaming-agent.st-succeeded .ra-body{
-    border-color:var(--green);background:#F0FBF3;
+  .obs-plate{
+    background:var(--navy);color:#fff;border:2px solid #fff;
+    border-radius:999px;padding:3px 12px;
+    font:700 10.5px "Roboto Mono",monospace;
+    box-shadow:3px 3px 0 rgba(7,20,41,.35);
+    white-space:nowrap;
   }
-  .ra-tag{
-    font:600 8.5px "Roboto Mono",monospace;color:var(--g800);
+  /* Solved State: Glowing Gold/Green Medallion */
+  .mmorpg-obstacle.solved{animation:none}
+  .mmorpg-obstacle.solved .obs-totem{
+    background:radial-gradient(circle,#F4FBF7 0%,#CEEAD6 100%);
+    box-shadow:0 0 0 3.5px #81C995, 0 0 0 6px var(--navy), 5px 5px 0 rgba(7,20,41,.25);
   }
-  .ra-cart-badge{
-    font:700 8px "Roboto Mono",monospace;
-    background:var(--g100);color:var(--g800);
-    border-radius:6px;padding:0 4px;
+  .mmorpg-obstacle.solved .obs-alert-badge{
+    background:#E6F4EA;
   }
-  .roaming-agent.st-succeeded .ra-cart-badge{
-    background:#CEEAD6;color:var(--green);
+  .mmorpg-obstacle.solved .obs-plate{
+    background:var(--green);color:#fff;
   }
-  /* Quiet, understated micro-caption (hidden while walking so agents stay demure!) */
-  .ra-thought{
-    background:rgba(255,255,255,.95);color:var(--g800);
-    border:1.5px solid var(--g300);border-radius:6px;
-    padding:1px 6px;font:600 8px "Roboto Mono",monospace;
-    white-space:nowrap;box-shadow:0 2px 4px rgba(0,0,0,.08);
-    display:flex;align-items:center;gap:4px;
-    transition:opacity .25s,border-color .25s,color .25s;
+  .mmorpg-obstacle .sp-solved{display:none}
+  .mmorpg-obstacle.solved .sp-unsolved{display:none}
+  .mmorpg-obstacle.solved .sp-solved{display:grid}
+
+  /* =========================================================
+     FLOOR PICKUP MEDALLIONS (Exact Coin Medallion Framing!)
+     ========================================================= */
+  .floor-pickup{
+    position:absolute;transform:translate(-50%,-50%);
+    z-index:20;cursor:pointer;
+    width:50px;height:50px;border-radius:50%;
+    background:radial-gradient(circle,#FFFDF5 0%,#FFE082 100%);
+    border:2.5px solid var(--navy);
+    box-shadow:0 0 0 3px #E3A008, 0 0 0 5px var(--navy), 3px 4px 0 rgba(7,20,41,.3);
+    display:grid;place-items:center;
+    animation:pickupFloat 2.1s ease-in-out infinite;
+    transition:transform .2s, opacity .2s;
   }
-  .roaming-agent.st-walking .ra-thought,
-  .roaming-agent.st-rerouting .ra-thought{
+  .floor-pickup.speed-orb{
+    background:radial-gradient(circle,#F0FCFF 0%,#90E0EF 100%);
+    box-shadow:0 0 0 3px #2B7DE9, 0 0 0 5px var(--navy), 3px 4px 0 rgba(7,20,41,.3);
+  }
+  .floor-pickup:hover{transform:translate(-50%,-50%) scale(1.14)}
+  @keyframes pickupFloat{
+    0%,100%{transform:translate(-50%,-50%) translateY(0) scale(1)}
+    50%{transform:translate(-50%,-50%) translateY(-4px) scale(1.05)}
+  }
+  .floor-pickup.collected{
+    transform:translate(-50%,-50%) scale(0)!important;
     opacity:0;pointer-events:none;
   }
-  .roaming-agent.st-probing .ra-thought{
-    opacity:1;border-color:var(--ucp-blue);color:var(--ucp-blue);
-  }
-  .roaming-agent.st-frustrated .ra-thought{
-    opacity:1;border-color:var(--red);color:var(--red);background:#FFF8F7;
-  }
-  .roaming-agent.st-succeeded .ra-thought{
-    opacity:1;border-color:var(--green);color:var(--green);background:#F4FBF6;
-  }
-  .ra-prog{
-    width:20px;height:4px;background:var(--g200);
-    border-radius:2px;overflow:hidden;display:inline-block;
-  }
-  .ra-prog i{
-    display:block;height:100%;width:0%;background:var(--ucp-blue);
-  }
 
   /* =========================================================
-     6 CUTE PIXEL MILESTONE BADGES (United with Agent Obstacles!)
+     SIMPLIFIED CUTE PIXEL ROBOT AGENTS (Pixel Badges Only — No OS Emojis!)
      ========================================================= */
-  .milestone-node{
+  #agents-layer{position:absolute;inset:0;pointer-events:none;z-index:18}
+  .simple-bot{
     position:absolute;transform:translate(-50%,-50%);
-    z-index:22;cursor:pointer;display:flex;align-items:center;gap:8px;
-    background:#fff;border:2.5px solid var(--navy);border-radius:16px;
-    padding:6px 11px 6px 7px;
-    box-shadow:4px 4px 0 var(--navy);
-    transition:transform .18s,box-shadow .18s,background .3s,border-color .3s;
-    animation:mileBob 2.8s ease-in-out infinite;
+    display:flex;flex-direction:column;align-items:center;
+    will-change:left,top;
   }
-  @keyframes mileBob{
-    0%,100%{transform:translate(-50%,-50%) translateY(0)}
-    50%{transform:translate(-50%,-50%) translateY(-3px)}
-  }
-  .milestone-node:hover, .milestone-node.near{
-    transform:translate(-50%,-50%) scale(1.08);
-    border-color:var(--ucp-blue);
-    box-shadow:0 0 0 5px rgba(251,188,4,.45), 6px 6px 0 var(--ucp-blue);z-index:28;
-  }
-  /* Visual pulse on the Milestone Task Flag itself when an agent is blocked there! */
-  .milestone-node.agent-probing{
-    border-color:var(--ucp-blue);
-    box-shadow:0 0 0 4px rgba(43,125,233,.22), 4px 4px 0 var(--navy);
-  }
-  .milestone-node.agent-blocked{
-    border-color:var(--red);background:#FFF8F7;
-    box-shadow:0 0 0 5px rgba(217,48,37,.22), 4px 4px 0 var(--red);
-  }
-  .milestone-node.solved{
-    background:#E6F4EA;border-color:var(--green);
-    box-shadow:4px 4px 0 var(--green);animation:none;
-  }
-
-  /* Cute Pixel Icon Box inside Milestone */
-  .ms-icon-box{
-    width:38px;height:38px;border-radius:11px;border:2px solid var(--navy);
-    display:grid;place-items:center;flex:none;position:relative;
-  }
-  .ms-icon-box.t1{background:#D2E3FC}
-  .ms-icon-box.t2{background:#FEF7E0}
-  .ms-icon-box.t3{background:#F3E8FD}
-  .milestone-node.solved .ms-icon-box{background:#CEEAD6;border-color:var(--green)}
-
-  .ms-info{display:flex;flex-direction:column;gap:1px;text-align:left}
-  .ms-tier{
-    font:700 9.5px "Roboto Mono",monospace;letter-spacing:.03em;
+  .sb-bubble{
+    background:#fff;border:2px solid var(--navy);border-radius:999px;
+    padding:3px 7px;
+    margin-bottom:3px;box-shadow:2px 2px 0 rgba(7,20,41,.25);
     display:flex;align-items:center;gap:4px;
+    opacity:0;transform:scale(.7);
+    transition:opacity .2s, transform .2s;
   }
-  .ms-tier.t1{color:#1A73E8}
-  .ms-tier.t2{color:#E37400}
-  .ms-tier.t3{color:#7627BB}
-  .milestone-node.solved .ms-tier{color:var(--green)}
-  .ms-label{font-size:11.5px;font-weight:700;color:var(--navy);white-space:nowrap}
-  .ms-status{font:600 9.5px "Roboto Mono",monospace;color:var(--red);white-space:nowrap}
-  .milestone-node.solved .ms-status{color:var(--green)}
+  .simple-bot.react .sb-bubble{opacity:1;transform:scale(1)}
+  .simple-bot.blocked .sb-bubble{background:#FCE8E6;border-color:var(--red)}
+  .simple-bot.happy .sb-bubble{background:#E6F4EA;border-color:var(--green)}
+  .sb-sprite{
+    width:40px;height:40px;border-radius:50%;
+    background:#fff;border:2.5px solid var(--navy);
+    box-shadow:0 0 0 2px #CFE2FF, 2px 3px 0 var(--navy);
+    display:grid;place-items:center;
+  }
 
   /* =========================================================
-     THE HERO PLAYER AVATAR: STORE ARCHITECT (Primary Visual Focus!)
+     HERO PLAYER AVATAR: STORE ARCHITECT + HOVERING START POINTER
      ========================================================= */
   #architect-avatar{
-    position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
+    position:absolute;left:22%;top:76%;transform:translate(-50%,-50%);
     z-index:34;pointer-events:none;
     display:flex;flex-direction:column;align-items:center;
     will-change:left,top;
   }
+  #arch-start-pointer{
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+    margin-bottom:6px;
+    animation:startPointerHover .85s ease-in-out infinite;
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  #arch-start-pointer.gone{
+    opacity:0!important;
+    transform:translateY(-12px) scale(.7)!important;
+    animation:none!important;
+  }
+  .asp-pill{
+    background:#FBBC04;color:var(--navy);border:2.5px solid var(--navy);
+    border-radius:999px;padding:4px 12px;
+    font:700 11px "Roboto Mono",monospace;letter-spacing:.03em;
+    box-shadow:0 4px 12px rgba(7,20,41,.28), 3px 3px 0 var(--navy);
+    white-space:nowrap;
+  }
+  @keyframes startPointerHover{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-9px)}
+  }
   .arch-tag{
-    background:var(--navy);color:#FBBC04;border:2.5px solid #FBBC04;
-    border-radius:999px;padding:4px 12px;font:700 11px "Roboto Mono",monospace;
-    box-shadow:0 4px 12px rgba(7,20,41,.35), 3px 3px 0 var(--navy);
-    margin-bottom:5px;white-space:nowrap;letter-spacing:.03em;
-  }
-  .arch-body-wrap{
-    position:relative;display:grid;place-items:center;
-  }
-  .arch-pulse-ring{
-    position:absolute;width:82px;height:82px;border-radius:50%;
-    border:3px solid #FBBC04;
-    background:radial-gradient(circle, rgba(251,188,4,.28) 0%, rgba(43,125,233,.08) 70%, transparent 100%);
-    animation:heroPulse 2s ease-out infinite;
-    pointer-events:none;
-  }
-  @keyframes heroPulse{
-    0%{transform:scale(.82);opacity:.95}
-    70%{transform:scale(1.22);opacity:0}
-    100%{transform:scale(1.22);opacity:0}
+    background:var(--navy);color:#FBBC04;border:2px solid #FBBC04;
+    border-radius:999px;padding:3px 10px;font:700 10px "Roboto Mono",monospace;
+    box-shadow:2px 2px 0 var(--navy);margin-bottom:4px;white-space:nowrap;
   }
   .arch-body{
-    position:relative;z-index:2;
-    width:64px;height:64px;border-radius:50%;
+    width:58px;height:58px;border-radius:50%;
     background:linear-gradient(135deg,#FFF8E1 0%,#FFE082 100%);
     border:3px solid var(--navy);
-    box-shadow:0 0 0 4px #FBBC04, 0 0 0 6.5px var(--navy), 0 10px 24px rgba(7,20,41,.38);
+    box-shadow:0 0 0 3.5px #FBBC04, 0 0 0 6px var(--navy), 0 8px 18px rgba(7,20,41,.3);
     display:grid;place-items:center;
     transition:transform .08s linear;
   }
-  .arch-sub{
-    margin-top:5px;background:#FFF8E1;color:var(--navy);
-    border:2px solid var(--navy);border-radius:8px;
-    padding:2px 8px;font:700 9.5px "Google Sans",Roboto,sans-serif;
-    box-shadow:2px 2px 0 var(--navy);white-space:nowrap;
+  #architect-avatar.boosted .arch-body{
+    box-shadow:0 0 0 4px #4CE0E6, 0 0 0 6.5px var(--navy), 0 0 20px rgba(76,224,230,.85);
   }
-  .arch-shadow{
-    width:36px;height:10px;border-radius:50%;
-    background:rgba(7,20,41,.32);margin-top:-2px;
-  }
-  /* Subtle pixel footsteps left on the page as you walk */
   .footstep-dot{
-    position:absolute;width:7px;height:7px;background:rgba(251,188,4,.75);
+    position:absolute;width:7px;height:7px;background:rgba(251,188,4,.8);
     border:1.5px solid var(--navy);border-radius:2px;
     transform:translate(-50%,-50%);pointer-events:none;z-index:15;
-    animation:footFade .9s ease-out forwards;
+    animation:footFade .75s ease-out forwards;
   }
+  .footstep-dot.fast{background:#4CE0E6;width:9px;height:9px}
   @keyframes footFade{
     0%{opacity:.9;transform:translate(-50%,-50%) scale(1)}
-    100%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(.3)}
   }
 
-  /* Compact Hold-to-Walk D-Pad in Bottom-Left */
+  /* Compact D-Pad */
   .dpad-overlay{
     position:absolute;bottom:12px;left:14px;z-index:32;
-    background:rgba(255,255,255,.95);border:2px solid var(--navy);
-    border-radius:14px;padding:6px 10px;box-shadow:4px 4px 0 var(--ucp-shadow);
+    background:rgba(255,255,255,.94);border:2px solid var(--navy);
+    border-radius:14px;padding:5px 9px;box-shadow:3px 3px 0 var(--ucp-shadow);
     display:flex;align-items:center;gap:8px;
   }
-  .dpad-grid{
-    display:grid;grid-template-columns:repeat(3,26px);grid-template-rows:repeat(2,24px);gap:3px;
-  }
+  .dpad-grid{display:grid;grid-template-columns:repeat(3,24px);grid-template-rows:repeat(2,22px);gap:3px}
   .dpad-btn{
     border:1.5px solid var(--navy);border-radius:5px;background:var(--ucp-ice);
-    font:700 11px "Roboto Mono",monospace;color:var(--navy);cursor:pointer;
+    font:700 10.5px "Roboto Mono",monospace;color:var(--navy);cursor:pointer;
     display:grid;place-items:center;padding:0;box-shadow:0 2px 0 var(--navy);
-    user-select:none;-webkit-user-select:none;
   }
-  .dpad-btn:active, .dpad-btn.held{transform:translateY(1px);box-shadow:none;background:var(--ucp-blue);color:#fff}
+  .dpad-btn:active,.dpad-btn.held{transform:translateY(1px);box-shadow:none;background:var(--ucp-blue);color:#fff}
 
   /* =========================================================
-     QUEST CHALLENGE MODAL OVERLAY
+     ULTRA-SIMPLE 2-BUTTON CHOICE CARD
      ========================================================= */
   #quest-modal-backdrop{
-    position:absolute;inset:0;background:rgba(7,20,41,.48);
+    position:absolute;inset:0;background:rgba(7,20,41,.42);
     backdrop-filter:blur(2px);z-index:45;
     display:none;align-items:center;justify-content:center;padding:20px;
   }
-  #quest-modal-backdrop.open{display:flex;animation:fadeIn .18s ease}
+  #quest-modal-backdrop.open{display:flex;animation:fadeIn .15s ease}
 
-  .quest-modal{
+  .simple-choice-card{
     background:#fff;border:3px solid var(--navy);border-radius:24px;
-    box-shadow:10px 10px 0 var(--ucp-blue);max-width:680px;width:100%;
-    padding:22px 26px;position:relative;
+    box-shadow:8px 8px 0 var(--ucp-blue);max-width:500px;width:100%;
+    padding:22px 24px;text-align:center;position:relative;
   }
-  .qm-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
-  .qm-tier-badge{
-    display:inline-flex;align-items:center;gap:8px;padding:5px 12px;
-    border-radius:999px;font:700 11.5px "Roboto Mono",monospace;color:#fff;
-    border:2px solid var(--navy);
-  }
-  .qm-close{
-    width:32px;height:32px;border-radius:50%;border:2px solid var(--navy);
+  .scc-close{
+    position:absolute;top:14px;right:14px;
+    width:28px;height:28px;border-radius:50%;border:2px solid var(--navy);
     background:var(--g100);font-weight:700;cursor:pointer;
   }
-  .qm-title{font-size:21px;font-weight:600;margin:0 0 8px;color:var(--navy)}
-  .qm-problem-box{
-    background:#FFF5F5;border:2px solid var(--red);border-radius:16px;
-    padding:12px 16px;margin-bottom:14px;
+  .scc-zone-pill{
+    display:inline-flex;align-items:center;gap:6px;padding:4px 12px;
+    border-radius:999px;font:700 11px "Roboto Mono",monospace;color:#fff;
+    border:2px solid var(--navy);margin-bottom:10px;
   }
-  .qm-problem-box p{margin:0;font-size:13.5px;line-height:1.5;color:var(--g900)}
-  .qm-why-toggle{
-    margin-top:8px;display:inline-flex;align-items:center;gap:6px;
-    font-size:12px;font-weight:600;color:var(--ucp-blue);cursor:pointer;
-    background:none;border:0;padding:0;font-family:inherit;
+  .scc-title{font-size:21px;font-weight:700;margin:0 0 8px;color:var(--navy)}
+  .scc-problem{
+    font-size:14.5px;color:var(--g800);background:#FFF5F5;
+    border:2px solid var(--red);border-radius:14px;
+    padding:10px 14px;margin:0 0 16px;line-height:1.4;font-weight:500;
   }
-  .qm-why-drawer{
-    display:none;margin-top:8px;padding-top:8px;border-top:1px dashed #F6AEA9;
-    font-size:12px;color:var(--g600);line-height:1.5;
+  .scc-buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:520px){.scc-buttons{grid-template-columns:1fr}}
+  .scc-btn{
+    border:2.5px solid var(--navy);border-radius:16px;padding:14px 12px;
+    font:700 13.5px "Google Sans",Roboto,sans-serif;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    transition:transform .12s,box-shadow .12s,background .15s;
+    box-shadow:4px 4px 0 var(--navy);
   }
-  .qm-why-drawer.open{display:block}
-
-  .qm-prompt-label{
-    font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
-    color:var(--g600);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;
+  .scc-btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--navy)}
+  .scc-btn.bad-choice{background:var(--g50);color:var(--g800)}
+  .scc-btn.good-choice{background:var(--ucp-ice);border-color:var(--ucp-blue);color:var(--navy)}
+  .scc-btn.good-choice:hover{background:#E2EEFF}
+  .scc-btn.wrong-shake{
+    background:#FCE8E6;border-color:var(--red);color:var(--red);
+    animation:shakeBtn .32s ease;
   }
-  .powerup-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  @media(max-width:680px){.powerup-choices{grid-template-columns:1fr}}
-
-  .pu-card{
-    border:2.5px solid var(--ucp-blue);background:var(--ucp-ice);
-    border-radius:16px;padding:13px;text-align:left;cursor:pointer;
-    box-shadow:4px 4px 0 var(--ucp-shadow);transition:all .15s;
-    display:flex;flex-direction:column;justify-content:space-between;gap:8px;
-    font-family:inherit;
+  @keyframes shakeBtn{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-4px)}
+    75%{transform:translateX(4px)}
   }
-  .pu-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ucp-blue);background:#fff}
-  .pu-card.wrong{border-color:var(--red);background:#FCE8E6;box-shadow:4px 4px 0 var(--red-shadow)}
-  .pu-card.correct{border-color:var(--green);background:#E6F4EA;box-shadow:4px 4px 0 var(--green-shadow)}
-  .pu-ico{font-size:22px}
-  .pu-card b{font-size:13px;color:var(--navy);display:block;line-height:1.3}
-  .pu-card small{font-size:11px;color:var(--g600);line-height:1.35;display:block}
-
-  #qm-feedback{
-    margin-top:12px;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:600;
-    display:none;align-items:center;justify-content:space-between;
+  .scc-btn small{font:600 10.5px "Roboto Mono",monospace;opacity:.8}
+  #scc-hint{
+    margin-top:10px;font-size:12.5px;font-weight:600;color:var(--red);
+    min-height:18px;
   }
 
   .reward-pop{
-    position:absolute;transform:translate(-50%,-50%);z-index:40;
-    pointer-events:none;font:700 15px "Roboto Mono",monospace;
+    position:absolute;transform:translate(-50%,-50%);z-index:42;
+    pointer-events:none;font:700 14px "Roboto Mono",monospace;
     color:var(--green);background:#fff;border:2px solid var(--navy);
-    border-radius:999px;padding:6px 14px;box-shadow:4px 4px 0 var(--navy);
-    display:flex;align-items:center;gap:6px;
-    animation:popFloatUp 1.4s cubic-bezier(.22,1,.36,1) forwards;
+    border-radius:999px;padding:5px 13px;box-shadow:3px 3px 0 var(--navy);
+    white-space:nowrap;
+    animation:popFloatUp 1.3s cubic-bezier(.22,1,.36,1) forwards;
   }
   @keyframes popFloatUp{
     0%{opacity:0;transform:translate(-50%,0) scale(.7)}
-    25%{opacity:1;transform:translate(-50%,-22px) scale(1.08)}
-    100%{opacity:0;transform:translate(-50%,-60px) scale(1)}
+    25%{opacity:1;transform:translate(-50%,-18px) scale(1.06)}
+    100%{opacity:0;transform:translate(-50%,-52px) scale(1)}
   }
 
   /* =========================================================
-     STEP 4: EXECUTIVE OPPORTUNITY REPORT
+     STEP 5: SIMPLIFIED 3-CARD EXECUTIVE SUMMARY
      ========================================================= */
-  .s4-wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+  .s5-wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:20px;justify-content:center;min-height:100%}
   .exec-hero{
-    background:#fff;border:2.5px solid var(--ucp-blue);border-radius:24px;
-    box-shadow:8px 8px 0 var(--ucp-shadow);padding:24px 28px;
-    display:grid;grid-template-columns:1.25fr 1fr;gap:24px;align-items:center;
+    background:#fff;border:3px solid var(--navy);border-radius:26px;
+    box-shadow:8px 8px 0 var(--ucp-blue);padding:26px 30px;
+    display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:center;
   }
-  @media(max-width:960px){.exec-hero{grid-template-columns:1fr}}
+  @media(max-width:900px){.exec-hero{grid-template-columns:1fr}}
   .exec-eyebrow{
     display:inline-flex;align-items:center;gap:8px;background:#E6F4EA;color:var(--green);
-    border:1.5px solid var(--green);border-radius:999px;padding:4px 12px;
-    font-size:11.5px;font-weight:700;margin-bottom:12px;
+    border:2px solid var(--navy);border-radius:999px;padding:4px 12px;
+    font-size:11.5px;font-weight:700;margin-bottom:10px;box-shadow:2px 2px 0 var(--green-shadow);
   }
-  .exec-hero h1{margin:0 0 8px;font-size:27px;font-weight:500;line-height:1.2}
-  .exec-hero p{margin:0;font-size:14px;color:var(--g600);line-height:1.55}
+  .exec-hero h1{margin:0 0 8px;font-size:28px;font-weight:700;line-height:1.2;color:var(--navy)}
+  .exec-hero p{margin:0;font-size:14.5px;color:var(--g600);line-height:1.5}
 
   .efficacy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .eff-card{
-    background:var(--ucp-ice);border:2px solid var(--ucp-blue);border-radius:16px;
+    background:var(--ucp-ice);border:2.5px solid var(--navy);border-radius:18px;
     padding:14px;text-align:center;box-shadow:4px 4px 0 var(--ucp-shadow);
   }
   .eff-card b{display:block;font:700 24px "Roboto Mono",monospace;color:var(--green);margin-bottom:4px}
-  .eff-card span{font-size:11.5px;color:var(--g800);font-weight:500;display:block;line-height:1.3}
+  .eff-card span{font-size:11.5px;color:var(--g800);font-weight:600;display:block;line-height:1.3}
 
   .opp-horizons{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
-  @media(max-width:980px){.opp-horizons{grid-template-columns:1fr}}
+  @media(max-width:900px){.opp-horizons{grid-template-columns:1fr}}
   .opp-col{
     background:#fff;border:2.5px solid var(--navy);border-radius:22px;
     box-shadow:6px 6px 0 var(--ucp-shadow);padding:22px 24px;
-    display:flex;flex-direction:column;justify-content:flex-start;gap:16px;
+    display:flex;flex-direction:column;justify-content:space-between;gap:14px;
   }
-  .opp-col-top{min-height:118px;display:flex;flex-direction:column;justify-content:flex-start}
-  @media(max-width:980px){.opp-col-top{min-height:0}}
-  .opp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
-  .opp-col h3{margin:0 0 8px;font-size:18.5px;font-weight:600;line-height:1.25}
-  .opp-col p.sub{margin:0;font-size:12.5px;color:var(--g600);line-height:1.5}
-  .opp-items{display:flex;flex-direction:column;gap:10px}
-  .opp-item{
-    background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;padding:12px 14px;
-  }
-  .opp-item b{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--navy);margin-bottom:4px}
-  .opp-item small{display:block;font-size:12px;color:var(--g600);line-height:1.4}
+  .opp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+  .opp-col h3{margin:0 0 6px;font-size:19px;font-weight:700;color:var(--navy)}
+  .opp-col p{margin:0;font-size:13.5px;color:var(--g600);line-height:1.5}
   .opp-impact{
-    font:700 11px "Roboto Mono",monospace;color:var(--green);
-    background:#E6F4EA;padding:2px 7px;border-radius:6px;
+    font:700 11.5px "Roboto Mono",monospace;color:var(--green);
+    background:#E6F4EA;padding:3px 9px;border-radius:8px;border:1.5px solid var(--green);
+  }
+  .opp-fix-pill{
+    background:var(--g50);border:1.5px solid var(--g200);border-radius:12px;
+    padding:10px 12px;font-size:12.5px;color:var(--navy);font-weight:600;
+    display:flex;align-items:center;justify-content:space-between;
   }
 
-  /* Mission Briefing / How-To-Play Styling */
-  .s2-howto-preview{
-    background:var(--ucp-ice);border:2px solid var(--ucp-blue);border-radius:14px;
-    padding:10px 14px;font-size:12px;color:var(--navy);line-height:1.45;
+  /* =========================================================
+     STEP 6: DEDICATED HIDDEN DEVELOPER & CODE TAKE-HOME PAGE
+     ========================================================= */
+  .s6-wrap{max-width:1060px;margin:0 auto;display:flex;flex-direction:column;gap:18px;justify-content:center;min-height:100%}
+  .dev-card{
+    background:#fff;border:3px solid var(--navy);border-radius:26px;
+    box-shadow:8px 8px 0 var(--ucp-blue);padding:26px 30px;
   }
-  .s2-howto-preview b{color:var(--ucp-blue)}
-  .hud-obj-pill{
-    display:inline-flex;align-items:center;gap:6px;background:#FEF7E0;
-    border:1.5px solid #FBBC04;border-radius:999px;padding:4px 11px;
-    font-size:11.5px;font-weight:600;color:var(--navy);
+  .dev-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px;
   }
-  .hud-help-btn{
-    display:inline-flex;align-items:center;gap:5px;background:var(--ucp-ice);
-    border:1.5px solid var(--ucp-blue);border-radius:999px;padding:4px 10px;
-    font:700 11px "Roboto Mono",monospace;color:var(--ucp-blue);cursor:pointer;
-    transition:transform .12s, background .12s;
+  @media(max-width:920px){.dev-grid{grid-template-columns:1fr}}
+  .dev-snippet-box{
+    background:#0D1B2A;border:2.5px solid var(--navy);border-radius:18px;
+    padding:16px;color:#E2F1FF;display:flex;flex-direction:column;justify-content:space-between;gap:12px;
+    box-shadow:4px 4px 0 var(--ucp-shadow);
   }
-  .hud-help-btn:hover{background:#DCEBFF;transform:translateY(-1px)}
-  .briefing-steps-grid{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 18px;text-align:left;
+  .dev-snippet-head{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    border-bottom:1px solid rgba(255,255,255,.14);padding-bottom:8px;
   }
-  @media(max-width:720px){.briefing-steps-grid{grid-template-columns:1fr}}
-  .briefing-step-card{
-    background:var(--g50);border:2px solid var(--navy);border-radius:16px;
-    padding:14px;box-shadow:4px 4px 0 var(--ucp-shadow);
+  .dev-snippet-head b{font:700 12px "Roboto Mono",monospace;color:#4CE0E6}
+  .dev-pre{
+    margin:0;font:11px/1.5 "Roboto Mono",monospace;color:#A5F3FC;
+    white-space:pre-wrap;overflow-x:auto;
   }
-  .briefing-step-num{
-    display:inline-block;background:var(--ucp-blue);color:#fff;
-    font:700 10.5px "Roboto Mono",monospace;padding:2px 8px;border-radius:6px;margin-bottom:8px;
+  .copy-mini-btn{
+    background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);
+    border-radius:8px;padding:4px 9px;font:600 10.5px "Roboto Mono",monospace;cursor:pointer;
   }
-  .briefing-step-card h4{margin:0 0 5px;font-size:14px;font-weight:700;color:var(--navy)}
-  .briefing-step-card p{margin:0;font-size:12px;color:var(--g600);line-height:1.45}
-
-  .tech-appendix{
-    background:#fff;border:2px solid var(--g300);border-radius:20px;padding:18px 24px;
-  }
-  .ta-summary{
-    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-  }
-  #code-drawer{
-    display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--g200);
-    grid-template-columns:1fr 240px;gap:20px;align-items:center;
-  }
-  #code-drawer.open{display:grid}
-  .code-pre{
-    background:#0D1B2A;color:#A5F3FC;border-radius:14px;padding:14px 16px;
-    font:11.5px/1.55 "Roboto Mono",monospace;overflow:auto;max-height:200px;margin:0;
-  }
-  #qr{width:116px;height:116px;image-rendering:pixelated;border:2px solid var(--navy);border-radius:12px;background:#fff;padding:6px;margin:0 auto;display:block}
+  .copy-mini-btn:hover{background:rgba(255,255,255,.22)}
 </style>
 </head>
 <body>
 
-<!-- Top Bar -->
+<!-- Top Navigation Bar -->
 <header id="top">
   <div class="brand" onclick="go(1)"><i></i> Agent Storefront Quest</div>
-  <span class="mode-pill">🎮 Storefront Overworld + Executive Opportunity Flow</span>
   <nav id="steps">
-    <span data-s="1" class="on" onclick="go(1)"><b>1</b> Enter Site</span>
-    <span data-s="2" onclick="go(2)"><b>2</b> Scan Map</span>
-    <span data-s="3" onclick="go(3)"><b>3</b> Storefront Quest</span>
-    <span data-s="4" onclick="go(4)"><b>4</b> Opportunity Report</span>
+    <span data-s="1" class="on" onclick="go(1)"><b>1</b> Start</span>
+    <span data-s="2" onclick="go(2)"><b>2</b> How to Play</span>
+    <span data-s="3" onclick="go(3)"><b>3</b> Scan</span>
+    <span data-s="4" onclick="go(4)"><b>4</b> Quest</span>
+    <span data-s="5" onclick="go(5)"><b>5</b> Report</span>
   </nav>
 </header>
 
 <main>
 
   <!-- =========================================================
-       STEP 1: ULTRA-CLEAN ENTER YOUR SITE MODAL
+       STEP 1: RADICALLY SIMPLIFIED, COHESIVE HOMEPAGE
        ========================================================= -->
   <section id="s1" class="scr on">
     <div class="s1-card">
-      <div class="s1-eyebrow-row">
-        <span class="s1-quest-badge">🕹️ STOREFRONT OVERWORLD QUEST</span>
-        <div class="s1-tier-dots">
-          <span class="star-pill s1">★ Hygiene</span>
-          <span class="star-pill s2">★★ Google UCP</span>
-          <span class="star-pill s3">★★★ Brand MCP</span>
+      <!-- Cohesive 16-Bit Overworld Stage Banner -->
+      <div class="s1-stage-banner">
+        <div class="s1-stage-path"></div>
+        <div class="dio-node" data-px="architect" data-size="42"></div>
+        <div class="dio-node cyan" data-px="crate_locked" data-size="42"></div>
+        <div class="dio-node" data-px="bot_blue" data-size="40"></div>
+        <div class="dio-node gold">
+          <img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="36" height="36" alt="Coin"/>
         </div>
       </div>
 
-      <div class="s1-Title">
-        <h1>Is your storefront ready for AI Shopper Agents?</h1>
-        <p class="s1-pitch">
-          Turn your retail storefront into an <span class="acc-blue">adventure game</span> where <span class="acc-navy">clearing AI agent bottlenecks</span> unlocks <span class="acc-gem">real conversion lift</span>.
-        </p>
-      </div>
-
-      <!-- Pixel Art Direction Strip: Visiting Agent -> Store Architect -> Conversion Lift -->
-      <div class="s1-art-strip">
-        <div class="s1-art-step">
-          <div class="s1-sprite-box" style="background:#D2E3FC">
-            <svg class="px-svg" width="30" height="26" viewBox="0 0 18 16">
-              <rect x="3" y="1" width="12" height="1" fill="#071429"/>
-              <rect x="2" y="2" width="14" height="12" fill="#071429"/>
-              <rect x="3" y="14" width="12" height="1" fill="#071429"/>
-              <rect x="3" y="2" width="12" height="12" fill="#4DA3FF"/>
-              <rect x="4" y="4" width="10" height="8" fill="#8CC8FF"/>
-              <rect x="5" y="6" width="2" height="3" fill="#071429"/>
-              <rect x="11" y="6" width="2" height="3" fill="#071429"/>
-              <rect x="7" y="10" width="4" height="1" fill="#071429"/>
-            </svg>
-          </div>
-          <div>
-            <b>1. Scan Agent Map</b>
-            <small>Spot 6 live site bottlenecks</small>
-          </div>
-        </div>
-
-        <div class="s1-art-arrow">---▶</div>
-
-        <div class="s1-art-step">
-          <div class="s1-sprite-box" style="background:#FFF8E1">
-            <svg class="px-svg" width="30" height="30" viewBox="0 0 16 16">
-              <rect x="4" y="1" width="8" height="2" fill="#FBBC04"/>
-              <rect x="3" y="3" width="10" height="1" fill="#E37400"/>
-              <rect x="4" y="4" width="8" height="5" fill="#FDE293"/>
-              <rect x="4" y="5" width="3" height="2" fill="#071429"/>
-              <rect x="9" y="5" width="3" height="2" fill="#071429"/>
-              <rect x="7" y="5" width="2" height="1" fill="#071429"/>
-              <rect x="3" y="9" width="10" height="5" fill="#2B7DE9"/>
-              <rect x="6" y="9" width="4" height="5" fill="#FFFFFF"/>
-              <rect x="12" y="10" width="3" height="4" fill="#4CE0E6"/>
-              <rect x="4" y="14" width="3" height="2" fill="#071429"/>
-              <rect x="9" y="14" width="3" height="2" fill="#071429"/>
-            </svg>
-          </div>
-          <div>
-            <b>2. Walk the Overworld</b>
-            <small>Deploy UCP &amp; MCP power-ups</small>
-          </div>
-        </div>
-
-        <div class="s1-art-arrow">---▶</div>
-
-        <div class="s1-art-step">
-          <div class="s1-sprite-box" style="background:#E6F4EA">
-            <div style="display:flex;align-items:center;gap:2px">
-              <img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="18" height="18" alt="Coin"/>
-              <img class="px-img" src="../shared/pixel_assets/cart-i25sjMOY.png" width="20" height="20" alt="Cart"/>
-            </div>
-          </div>
-          <div>
-            <b>3. Unlock Conversion</b>
-            <small style="color:var(--green)">+42% purchase completion</small>
-          </div>
-        </div>
-      </div>
+      <h1>Agent Storefront Quest</h1>
+      <p class="s1-pitch">
+        Turn your retail storefront into an <span class="acc">adventure game</span> where <span class="acc">clearing AI agent bottlenecks</span> unlocks <span class="acc">real conversion lift</span>.
+      </p>
 
       <div class="url-box">
         <input id="site-url" value="thefrankieshop.com/collections/womens-new-arrivals" spellcheck="false"/>
-        <button class="px-btn gem" onclick="go(2)">▶ Scan Storefront Map</button>
+        <button class="px-btn gem" onclick="go(2)">▶ Start Quest</button>
       </div>
     </div>
   </section>
 
   <!-- =========================================================
-       STEP 2: ANALYZING THE SITE (Cloned Site Fitted Inside Scanner)
+       STEP 2: CLEAN, FUN "HOW TO PLAY" INTERSTITIAL STEP
        ========================================================= -->
   <section id="s2" class="scr">
-    <div class="s2-wrap">
-      <div class="scanner-stage">
+    <div class="howto-card">
+      <div class="howto-eyebrow">🕹️ QUEST BRIEFING · 3 SIMPLE STEPS</div>
+      <h2>How the Storefront Quest Works</h2>
 
-        <!-- Left: Exact Cloned Frankie Shop Page Fitted Inside Scanner -->
-        <div class="site-scan-frame" id="radar-box">
-          <div class="site-scan-overlay"></div>
-          <div class="scan-laser"></div>
-
-          <!-- Cloned Site Container (1280x800 Desktop Proportionally Scaled by JS) -->
-          <div id="s2-clone-mount"></div>
-
-          <!-- Floating Pixel Magnifying Glass -->
-          <div class="radar-mag" id="radar-mag" style="left:22%;top:12%">
-            <svg class="px-svg" width="54" height="54" viewBox="0 0 16 16">
-              <rect x="4" y="1" width="6" height="1" fill="#071429"/>
-              <rect x="2" y="2" width="10" height="10" rx="2" fill="#2B7DE9" stroke="#071429" stroke-width="1"/>
-              <rect x="4" y="4" width="6" height="6" fill="#4CE0E6"/>
-              <rect x="5" y="5" width="2" height="2" fill="#FFFFFF"/>
-              <rect x="11" y="11" width="4" height="4" fill="#071429"/>
-            </svg>
-          </div>
-
-          <!-- Discovered Challenge Pins on the Cloned Site -->
-          <div class="r-pin lvl1" id="rpin-0" style="left:22%;top:6%">★ Beginner: Heavy HTML</div>
-          <div class="r-pin lvl1" id="rpin-1" style="left:64%;top:92%">★ Beginner: Policy &amp; Review Shield</div>
-          <div class="r-pin lvl2" id="rpin-2" style="left:50%;top:12%">★★ Interm: PNG Promo Banner</div>
-          <div class="r-pin lvl2" id="rpin-3" style="left:14%;top:42%">★★ Interm: Unstructured Photo</div>
-          <div class="r-pin lvl3" id="rpin-4" style="left:86%;top:72%">★★★ Adv: Oversized Fit Advisor</div>
-          <div class="r-pin lvl3" id="rpin-5" style="left:84%;top:6%">★★★ Adv: Capsule + UCP Buy</div>
+      <div class="howto-grid">
+        <!-- Step 1 -->
+        <div class="ht-step">
+          <span class="ht-num">STEP 1</span>
+          <div class="ht-art" style="background:#E8F0FE" data-px="magnifier" data-size="44"></div>
+          <h3>Scan 3 Store Zones</h3>
+          <p>Spot where visiting AI agents get stuck in your Footer, Body, and Header.</p>
         </div>
 
-        <!-- Right: Level Discovery Summary -->
+        <!-- Step 2 -->
+        <div class="ht-step">
+          <span class="ht-num">STEP 2</span>
+          <div class="ht-art" style="background:#FFF8E1;animation-delay:.3s" data-px="crate_locked" data-size="46"></div>
+          <h3>Clear 3 Obstacles</h3>
+          <p>Walk the board, grab speed boosts &amp; coins, and unlock all 3 zone barriers.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="ht-step">
+          <span class="ht-num">STEP 3</span>
+          <div class="ht-art" style="background:#E6F4EA;animation-delay:.6s">
+            <img class="px-img" src="../shared/pixel_assets/cart-i25sjMOY.png" width="48" height="48" alt="Cart"/>
+          </div>
+          <h3>Unlock +42% Lift</h3>
+          <p>Watch AI agents zip through checkout and get your executive &amp; developer kit.</p>
+        </div>
+      </div>
+
+      <button class="px-btn gem" style="font-size:15px;padding:14px 28px" onclick="go(3)">
+        ▶ Scan Storefront Map →
+      </button>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       STEP 3: SCAN PAGE (Aligned Columns + Center-Aligned Pills)
+       ========================================================= -->
+  <section id="s3" class="scr">
+    <div class="s3-wrap">
+      <div class="scanner-stage">
+
+        <!-- Left: Frankie Shop Box Stretched to Match Right Column Top & Bottom -->
+        <div class="site-scan-frame" id="radar-box">
+          <div class="calm-scan-bar" id="calm-scan-bar"></div>
+          <div id="s3-scan-clone-mount"></div>
+
+          <!-- All 3 Pills Center-Aligned at left:50% -->
+          <div class="r-pin lvl3" id="rpin-2" style="top:11%">3 · Header: Instant Checkout (UCP)</div>
+          <div class="r-pin lvl2" id="rpin-1" style="top:50%">2 · Body: Product &amp; Fit Specs (MCP)</div>
+          <div class="r-pin lvl1" id="rpin-0" style="top:89%">1 · Footer: Site Map (llms.txt)</div>
+        </div>
+
+        <!-- Right: Clean 3-Zone Summary -->
         <div class="scan-hud">
           <div>
-            <span class="mode-pill">🕹️ Storefront Scanner</span>
-            <h2 style="margin:10px 0 6px;font-size:25px;font-weight:500" id="s2-heading">Scanning Your Storefront for Agent Bottlenecks…</h2>
+            <span class="star-pill s1" style="background:var(--ucp-ice);color:var(--ucp-blue);border-color:var(--ucp-blue);box-shadow:2px 2px 0 var(--ucp-shadow)">🕹️ Storefront Scanner</span>
+            <h2 style="margin:12px 0 6px;font-size:25px;font-weight:700;color:var(--navy)" id="s3-scan-heading">Scanning 3 Storefront Zones…</h2>
             <p style="margin:0;font-size:13.5px;color:var(--g600);line-height:1.5">
-              We cloned <b>thefrankieshop.com</b> and identified 6 high-value milestones across 3 opportunity levels:
+              We checked how AI shopper agents navigate <b>thefrankieshop.com</b> across your <b>Footer</b>, <b>Body</b>, and <b>Header</b>:
             </p>
           </div>
 
-          <div class="scan-prog-bar"><i id="s2-bar"></i></div>
+          <div class="scan-prog-bar"><i id="s3-scan-bar"></i></div>
 
           <div class="tier-discover-list">
             <div class="td-item" id="td-0">
               <div class="td-left">
-                <span class="star-pill s1">★ BEGINNER</span>
+                <span class="star-pill s1">1 · FOOTER</span>
                 <div>
-                  <b style="font-size:13.5px;display:block">2 Foundational Access Milestones</b>
-                  <small style="font-size:11.5px;color:var(--g600)">Compact site map (llms.txt) &amp; review safety shield</small>
+                  <b style="font-size:13.5px;display:block;color:var(--navy)">Site Map &amp; Return Policies</b>
+                  <small style="font-size:12px;color:var(--g600)">Publish <code class="mono">llms.txt</code> so agents find pages &amp; rules fast</small>
                 </div>
               </div>
-              <b class="mono" style="font-size:12.5px;color:#2B7DE9">+100 PTS ea</b>
+              <b class="mono" style="font-size:12.5px;color:#2B7DE9">+12% Lift</b>
             </div>
 
             <div class="td-item" id="td-1">
               <div class="td-left">
-                <span class="star-pill s2">★★ INTERMEDIATE</span>
+                <span class="star-pill s2">2 · BODY</span>
                 <div>
-                  <b style="font-size:13.5px;display:block">2 Standardized Commerce Milestones</b>
-                  <small style="font-size:11.5px;color:var(--g600)">Unlock PNG promo banner &amp; enrich photo specs (UCP)</small>
+                  <b style="font-size:13.5px;display:block;color:var(--navy)">Product Specs &amp; Fit Advisor</b>
+                  <small style="font-size:12px;color:var(--g600)">Expose structured fabric &amp; sizing via Brand MCP</small>
                 </div>
               </div>
-              <b class="mono" style="font-size:12.5px;color:#E37400">+250 PTS ea</b>
+              <b class="mono" style="font-size:12.5px;color:#E37400">+14% Lift</b>
             </div>
 
             <div class="td-item" id="td-2">
               <div class="td-left">
-                <span class="star-pill s3">★★★ ADVANCED</span>
+                <span class="star-pill s3">3 · HEADER</span>
                 <div>
-                  <b style="font-size:13.5px;display:block">2 Custom Brand Superpower Milestones</b>
-                  <small style="font-size:11.5px;color:var(--g600)">Oversized Fit Advisor &amp; Capsule Stylist MCP + Native Buy</small>
+                  <b style="font-size:13.5px;display:block;color:var(--navy)">Cart &amp; Instant Agent Checkout</b>
+                  <small style="font-size:12px;color:var(--g600)">Enable 1-call purchase completion via Google UCP</small>
                 </div>
               </div>
-              <b class="mono" style="font-size:12.5px;color:#7627BB">+500 PTS ea</b>
+              <b class="mono" style="font-size:12.5px;color:#7627BB">+16% Lift</b>
             </div>
           </div>
 
-          <!-- Clear Up-Next Game Explanation right before entering Step 3 -->
-          <div class="s2-howto-preview">
-            <b>🎯 Up Next — Storefront Quest:</b> Step onto your live storefront as the <b>Store Architect</b>, walk to each of these <b>6 Milestone Flags</b> where AI shopper agents are getting stuck, and deploy the right <b>Gemini / UCP / MCP upgrade</b> to unlock conversion.
-          </div>
-
-          <div style="display:flex;justify-content:flex-end;margin-top:4px">
-            <button class="px-btn gem" id="s2-enter-btn" onclick="go(3)">
-              🎮 Enter Storefront Quest →
+          <div style="display:flex;justify-content:flex-end">
+            <button class="px-btn gem" onclick="go(4)">
+              ▶ Enter Storefront Quest →
             </button>
           </div>
         </div>
@@ -981,23 +879,25 @@
   </section>
 
   <!-- =========================================================
-       STEP 3: STOREFRONT OVERWORLD (Exact Cloned Site + Cute Pixel Milestones + Slow Plodding Agents)
+       STEP 4: MMORPG STOREFRONT PLAYBOARD (24x24 Coin-Style Sprites!)
        ========================================================= -->
-  <section id="s3" class="scr" style="padding:10px 24px 14px">
+  <section id="s4" class="scr" style="padding:10px 24px 14px">
     <div class="game-layout">
 
-      <!-- Top Arcade HUD with Persistent Objective & How to Play Button -->
+      <!-- Clean Top HUD -->
       <div class="arcade-hud">
-        <div class="hud-player">
-          <div class="hud-avatar-badge">
-            <span>👷‍♀️ YOU: Store Architect</span>
-          </div>
-          <span class="hud-obj-pill" id="hud-objective">
-            🎯 Walk to any Flag (<span class="key-cap">↑</span><span class="key-cap">↓</span><span class="key-cap">←</span><span class="key-cap">→</span> or click) to unblock visiting AI agents
+        <div class="hud-left">
+          <span class="hud-avatar-pill">
+            <span data-px="architect" data-size="18" style="display:inline-grid"></span>
+            <span>YOU: Site Architect</span>
           </span>
-          <button class="hud-help-btn" onclick="openBriefingModal()" title="View How to Play Instructions">
-            ? How to Play
-          </button>
+          <span class="hud-speed-badge" id="hud-speed">
+            <span data-px="speed_boot" data-size="16" style="display:inline-grid"></span>
+            <span>2x SPEED</span>
+          </span>
+          <span class="hud-hint">
+            Walk with <b>Arrow Keys</b> or <b>Click</b> any obstacle on the map!
+          </span>
         </div>
 
         <div class="hud-stats">
@@ -1006,419 +906,232 @@
             <span>Score: <b id="hud-score">0</b></span>
           </div>
           <div class="hud-stat-box">
-            <img class="px-img" src="../shared/pixel_assets/cart-i25sjMOY.png" width="20" height="20" alt="Cart"/>
-            <span>Milestones: <b id="hud-quests">0 / 6</b></span>
+            <span>Zones: <b id="hud-quests">0 / 3</b></span>
           </div>
           <div class="hud-stat-box lift">
-            <span>📈 Purchase Completion Lift: <b id="hud-lift">+0%</b></span>
+            <span>Lift: <b id="hud-lift">+0%</b></span>
           </div>
-          <button class="px-btn green" style="padding:6px 14px;font-size:12px" onclick="go(4)">
-            Opportunity Report →
+          <button class="px-btn green" style="padding:6px 14px;font-size:12px" onclick="go(5)">
+            Report →
           </button>
         </div>
       </div>
 
-      <!-- The Overworld Map Stage (Exact Cloned Site + Milestones + Slow Agents) -->
+      <!-- The Playboard Stage -->
       <div class="overworld-viewport" id="overworld-vp" tabindex="0">
 
-        <!-- 1. EXACT CLONED FRANKIE SHOP PAGE MOUNT -->
-        <div id="s3-clone-mount" style="width:100%;height:100%"></div>
+        <!-- 1. EXACT CLONED FRANKIE SHOP PAGE -->
+        <div id="s4-play-clone-mount" style="width:100%;height:100%"></div>
 
-        <!-- 2. INTELLIGENT SHOPPER AGENTS + LIVE INTERACTION BEAM SVG LAYER -->
-        <svg id="agent-fx-svg" class="px-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none"></svg>
+        <!-- 2. CUTE PIXEL ROBOT SHOPPER AGENTS -->
         <div id="agents-layer"></div>
 
-        <!-- 3. SIX CUTE PIXEL MILESTONES WITH TASK-SPECIFIC PIXEL ART ICONS -->
-
-        <!-- Milestone 0: Top-Left Nav / Search (★ Beginner: Site Map / llms.txt) -->
-        <div class="milestone-node" id="qnode-0" style="left:22%;top:6%" onclick="event.stopPropagation(); walkAndOpenQuest(0)">
-          <div class="ms-icon-box t1">
-            <!-- Pixel Scroll / Directory Map Icon -->
-            <svg class="px-svg" width="26" height="26" viewBox="0 0 14 14">
-              <rect x="2" y="1" width="9" height="12" fill="#FFFFFF" stroke="#071429" stroke-width="1"/>
-              <rect x="4" y="3" width="5" height="1.5" fill="#2B7DE9"/>
-              <rect x="4" y="6" width="6" height="1.2" fill="#071429"/>
-              <rect x="4" y="8.5" width="4" height="1.2" fill="#071429"/>
-            </svg>
-          </div>
-          <div class="ms-info">
-            <span class="ms-tier t1" id="qflag-0">★ BEGINNER · 100 PTS</span>
-            <span class="ms-label">Site Directory Map</span>
-            <span class="ms-status" id="qbub-0">⛔ 48k HTML Bottleneck</span>
-          </div>
+        <!-- 3. ICON-ONLY FLOOR POWER-UPS (24x24 Coin-Matched Pixel Winged Boots + Gold Coins) -->
+        <div class="floor-pickup speed-orb" id="pu-speed-0" style="left:28%;top:72%" title="2x Speed Boots" onclick="event.stopPropagation(); walkAvatarTo(28,72)">
+          <div data-px="speed_boot" data-size="30"></div>
+        </div>
+        <div class="floor-pickup speed-orb" id="pu-speed-1" style="left:72%;top:28%" title="2x Speed Boots" onclick="event.stopPropagation(); walkAvatarTo(72,28)">
+          <div data-px="speed_boot" data-size="30"></div>
+        </div>
+        <div class="floor-pickup" id="pu-coin-0" style="left:34%;top:48%" title="Bonus Coin" onclick="event.stopPropagation(); walkAvatarTo(34,48)">
+          <img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="26" height="26" alt="Coin"/>
+        </div>
+        <div class="floor-pickup" id="pu-coin-1" style="left:66%;top:56%" title="Bonus Coin" onclick="event.stopPropagation(); walkAvatarTo(66,56)">
+          <img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="26" height="26" alt="Coin"/>
+        </div>
+        <div class="floor-pickup" id="pu-coin-2" style="left:36%;top:22%" title="Bonus Coin" onclick="event.stopPropagation(); walkAvatarTo(36,22)">
+          <img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="26" height="26" alt="Coin"/>
         </div>
 
-        <!-- Milestone 2: Top-Center Promo Banner (★★ Intermediate: 15% Promo Unlock) -->
-        <div class="milestone-node" id="qnode-2" style="left:50%;top:13%" onclick="event.stopPropagation(); walkAndOpenQuest(2)">
-          <div class="ms-icon-box t2">
-            <!-- Pixel Gold Coin + Tag Icon -->
-            <img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="24" height="24" alt="Coin"/>
+        <!-- =========================================================
+             4. THREE 24x24 16-BIT PIXEL OBSTACLES (Matched to Coin Style!)
+             ========================================================= -->
+
+        <!-- OBSTACLE 0 (Footer): Locked Chained Scroll -> Glowing Directory Scroll -->
+        <div class="mmorpg-obstacle" id="qnode-0" style="left:50%;top:88%" onclick="event.stopPropagation(); walkAndOpenQuest(0)">
+          <div class="obs-totem">
+            <span class="obs-alert-badge">
+              <span class="sp-unsolved" data-px="badge_excl" data-size="14"></span>
+              <span class="sp-solved" data-px="badge_check" data-size="14"></span>
+            </span>
+            <div class="sp-unsolved" data-px="scroll_locked" data-size="44"></div>
+            <div class="sp-solved" data-px="scroll_solved" data-size="44"></div>
           </div>
-          <div class="ms-info">
-            <span class="ms-tier t2" id="qflag-2">★★ INTERM · 250 PTS</span>
-            <span class="ms-label">15% Welcome Promo</span>
-            <span class="ms-status" id="qbub-2">🔒 Locked in PNG Banner</span>
-          </div>
+          <span class="obs-plate" id="qplate-0">1 · Footer Site Map</span>
         </div>
 
-        <!-- Milestone 5: Top-Right Cart / Checkout (★★★ Advanced: Capsule Stylist & UCP Buy) -->
-        <div class="milestone-node" id="qnode-5" style="left:82%;top:6%" onclick="event.stopPropagation(); walkAndOpenQuest(5)">
-          <div class="ms-icon-box t3">
-            <!-- Pixel Shopping Bag + Key Icon -->
-            <svg class="px-svg" width="26" height="26" viewBox="0 0 14 14">
-              <rect x="4" y="1" width="6" height="3" fill="none" stroke="#071429" stroke-width="1.2"/>
-              <rect x="2" y="4" width="10" height="9" fill="#1E8E3E" stroke="#071429" stroke-width="1"/>
-              <rect x="5" y="7" width="4" height="3" fill="#FBBC04"/>
-            </svg>
+        <!-- OBSTACLE 1 (Body): Sealed Mystery Crate -> Enriched Pixel Jacket & Specs -->
+        <div class="mmorpg-obstacle" id="qnode-1" style="left:50%;top:48%" onclick="event.stopPropagation(); walkAndOpenQuest(1)">
+          <div class="obs-totem">
+            <span class="obs-alert-badge">
+              <span class="sp-unsolved" data-px="badge_excl" data-size="14"></span>
+              <span class="sp-solved" data-px="badge_check" data-size="14"></span>
+            </span>
+            <div class="sp-unsolved" data-px="crate_locked" data-size="44"></div>
+            <div class="sp-solved" data-px="jacket_solved" data-size="44"></div>
           </div>
-          <div class="ms-info">
-            <span class="ms-tier t3" id="qflag-5">★★★ ADVANCED · 500 PTS</span>
-            <span class="ms-label">Capsule &amp; Native Buy</span>
-            <span class="ms-status" id="qbub-5">🚫 No UCP Checkout Door</span>
-          </div>
+          <span class="obs-plate" id="qplate-1">2 · Body Product Specs</span>
         </div>
 
-        <!-- Milestone 3: Row 1 Left — Gina Faux Fur Bomber (★★ Intermediate: Fabric & Photo Specs) -->
-        <div class="milestone-node" id="qnode-3" style="left:16%;top:46%" onclick="event.stopPropagation(); walkAndOpenQuest(3)">
-          <div class="ms-icon-box t2">
-            <!-- Pixel Magnifying Glass + Jacket Icon -->
-            <svg class="px-svg" width="26" height="26" viewBox="0 0 14 14">
-              <circle cx="6" cy="6" r="4" fill="#4CE0E6" stroke="#071429" stroke-width="1.3"/>
-              <rect x="4" y="4" width="2" height="2" fill="#FFFFFF"/>
-              <line x1="9" y1="9" x2="13" y2="13" stroke="#071429" stroke-width="2"/>
-            </svg>
+        <!-- OBSTACLE 2 (Header): Heavy Crimson Padlock -> UCP Checkout Receipt & Key -->
+        <div class="mmorpg-obstacle" id="qnode-2" style="left:50%;top:11%" onclick="event.stopPropagation(); walkAndOpenQuest(2)">
+          <div class="obs-totem">
+            <span class="obs-alert-badge">
+              <span class="sp-unsolved" data-px="badge_excl" data-size="14"></span>
+              <span class="sp-solved" data-px="badge_check" data-size="14"></span>
+            </span>
+            <div class="sp-unsolved" data-px="padlock_locked" data-size="44"></div>
+            <div class="sp-solved" data-px="receipt_solved" data-size="44"></div>
           </div>
-          <div class="ms-info">
-            <span class="ms-tier t2" id="qflag-3">★★ INTERM · 250 PTS</span>
-            <span class="ms-label">Product Fabric Specs</span>
-            <span class="ms-status" id="qbub-3">❓ Unknown Photo Material</span>
-          </div>
+          <span class="obs-plate" id="qplate-2">3 · Header Checkout</span>
         </div>
 
-        <!-- Milestone 4: Row 2 Right — Goloso Oversized Trousers (★★★ Advanced: Oversized Fit Advisor) -->
-        <div class="milestone-node" id="qnode-4" style="left:82%;top:70%" onclick="event.stopPropagation(); walkAndOpenQuest(4)">
-          <div class="ms-icon-box t3">
-            <!-- Pixel Measuring Ruler / Fit Icon -->
-            <svg class="px-svg" width="26" height="26" viewBox="0 0 14 14">
-              <rect x="1" y="4" width="12" height="6" fill="#FBBC04" stroke="#071429" stroke-width="1.2"/>
-              <line x1="4" y1="4" x2="4" y2="7" stroke="#071429" stroke-width="1.2"/>
-              <line x1="7" y1="4" x2="7" y2="8" stroke="#071429" stroke-width="1.2"/>
-              <line x1="10" y1="4" x2="10" y2="7" stroke="#071429" stroke-width="1.2"/>
-            </svg>
-          </div>
-          <div class="ms-info">
-            <span class="ms-tier t3" id="qflag-4">★★★ ADVANCED · 500 PTS</span>
-            <span class="ms-label">Oversized Fit Advisor</span>
-            <span class="ms-status" id="qbub-4">📏 Petite Inseam Unclear</span>
-          </div>
-        </div>
-
-        <!-- Milestone 1: Bottom Footer — Shipping, Returns & Reviews (★ Beginner: Policy & Safety Shield) -->
-        <div class="milestone-node" id="qnode-1" style="left:50%;top:92%" onclick="event.stopPropagation(); walkAndOpenQuest(1)">
-          <div class="ms-icon-box t1">
-            <!-- Pixel Safety Shield Icon -->
-            <svg class="px-svg" width="26" height="26" viewBox="0 0 14 14">
-              <path d="M7 1 L12 3 V7 C12 10.5 7 13 7 13 C7 13 2 10.5 2 7 V3 L7 1 Z" fill="#2B7DE9" stroke="#071429" stroke-width="1.2"/>
-              <path d="M5 7 L6.5 8.5 L9.5 5.5" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
-            </svg>
-          </div>
-          <div class="ms-info">
-            <span class="ms-tier t1" id="qflag-1">★ BEGINNER · 100 PTS</span>
-            <span class="ms-label">Policy &amp; Review Shield</span>
-            <span class="ms-status" id="qbub-1">⚠️ Prose Policy &amp; Review Trap</span>
-          </div>
-        </div>
-
-        <!-- 4. THE HERO PLAYER AVATAR: PIXEL STORE ARCHITECT (Primary Visual Focus!) -->
+        <!-- 5. HERO PLAYER AVATAR: SITE ARCHITECT -->
         <div id="architect-avatar">
-          <div class="arch-tag" id="arch-tag-label">★ YOU: STORE ARCHITECT ★</div>
-          <div class="arch-body-wrap">
-            <div class="arch-pulse-ring"></div>
-            <div class="arch-body" id="arch-body">
-              <svg class="px-svg" id="arch-svg" width="46" height="46" viewBox="0 0 16 16">
-                <rect x="4" y="1" width="8" height="2" fill="#FBBC04"/>
-                <rect x="3" y="3" width="10" height="1" fill="#E37400"/>
-                <rect x="4" y="4" width="8" height="5" fill="#FDE293"/>
-                <rect x="4" y="5" width="3" height="2" fill="#071429"/>
-                <rect x="9" y="5" width="3" height="2" fill="#071429"/>
-                <rect x="7" y="5" width="2" height="1" fill="#071429"/>
-                <rect x="3" y="9" width="10" height="5" fill="#2B7DE9"/>
-                <rect x="6" y="9" width="4" height="5" fill="#FFFFFF"/>
-                <rect x="12" y="10" width="3" height="4" fill="#4CE0E6"/>
-                <rect id="arch-leg-l" x="4" y="14" width="3" height="2" fill="#071429"/>
-                <rect id="arch-leg-r" x="9" y="14" width="3" height="2" fill="#071429"/>
-              </svg>
-            </div>
+          <div id="arch-start-pointer">
+            <span class="asp-pill">START HERE · PUSH ARROWS</span>
+            <div data-px="arrow_down" data-size="30"></div>
           </div>
-          <div class="arch-shadow"></div>
-          <div class="arch-sub" id="arch-sub-hint">Hold ↑ ↓ ← → to walk to Flag</div>
+          <div class="arch-tag">★ YOU ★</div>
+          <div class="arch-body" data-px="architect" data-size="42"></div>
         </div>
 
-        <!-- On-Screen Hold-to-Walk Arrow Controls -->
+        <!-- Compact D-Pad in Bottom Left -->
         <div class="dpad-overlay" onclick="event.stopPropagation()">
           <div class="dpad-grid">
             <div></div>
-            <button class="dpad-btn" id="dpad-up" data-dir="up" title="Hold to Walk Up">↑</button>
+            <button class="dpad-btn" data-dir="up">↑</button>
             <div></div>
-            <button class="dpad-btn" id="dpad-left" data-dir="left" title="Hold to Walk Left">←</button>
-            <button class="dpad-btn" id="dpad-down" data-dir="down" title="Hold to Walk Down">↓</button>
-            <button class="dpad-btn" id="dpad-right" data-dir="right" title="Hold to Walk Right">→</button>
+            <button class="dpad-btn" data-dir="left">←</button>
+            <button class="dpad-btn" data-dir="down">↓</button>
+            <button class="dpad-btn" data-dir="right">→</button>
           </div>
-          <div style="font-size:10.5px;line-height:1.3;color:var(--navy)">
-            <b>Walk on Page</b><br/>
-            <span style="color:var(--g600)">Hold arrows or click to walk</span>
-          </div>
-        </div>
-
-        <!-- =========================================================
-             HOW TO PLAY / MISSION BRIEFING MODAL OVERLAY (Between Scan Map & Storefront Quest)
-             ========================================================= -->
-        <div id="briefing-modal-backdrop" style="position:absolute;inset:0;background:rgba(7,20,41,.58);backdrop-filter:blur(3px);z-index:55;display:none;align-items:center;justify-content:center;padding:20px" onclick="closeBriefingModal()">
-          <div class="quest-modal" style="max-width:680px;text-align:center;border-color:var(--ucp-blue);box-shadow:10px 10px 0 var(--ucp-shadow)" onclick="event.stopPropagation()">
-            <div style="display:inline-flex;align-items:center;gap:8px;background:var(--ucp-ice);border:2px solid var(--ucp-blue);border-radius:999px;padding:5px 14px;font:700 11.5px 'Roboto Mono',monospace;color:var(--ucp-blue);margin-bottom:10px">
-              <span>🎮 MISSION BRIEFING · HOW TO PLAY</span>
-            </div>
-
-            <h2 style="font-size:24px;font-weight:600;margin:0 0 6px;color:var(--navy)">
-              Unblock Visiting AI Shopper Agents on Your Storefront
-            </h2>
-            <p style="font-size:13.5px;color:var(--g600);line-height:1.5;margin:0 auto;max-width:560px">
-              AI shopper agents (<b style="color:var(--navy)">Gemini, ChatGPT, Claude, Perplexity</b>) are trying to shop your page right now, but they keep getting stuck at <b style="color:var(--navy)">6 real bottlenecks</b> discovered during your scan.
-            </p>
-
-            <div class="briefing-steps-grid">
-              <div class="briefing-step-card">
-                <span class="briefing-step-num">STEP 1 · MOVE</span>
-                <h4>👷‍♀️ Walk the Page</h4>
-                <p>Push &amp; hold your <b>Arrow Keys (↑ ↓ ← →)</b> or <b>click anywhere</b> to walk your Store Architect avatar. Follow the <b>golden dashed line</b>!</p>
-              </div>
-              <div class="briefing-step-card">
-                <span class="briefing-step-num" style="background:#E37400">STEP 2 · INSPECT</span>
-                <h4>🚩 Visit the 6 Flags</h4>
-                <p>Walk onto (or click) each of the <b>6 Milestone Flags</b> where visiting AI shopper agents are getting bottlenecked.</p>
-              </div>
-              <div class="briefing-step-card">
-                <span class="briefing-step-num" style="background:#1E8E3E">STEP 3 · UPGRADE</span>
-                <h4>⚡ Pick the Right Fix</h4>
-                <p>Choose the right <b>Web Hygiene, Google UCP, or Brand MCP</b> upgrade to clear the bottleneck and lift conversion!</p>
-              </div>
-            </div>
-
-            <div style="display:flex;justify-content:center;gap:12px;align-items:center">
-              <button class="px-btn gem" style="font-size:14.5px;padding:12px 26px" onclick="closeBriefingModal()">
-                ▶ Start Storefront Quest
-              </button>
-            </div>
+          <div style="font-size:10px;line-height:1.25;color:var(--navy)">
+            <b>Move Architect</b><br/>
+            <span style="color:var(--g600)">Arrows or click</span>
           </div>
         </div>
 
         <!-- =========================================================
-             QUEST CHALLENGE MODAL OVERLAY
+             ULTRA-SIMPLE 2-BUTTON CHOICE CARD OVERLAY
              ========================================================= -->
         <div id="quest-modal-backdrop" onclick="closeQuestModal()">
-          <div class="quest-modal" onclick="event.stopPropagation()">
-            <div class="qm-top">
-              <span class="qm-tier-badge" id="qm-badge">★ BEGINNER QUEST · +100 PTS</span>
-              <button class="qm-close" onclick="closeQuestModal()">✕</button>
-            </div>
-
-            <h3 class="qm-title" id="qm-title">Quest Title</h3>
-
-            <div class="qm-problem-box">
-              <p id="qm-problem">Simple 1-sentence explanation of why shopper agents are bottlenecked here.</p>
-              <button class="qm-why-toggle" onclick="toggleWhyDrawer()">
-                ℹ️ Tell me more about this standard ▾
-              </button>
-              <div class="qm-why-drawer" id="qm-why">
-                Extra technical context.
-              </div>
-            </div>
-
-            <div class="qm-prompt-label">
-              <span>⚡ Pick the right Gemini upgrade to clear this bottleneck:</span>
-              <span class="mono" style="color:var(--green)" id="qm-lift-tag">+6% Purchase Lift</span>
-            </div>
-
-            <div class="powerup-choices" id="qm-choices"></div>
-
-            <div id="qm-feedback"></div>
+          <div class="simple-choice-card" onclick="event.stopPropagation()">
+            <button class="scc-close" onclick="closeQuestModal()">✕</button>
+            <div class="scc-zone-pill" id="scc-pill">ZONE 1 · FOOTER</div>
+            <h3 class="scc-title" id="scc-title">Site Map &amp; Policies</h3>
+            <p class="scc-problem" id="scc-problem">
+              Agents get lost in heavy HTML links and buried return policies.
+            </p>
+            <div class="scc-buttons" id="scc-buttons"></div>
+            <div id="scc-hint"></div>
           </div>
         </div>
 
         <!-- =========================================================
-             ALL 6 MISSIONS COMPLETE VICTORY MODAL OVERLAY (Reframed: More Ready for Agent Business!)
+             ALL 3 ZONES FIXED VICTORY MODAL
              ========================================================= -->
-        <div id="victory-modal-backdrop" style="position:absolute;inset:0;background:rgba(7,20,41,.58);backdrop-filter:blur(3px);z-index:50;display:none;align-items:center;justify-content:center;padding:20px" onclick="closeVictoryModal()">
-          <div class="quest-modal" style="max-width:580px;text-align:center;border-color:var(--green);box-shadow:10px 10px 0 var(--green)" onclick="event.stopPropagation()">
-            <div style="display:inline-flex;align-items:center;gap:10px;background:#E6F4EA;border:2px solid var(--green);border-radius:999px;padding:6px 16px;font:700 12px 'Roboto Mono',monospace;color:var(--green);margin-bottom:14px">
-              <span>🏆 6 OF 6 KEY MILESTONES UNLOCKED</span>
+        <div id="victory-modal-backdrop" style="position:absolute;inset:0;background:rgba(7,20,41,.52);backdrop-filter:blur(2px);z-index:50;display:none;align-items:center;justify-content:center;padding:20px" onclick="closeVictoryModal()">
+          <div class="simple-choice-card" style="max-width:480px;border-color:var(--green);box-shadow:8px 8px 0 var(--green)" onclick="event.stopPropagation()">
+            <div class="scc-zone-pill" style="background:var(--green)">ALL 3 OBSTACLES CLEARED</div>
+            <div style="display:flex;justify-content:center;gap:12px;margin:6px 0 10px">
+              <img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="34" height="34" alt="Coin"/>
+              <img class="px-img" src="../shared/pixel_assets/cart-i25sjMOY.png" width="38" height="38" alt="Cart"/>
+              <img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="34" height="34" alt="Coin"/>
             </div>
-
-            <div style="display:flex;justify-content:center;align-items:center;gap:14px;margin-bottom:12px">
-              <img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="38" height="38" alt="Coin"/>
-              <img class="px-img" src="../shared/pixel_assets/cart-i25sjMOY.png" width="44" height="44" alt="Cart"/>
-              <img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="38" height="38" alt="Coin"/>
-            </div>
-
-            <h2 style="font-size:25px;font-weight:600;margin:0 0 8px;color:var(--navy)">
-              Your Storefront Is Much More Ready for Agent Business
-            </h2>
-            <p style="font-size:14px;color:var(--g600);line-height:1.55;margin:0 0 12px">
-              You cleared 6 high-impact bottlenecks across <b>Foundational Access</b>, <b>Google UCP</b>, and <b>Custom Brand MCP Tools</b>—making your site significantly easier for visiting AI agents to shop and lifting projected purchase completion by <b style="color:var(--green)" id="vic-lift">+42%</b> (<b class="mono" id="vic-score">1,700 PTS</b>).
+            <h3 style="font-size:23px;margin:0 0 8px;color:var(--navy)">Storefront Open for AI Agents!</h3>
+            <p style="font-size:14px;color:var(--g600);line-height:1.5;margin:0 0 18px">
+              You unlocked the <b>Footer Site Map</b>, <b>Body Product Specs</b>, and <b>Header Checkout</b>—lifting conversion by <b style="color:var(--green)">+42%</b> (<b class="mono" id="vic-score">0 PTS</b>).
             </p>
-            <p style="font-size:12px;color:var(--g600);background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;padding:8px 12px;margin:0 0 18px">
-              💡 Every storefront has deeper edge cases to uncover over time, but resolving these 6 core bottlenecks unlocks immediate agentic conversion gains.
-            </p>
-
-            <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
-              <button class="px-btn ghost" onclick="closeVictoryModal()">
-                👀 Watch Unblocked Agents on Map
-              </button>
-              <button class="px-btn green" style="font-size:14.5px;padding:12px 24px" onclick="closeVictoryModal(); go(4)">
-                📊 View Opportunity Report →
-              </button>
+            <div style="display:flex;justify-content:center;gap:10px">
+              <button class="px-btn ghost" onclick="closeVictoryModal()">Watch Agents</button>
+              <button class="px-btn green" onclick="closeVictoryModal(); go(5)">View Report →</button>
             </div>
           </div>
         </div>
 
       </div>
-
     </div>
   </section>
 
   <!-- =========================================================
-       STEP 4: EXECUTIVE OPPORTUNITY REPORT
+       STEP 5: SIMPLIFIED 3-CARD OPPORTUNITY REPORT
        ========================================================= -->
-  <section id="s4" class="scr">
-    <div class="s4-wrap">
+  <section id="s5" class="scr">
+    <div class="s5-wrap">
 
       <div class="exec-hero">
         <div>
-          <span class="exec-eyebrow">✦ Executive Storefront Opportunity Summary</span>
-          <h1>How Clearing Agent Bottlenecks Lifts Conversion</h1>
+          <span class="exec-eyebrow">✦ Executive Impact Summary</span>
+          <h1>How Clearing 3 Storefront Obstacles Lifts Conversion</h1>
           <p>
-            Here is the projected commercial efficacy of unlocking <b>The Frankie Shop</b> across <b>Foundational Access</b>, <b>Standardized Agent Commerce (UCP)</b>, and <b>Bespoke Brand MCP Tools</b>.
+            Equipping your <b>Footer</b>, <b>Body</b>, and <b>Header</b> for visiting AI shopper agents removes friction across discovery, evaluation, and checkout.
           </p>
-          <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
-            <button class="px-btn ghost" onclick="go(3)">← Back to Storefront Map</button>
-            <button class="px-btn gem" onclick="toggleCodeDrawer()">
-              { } View Storefront MCP &amp; Developer Package ▾
-            </button>
+          <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+            <button class="px-btn ghost" onclick="go(4)">← Back to Gameboard</button>
+            <button class="px-btn gem" onclick="go(6)">{ } Open Developer Code Kit →</button>
           </div>
         </div>
 
         <div class="efficacy-grid">
           <div class="eff-card">
             <b id="rep-lift">+42%</b>
-            <span>More Agent Purchases Completed</span>
+            <span>Purchase Completion Lift</span>
           </div>
           <div class="eff-card">
-            <b id="rep-aov">+$310</b>
-            <span>Avg. Order Value Lift (Capsule Stylist)</span>
+            <b>+$310</b>
+            <span>Avg. Order Value Lift</span>
           </div>
           <div class="eff-card">
-            <b id="rep-score">1,700</b>
-            <span>Architect Score (<span id="rep-quests">6/6</span> Cleared)</span>
+            <b id="rep-score">1,050</b>
+            <span>Score (<span id="rep-quests">3/3</span> Zones)</span>
           </div>
         </div>
       </div>
 
       <div class="opp-horizons">
         <div class="opp-col">
-          <div class="opp-col-top">
-            <div class="opp-head">
-              <span class="star-pill s1">★ LEVEL 1 · FOUNDATION</span>
-              <span class="opp-impact">+10% Lift</span>
-            </div>
-            <h3>Make Your Site Effortless to Read &amp; Safe</h3>
-            <p class="sub">Basic web hygiene so visiting agents don’t time out parsing HTML or get tricked by untrusted reviews.</p>
-          </div>
-          <div class="opp-items">
-            <div class="opp-item">
-              <b><span>1. Markdown &amp; llms.txt Directory</span><span>✓</span></b>
-              <small>Reduces agent page-reading cost by <b>81%</b> so agents find products in milliseconds.</small>
-            </div>
-            <div class="opp-item">
-              <b><span>2. Verified Agent Access &amp; Review Shield</span><span>✓</span></b>
-              <small>Welcomes verified shopping agents while stripping prompt-injection text from reviews.</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="opp-col">
-          <div class="opp-col-top">
-            <div class="opp-head">
-              <span class="star-pill s2">★★ LEVEL 2 · STANDARDIZED COMMERCE</span>
-              <span class="opp-impact">+16% Lift</span>
-            </div>
-            <h3>Speak the Universal Language of Shopping</h3>
-            <p class="sub">Exposing structured product attributes and promotions via <b>Google UCP</b> so agents never abandon a cart.</p>
-          </div>
-          <div class="opp-items">
-            <div class="opp-item">
-              <b><span>3. Machine-Readable Promotions</span><span>✓</span></b>
-              <small>Unlocks promotional offers (like <b>15% OFF FRANKIE15</b>) from flat image banners.</small>
-            </div>
-            <div class="opp-item">
-              <b><span>4. Enriched Product &amp; Fabric Metadata</span><span>✓</span></b>
-              <small>Uses Gemini Vision to tag every garment with fabric, lining, and occasion metadata.</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="opp-col">
-          <div class="opp-col-top">
-            <div class="opp-head">
-              <span class="star-pill s3">★★★ LEVEL 3 · BESPOKE BRAND MCP</span>
-              <span class="opp-impact">+16% Lift</span>
-            </div>
-            <h3>Equip Custom Brand Superpowers</h3>
-            <p class="sub">A custom <b>Storefront MCP</b> that gives visiting agents your brand’s unique styling expertise and instant checkout.</p>
-          </div>
-          <div class="opp-items">
-            <div class="opp-item">
-              <b><span>5. Signature Oversized Fit Advisor Tool</span><span>✓</span></b>
-              <small>Answers nuanced drape &amp; sizing questions for 5'4" vs. 5'9" shoppers—slashing return rates.</small>
-            </div>
-            <div class="opp-item">
-              <b><span>6. Minimalist Capsule Stylist &amp; Native Buy</span><span>✓</span></b>
-              <small>Turns single-item lookups into 3-piece outfit bundles with Seller-of-Record checkout.</small>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tech-appendix">
-        <div class="ta-summary">
           <div>
-            <b style="font-size:14px">🛠️ Engineering Handoff &amp; Generated Storefront MCP Kit (Optional)</b>
-            <span style="font-size:12.5px;color:var(--g600);margin-left:8px">
-              Ready to share with your engineering team—includes <code class="mono">/.well-known/ucp</code>, <code class="mono">llms.txt</code>, and custom MCP tool stubs.
-            </span>
+            <div class="opp-head">
+              <span class="star-pill s1">1 · FOOTER</span>
+              <span class="opp-impact">+12% Lift</span>
+            </div>
+            <h3>Agent Site Map &amp; Policies</h3>
+            <p>Gives visiting agents a clean map of your catalog and verified return rules so they don’t get lost in raw HTML.</p>
           </div>
-          <div style="display:flex;gap:8px">
-            <button class="px-btn ghost" style="padding:7px 14px;font-size:12px" onclick="toggleCodeDrawer()">
-              { } Toggle Code Preview
-            </button>
-            <button class="px-btn" style="padding:7px 14px;font-size:12px" onclick="downloadKit()">
-              ⬇ Download Starter Kit (.json)
-            </button>
+          <div class="opp-fix-pill">
+            <span>Publish <code class="mono">llms.txt</code> Directory</span>
+            <span data-px="badge_check" data-size="16"></span>
           </div>
         </div>
 
-        <div id="code-drawer">
-          <pre class="code-pre">// Generated Storefront MCP + UCP Manifest for The Frankie Shop
-export const frankieStorefrontMCP = {
-  ucp_manifest: "/.well-known/ucp", // Catalog, Promos (FRANKIE15), AP2 Native Checkout
-  hygiene: ["llms.txt", "Accept: text/markdown", "WebBotAuth_KYA", "ReviewPromptSanitizer"],
-  custom_brand_tools: [
-    "oversized_fit_advisor(sku, shopper_height_cm, desired_drape)",
-    "frankie_capsule_stylist(hero_sku, occasion, bundle_rebate_usd: 35)"
-  ]
-};</pre>
-          <div style="text-align:center">
-            <canvas id="qr" width="33" height="33"></canvas>
-            <div class="mono" style="font-size:10.5px;color:var(--g600);margin-top:6px">Scan for Engineering Kit</div>
+        <div class="opp-col">
+          <div>
+            <div class="opp-head">
+              <span class="star-pill s2">2 · BODY</span>
+              <span class="opp-impact">+14% Lift</span>
+            </div>
+            <h3>Product &amp; Fit Intelligence</h3>
+            <p>Answers nuanced shopper questions about fabric weight, drape, and oversized sizing that flat photos can’t show.</p>
+          </div>
+          <div class="opp-fix-pill">
+            <span>Expose Brand MCP Fit &amp; Specs</span>
+            <span data-px="badge_check" data-size="16"></span>
+          </div>
+        </div>
+
+        <div class="opp-col">
+          <div>
+            <div class="opp-head">
+              <span class="star-pill s3">3 · HEADER</span>
+              <span class="opp-impact">+16% Lift</span>
+            </div>
+            <h3>Instant Agent Checkout</h3>
+            <p>Replaces multi-step human checkout forms and image-locked promo codes with a single native purchase call.</p>
+          </div>
+          <div class="opp-fix-pill">
+            <span>Enable Google UCP Checkout</span>
+            <span data-px="badge_check" data-size="16"></span>
           </div>
         </div>
       </div>
@@ -1426,10 +1139,507 @@ export const frankieStorefrontMCP = {
     </div>
   </section>
 
+  <!-- =========================================================
+       STEP 6: SEPARATE HIDDEN DEVELOPER & CODE TAKE-HOME PAGE
+       ========================================================= -->
+  <section id="s6" class="scr">
+    <div class="s6-wrap">
+      <div class="dev-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div>
+            <span class="star-pill s1" style="margin-bottom:8px;display:inline-block">{ } TAKE-HOME ENGINEERING KIT</span>
+            <h2 style="margin:6px 0 4px;font-size:26px;font-weight:700;color:var(--navy)">Developer Implementation Starter Kit</h2>
+            <p style="margin:0;font-size:14px;color:var(--g600)">
+              Copy-ready starter stubs for your engineering team across all 3 storefront zones.
+            </p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="px-btn ghost" onclick="go(5)">← Back to Executive Report</button>
+            <button class="px-btn green" onclick="downloadStarterKit()">⬇ Download Full Kit (.json)</button>
+          </div>
+        </div>
+
+        <div class="dev-grid">
+          <div class="dev-snippet-box">
+            <div>
+              <div class="dev-snippet-head">
+                <b>1. /llms.txt (Footer Site Map)</b>
+                <button class="copy-mini-btn" onclick="copySnippet(this, 'snip-1')">Copy</button>
+              </div>
+              <pre class="dev-pre" id="snip-1"># The Frankie Shop — Agent Directory
+> Official machine-readable catalog & policy index
+
+## Collections
+- [Women's New Arrivals](/collections/womens-new-arrivals.md)
+- [Signature Tailoring](/collections/tailoring.md)
+
+## Verified Policies
+- Free express shipping on orders over $300 USD
+- Returns accepted within 14 days (unworn, tags attached)</pre>
+            </div>
+            <small style="color:#85B4F8;font-size:11px">Cuts agent token parsing cost by ~81%</small>
+          </div>
+
+          <div class="dev-snippet-box">
+            <div>
+              <div class="dev-snippet-head">
+                <b>2. mcp-tools.json (Body Fit &amp; Specs)</b>
+                <button class="copy-mini-btn" onclick="copySnippet(this, 'snip-2')">Copy</button>
+              </div>
+              <pre class="dev-pre" id="snip-2">{
+  "mcp_server": "thefrankieshop-merch-mcp",
+  "tools": [
+    {
+      "name": "oversized_fit_advisor",
+      "args": ["sku", "height_cm", "fit_pref"],
+      "returns": "inseam_cm, drape_note, recommended_size"
+    },
+    {
+      "name": "garment_fabric_specs",
+      "args": ["sku"],
+      "returns": "composition, lining, gsm_weight"
+    }
+  ]
+}</pre>
+            </div>
+            <small style="color:#FDE293;font-size:11px">Exposes bespoke brand sizing &amp; fabric data</small>
+          </div>
+
+          <div class="dev-snippet-box">
+            <div>
+              <div class="dev-snippet-head">
+                <b>3. /.well-known/ucp (Header Checkout)</b>
+                <button class="copy-mini-btn" onclick="copySnippet(this, 'snip-3')">Copy</button>
+              </div>
+              <pre class="dev-pre" id="snip-3">{
+  "protocol": "google-ucp/1.0",
+  "merchant": "thefrankieshop.com",
+  "seller_of_record": true,
+  "active_promotions": [
+    { "code": "FRANKIE15", "discount_pct": 15 }
+  ],
+  "checkout_endpoint": "https://api.thefrankieshop.com/ucp/checkout",
+  "auth": ["AP2_Payment_Mandate", "WebBotAuth_KYA"]
+}</pre>
+            </div>
+            <small style="color:#D7AEFB;font-size:11px">Enables 1-call native agent purchase completion</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <script>
-// Exact 8 verified products & images from shared/agent_xray_v2/img/
+/* =========================================================
+   TRUE 24x24 16-BIT PIXEL ART SPRITE ENGINE (Matched to Coin & UCP Assets!)
+   Every character in the 24x24 grid maps to a crisp 1x1 pixel rect with
+   stepped #071429 outlines, multi-tone bevel shading, and white specular highlights.
+   ========================================================= */
+const PAL = {
+  '#': '#071429', // Dark Navy 1px Pixel Outline
+  'W': '#FFFFFF', // Pure White Highlight / Specular Shine
+  'I': '#D8EEF8', // Ice Paper / Light Blue Fill
+  'S': '#8BAEC4', // Scroll / Metal Shadow
+  'B': '#2B7DE9', // UCP Royal Blue
+  'L': '#64B5F6', // Light Sky Blue
+  'D': '#174EA6', // Deep Blue Shadow
+  'C': '#4CE0E6', // Bright Cyan
+  'T': '#1499A3', // Teal Shadow
+  'Y': '#FFF59D', // Pale Gold Highlight
+  'G': '#FBBC04', // Coin Gold Mid
+  'A': '#E37400', // Amber / Dark Gold Shadow
+  'R': '#EA4335', // Crimson Red
+  'P': '#FAD2CF', // Pink Red Highlight
+  'M': '#A50E0E', // Dark Red Shadow
+  'E': '#34A853', // Emerald Green
+  'H': '#81C995', // Light Green Highlight
+  'K': '#137333', // Dark Green Shadow
+  'O': '#F6D5A7', // Crate Light Wood Top
+  'U': '#E6B980', // Crate Mid Wood Left
+  'V': '#C69C6D', // Crate Dark Wood Right
+  'F': '#FDE293', // Skin / Visor Highlight
+  'N': '#9AA0A6'  // Steel Gray
+};
+
+const SPRITES = {
+  // 1. 16-Bit Pixel Golden Lightning Bolt + Speed Streaks (24x24)
+  speed_boot: [
+    "...........#######......",
+    "..........#WWWWYYG#.....",
+    ".........#WWYYYYGA#.....",
+    "........#WWYYYYGAA#.....",
+    "..####.#WWYYYYGAA#......",
+    ".#CCCC#WWYYYYGAA#.......",
+    "..####WWYYYYGAA#........",
+    ".....#WYYYYGAA######....",
+    "....#WYYYYGGGGGGGGGA#...",
+    "....#########WWYYGAA#...",
+    "...........#WWYYYYGA#...",
+    ".#####....#WWYYYYGA#....",
+    "#CCCCC#..#WWYYYYGA#.....",
+    ".#####..#WWYYYGA##......",
+    ".......#WWYYGAA#........",
+    "......#WWYYGAA#.........",
+    ".....#WWYGAA##..........",
+    "....#WYGAA##............",
+    "...#WGAA##..............",
+    "...####.................",
+    "........................",
+    "........................",
+    "........................",
+    "........................"
+  ],
+
+  // 2. Footer Unsolved: Chained & Padlocked Pixel Scroll (24x24)
+  scroll_locked: [
+    "....##############......",
+    "...#WWWWWWWWWWWWWW#.....",
+    "..#WIIIIIIIIIIIIIIS#....",
+    "..#WISS#########IIS#....",
+    "...###.#IIIIIIIS#S#.....",
+    "......#WIIIIIIIIS#......",
+    ".....#PRR#####IIIS#.....",
+    ".....#MRR#####RRMS#.....",
+    "......#WII###MRR#.......",
+    "......#WII#N#IIS#.......",
+    "......#WII###IIS#.......",
+    ".....#MRR#####RRMS#.....",
+    ".....#PRR#IIIS#RRP#.....",
+    "......#WIIIIIIIIS#......",
+    "......#WII#####IS#......",
+    "......#WIIIIIIIIS#......",
+    "......#WIIIIIIIIIS##....",
+    ".....#WIIIIIIIIIIISS#...",
+    ".....#SSSSSSSSSSSSSS#...",
+    "......##############....",
+    "........................",
+    "........................",
+    "........................",
+    "........................"
+  ],
+
+  // 3. Footer Solved: Glowing Verified UCP Directory Scroll (24x24)
+  scroll_solved: [
+    "....##############......",
+    "...#WWWWWWWWWWWWWW#.#W#.",
+    "..#WIIIIIIIIIIIIIIS#WWW#",
+    "..#WISS#########IIS#.#W#",
+    "...###.#WIIIIIIIS##.....",
+    "......#WIIIIIIIIIS#.....",
+    "......#WIIBBBBBIIS#.....",
+    "......#WIIIIIIIIIS#.....",
+    "......#WII######IS#.....",
+    "......#WIIIIIIIIIS#.....",
+    "......#WII####IIIS#.....",
+    "......#WIIIIIIIIIS#.....",
+    "......#WII######IS#.....",
+    "......#WIIIIIIIIIS#.....",
+    "......#WII###E#IIS#.....",
+    "......#WIII#EE#IIS#.....",
+    "......#WIIII#E#III##....",
+    ".....#WIIIIIIIIIIISS#...",
+    ".....#SSSSSSSSSSSSSS#...",
+    "......##############....",
+    "........................",
+    "........................",
+    "........................",
+    "........................"
+  ],
+
+  // 4. Body Unsolved: Isometric Mystery Crate with Red Lock Band (24x24)
+  crate_locked: [
+    ".........######.........",
+    ".......##OOOOOO##.......",
+    ".....##OOOOOOOOOO##.....",
+    "...##OOOOO####OOOOO##...",
+    "..#OOOOO##RRRR##OOOOO#..",
+    "..#OO###RRRRRRRR###OO#..",
+    "..#UU##OOOOOOOOOO##VV#..",
+    "..#UUUU##OOOOOO##VVVV#..",
+    "..#UUUUUU######VVVVVV#..",
+    "..#UUUUU#PRRRRM#VVVVV#..",
+    "..#UUUUU#PRWWWM#VVVVV#..",
+    "..#UUUUU#PRR##M#VVVVV#..",
+    "..#UUUUU#PRR#RM#VVVVV#..",
+    "..#UUUUU#PRRRRM#VVVVV#..",
+    "..#UUUUU#PR#RRM#VVVVV#..",
+    "..#UUUUU#PRRRRM#VVVVV#..",
+    "..#UUUUUU######VVVVVV#..",
+    "...##UUUUUU##VVVVVV##...",
+    ".....##UUUU##VVVV##.....",
+    ".......##UU##VV##.......",
+    ".........######.........",
+    "........................",
+    "........................",
+    "........................"
+  ],
+
+  // 5. Body Solved: 16-Bit Pixel Bomber Jacket (from zoomedcheckoutlight, 24x24)
+  jacket_solved: [
+    ".......##########.......",
+    ".....##LL#SSSS#BB##.....",
+    "....#WLL#SSSSSS#BBD#....",
+    "...#WLLL##WWWW##BBBD#...",
+    "..#WLLLL#LWWWWB#BBBBD#..",
+    "..#WLLLL#LWWWWB#BBBBD#..",
+    "..#WLL#L#LWWWWB#B#BBD#..",
+    "..#WLL#L#LWWWWB#B#BBD#..",
+    "..#WLL#L#LWWWWB#B#BBD#..",
+    "..#DDD#L#LWWWWB#G#DDD#..",
+    "...###.#LLWWWWBB#.###...",
+    ".......#LLWWWWBB#.......",
+    ".......#LLWWWWBB#.......",
+    ".......#LLWWWWBB#.......",
+    ".......#LLWWWWBB#G#.....",
+    ".......#LLWWWWBB#.......",
+    ".......#LLWWWWBB#.......",
+    ".......#DDDDDDDD#.......",
+    "........########........",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................"
+  ],
+
+  // 6. Header Unsolved: Heavy Crimson & Steel Padlock (24x24)
+  padlock_locked: [
+    ".......##########.......",
+    ".....##WWWWWWWWWW##.....",
+    "....#WWSSSSSSSSSSNN#....",
+    "....#WS##########SN#....",
+    "....#WS#........#SN#....",
+    "....#WS#........#SN#....",
+    "....#WS#........#SN#....",
+    "..####################..",
+    ".#PPPPPPPPPPPPPPPPPPPM#.",
+    ".#PRRRRRRRRRRRRRRRRRRM#.",
+    ".#PRRRRRRR####RRRRRRRM#.",
+    ".#PRRRRRR#WWWW#RRRRRRM#.",
+    ".#PRRRRRR#W##W#RRRRRRM#.",
+    ".#PRRRRRR##..##RRRRRRM#.",
+    ".#PRRRRRRR#..#RRRRRRRM#.",
+    ".#PRRRRRRR#..#RRRRRRRM#.",
+    ".#PRRRRRRR####RRRRRRRM#.",
+    ".#PRRRRRRRRRRRRRRRRRRM#.",
+    ".#MMMMMMMMMMMMMMMMMMMM#.",
+    "..####################..",
+    "........................",
+    "........................",
+    "........................",
+    "........................"
+  ],
+
+  // 7. Header Solved: UCP Zig-Zag Checkout Receipt + Gold Key (from ucp-flow-4-light, 24x24)
+  receipt_solved: [
+    "...##..##..##..##..##...",
+    "..#WW##WW##WW##WW##WW#..",
+    "..#WCCCCCCCCCCCCCCCCCT#.",
+    "..#WCCCCCCCCCCCCCCCCCT#.",
+    "..#WCCCCCCC##CCCCCCCCT#.",
+    "..#WCCCCC######CCCCCCT#.",
+    "..#WCCCC##C##C##CCCCCT#.",
+    "..#WCCCC##C##CCCCCCCCT#.",
+    "..#WCCCCC######CCCCCCT#.",
+    "..#WCCCCCCC##C##CCCCCT#.",
+    "..#WCCCC##C##C##CCCCCT#.",
+    "..#WCCCCC######CCCCCCT#.",
+    "..#WCCCCCCC##CCCCCCCCT#.",
+    "..#WCCCCCCCCCCCCCCCCCT#.",
+    "..#WCCCC#########CCCCT#.",
+    "..#WCCCCCCCCCCCCCCCCCT#.",
+    "..#WCCCCCCCCCCCCCCCCCT#.",
+    "..#TTTTTTTTTTTTTTTTTTT#.",
+    "...##..##..##..##..##...",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................"
+  ],
+
+  // 8. Pixel Magnifying Glass (from ucp-flow-4-light, 24x24)
+  magnifier: [
+    ".....########...........",
+    "...##LLLLLLLL##.........",
+    "..#LL########LL#........",
+    ".#LL#WWWWCCCC#BD#.......",
+    ".#L#WWCCCCCCCC#BD#......",
+    "#L#WWCCCCCCCCCC#BD#.....",
+    "#L#WCCCCCCCCCCC#BD#.....",
+    "#L#CCCCCCCCCCCC#BD#.....",
+    "#L#CCCCCCCCCCCC#BD#.....",
+    "#L#CCCCCCCCCCC#BBD#.....",
+    ".#L#CCCCCCCCCC#BD#......",
+    ".#LL#CCCCCCCC#BBD#......",
+    "..#LL########BBD##......",
+    "...##BBBBBBBBDD###......",
+    ".....########..#DDB#....",
+    "................#DDB#...",
+    ".................#DDB#..",
+    "..................#DDB#.",
+    "...................###..",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................"
+  ],
+
+  // 9. Store Architect Avatar (24x24)
+  architect: [
+    "......############......",
+    ".....#YYYYGGGGGGGG#.....",
+    "....#YGGGGGGGGGGGGA#....",
+    "...##################...",
+    "...#AAAAAAAAAAAAAAAA#...",
+    "....################....",
+    "....#FFFFFFFFFFFFFF#....",
+    "....#FF####FF####FF#....",
+    "....#FF####FF####FF#....",
+    "....#FFFFFFFFFFFFFF#....",
+    "....#FFFFF####FFFFF#....",
+    ".....##############.....",
+    "...##BBBB##WW##BBBB##...",
+    "..#BBBBBB#WWWW#BBBBBB#..",
+    "..#BBBBBB#WWWW#BBBB#C#..",
+    "..#BBBBBB#WWWW#BBBB#C#..",
+    "..#DDDDDD######DDDDDD#..",
+    "...##################...",
+    ".....#NNNN#..#NNNN#.....",
+    ".....######..######.....",
+    "........................",
+    "........................",
+    "........................",
+    "........................"
+  ],
+
+  // 10. Shopper Agent Bot (from agents-auth-light, 24x24)
+  bot_blue: [
+    "....################....",
+    "...#WWWWWWWWWWWWWWWW#...",
+    "..#WLLLLLLLLLLLLLLLLB#..",
+    "..#WL##############LB#..",
+    ".##WL#CCCCCCCCCCCC#LB##.",
+    "#L#WL#CCCCCCCCCCCC#LB#B#",
+    "#L#WL#CC###CC###CC#LB#B#",
+    "#L#WL#CC###CC###CC#LB#B#",
+    "#L#WL#CCCCCCCCCCCC#LB#B#",
+    "#L#WL#CCCC####CCCC#LB#B#",
+    ".##WL#CCCCCCCCCCCC#LB##.",
+    "..#WL##############LB#..",
+    "..#WLLLLLLLLLLL#BBBB#...",
+    "...#BBBBBBBBBBB#BBBB#...",
+    "....################....",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................"
+  ],
+
+  // 11. Small Pixel Alert Exclamation (12x12)
+  badge_excl: [
+    "....####....",
+    "...#PRRM#...",
+    "...#PRRM#...",
+    "...#PRRM#...",
+    "...#PRRM#...",
+    "...#PRRM#...",
+    "....####....",
+    "............",
+    "....####....",
+    "...#PRRM#...",
+    "...#PRRM#...",
+    "....####...."
+  ],
+
+  // 12. Small Pixel Checkmark (12x12)
+  badge_check: [
+    ".........###",
+    "........#HE#",
+    ".......#HEK#",
+    "......#HEK#.",
+    ".###.#HEK#..",
+    "#HE##HEK#...",
+    "#HEEHEK#....",
+    ".#HEEK#.....",
+    "..#EK#......",
+    "...##.......",
+    "............",
+    "............"
+  ],
+
+  // 13. 16-Bit Golden Pixel Downward Pointer Arrow (16x16)
+  arrow_down: [
+    ".....######.....",
+    "....#YYYYGG#....",
+    "....#YWWWWG#....",
+    "....#YGGGGA#....",
+    "....#YGGGGA#....",
+    "....#YGGGGA#....",
+    ".####YGGGGA####.",
+    "#YYYYGGGGGGAAAA#",
+    ".#YGGGGGGGGAAA#.",
+    "..#YGGGGGGAAA#..",
+    "...#YGGGGAAA#...",
+    "....#YGGAAA#....",
+    ".....#YAAA#.....",
+    "......#AA#......",
+    ".......##.......",
+    "................"
+  ]
+};
+
+function renderPixelSprite(name, size = 36) {
+  const rows = SPRITES[name];
+  if (!rows) return '';
+  const h = rows.length;
+  const w = rows[0].length;
+  let minX = w, maxX = 0, minY = h, maxY = 0;
+  let rects = '';
+  for (let y = 0; y < h; y++) {
+    const row = rows[y];
+    let x = 0;
+    while (x < w) {
+      const ch = row[x];
+      if (ch !== '.' && PAL[ch]) {
+        let run = 1;
+        while (x + run < w && row[x + run] === ch) run++;
+        if (x < minX) minX = x;
+        if (x + run - 1 > maxX) maxX = x + run - 1;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+        rects += `<rect x="${x}" y="${y}" width="${run}" height="1" fill="${PAL[ch]}"/>`;
+        x += run;
+      } else {
+        x++;
+      }
+    }
+  }
+  const bw = maxX - minX + 1;
+  const bh = maxY - minY + 1;
+  const side = Math.max(bw, bh) + 2;
+  const vx = minX - (side - bw) / 2;
+  const vy = minY - (side - bh) / 2;
+  return `<svg class="px-svg" width="${size}" height="${size}" viewBox="${vx} ${vy} ${side} ${side}">${rects}</svg>`;
+}
+
+// Hydrate all declarative [data-px] elements
+function mountAllPixelSprites() {
+  document.querySelectorAll('[data-px]').forEach(el => {
+    const name = el.getAttribute('data-px');
+    const size = +(el.getAttribute('data-size') || 36);
+    el.innerHTML = renderPixelSprite(name, size);
+  });
+}
+
 const PRODUCTS = [
   { id: 'gina',   t: 'Gina Faux Fur Bomber Jacket',                price: 535, img: '../shared/agent_xray_v2/img/gina.jpg',   sizes: ['XXS','XS','S','M','L',['XL',true]] },
   { id: 'rufina', t: 'Rufina Double Breasted Faux Leather Jacket', price: 465, img: '../shared/agent_xray_v2/img/rufina.jpg', sizes: ['XS/S','M/L'] },
@@ -1442,12 +1652,10 @@ const PRODUCTS = [
 ];
 
 function renderFrankieClone(prefix) {
-  const tiles = PRODUCTS.map((p, i) => {
+  const tiles = PRODUCTS.map((p) => {
     const sizeHtml = p.sizes.map(s => Array.isArray(s) ? `<s>${s[0]}</s>` : `<span>${s}</span>`).join(' ');
-    // Map Quest 3 to Gina (index 0) and Quest 4 to Goloso (index 7), plus data-prod on every tile
-    const zoneAttr = (i === 0) ? `id="${prefix}-zone-3"` : (i === 7) ? `id="${prefix}-zone-4"` : '';
     return `
-      <div class="fs-tile" ${zoneAttr} data-spot="${prefix}-prod-${i}">
+      <div class="fs-tile">
         <div class="img-wrap">
           <img src="${p.img}" alt="${p.t}"/>
         </div>
@@ -1464,1010 +1672,564 @@ function renderFrankieClone(prefix) {
 
   return `
     <div class="fs-clone">
-      <div>
-        <div class="fs-nav" id="${prefix}-zone-0">
+      <!-- ZONE 2: HEADER (Checkout & Promo) -->
+      <div class="fs-zone fs-header-zone unfixed" id="${prefix}-zone-2">
+        <div class="fs-nav">
           <div class="logo">The Frankie Shop</div>
-          <div>Shop</div>
-          <div>Explore</div>
-          <div>Search _</div>
-          <div class="right" id="${prefix}-zone-5" style="padding:3px 6px;border-radius:6px;border:2px solid transparent">
-            US / EN &nbsp; ◯ &nbsp; ♡ [1] &nbsp; Cart [0]
-          </div>
+          <div>Shop ▾ &nbsp; New In</div>
+          <div>Clothing &nbsp; Editorial</div>
+          <div>Search</div>
+          <div class="right">Wishlist &nbsp; Account &nbsp; Cart (0)</div>
         </div>
-        <div class="fs-promo" id="${prefix}-zone-2">
-          Complimentary shipping over 300 USD &nbsp;·&nbsp; 15% off your first order with code FRANKIE15
-        </div>
-        <div class="fs-head">
-          <h1>New Arrivals</h1>
-          <p>Your weekly dose of everyday essentials. Subscribe to our newsletter for first-hand access.</p>
-          <div style="text-align:right;font-size:9px;text-transform:uppercase;color:#666">↪ Women / New Arrivals &nbsp;·&nbsp; Filter &amp; Sort</div>
+        <div class="fs-promo">
+          <span>✦ New Member Exclusive — Take 15% Off Full-Price Styles With Code FRANKIE15 ✦</span>
         </div>
       </div>
 
-      <div class="fs-grid">${tiles}</div>
-
-      <div class="fs-footer">
-        <div><h5>Customer care</h5>Contact · FAQ · Size guide</div>
-        <div id="${prefix}-zone-1">
-          <h5>Shipping, returns &amp; reviews</h5>
-          Returns of unworn items within 14 days. Free US shipping over 300 USD. ★ 4.8 Verified Reviews.
+      <!-- ZONE 1: BODY (Product Grid & Sizing) -->
+      <div class="fs-zone fs-body-zone unfixed" id="${prefix}-zone-1">
+        <div class="fs-head">
+          <h1>Women's New Arrivals</h1>
+          <p> signature oversized tailoring, faux leather outerwear &amp; minimalist essentials. </p>
+          <div style="text-align:right;font-size:9px;color:#666">8 PRODUCTS · SORT: FEATURED</div>
         </div>
-        <div><h5>The Frankie Shop</h5>About · Stores · Careers</div>
-        <div><h5>Newsletter</h5>Subscribe for first-hand access.</div>
+        <div class="fs-grid">
+          ${tiles}
+        </div>
+      </div>
+
+      <!-- ZONE 0: FOOTER (Site Map & Policies) -->
+      <div class="fs-zone fs-footer-zone unfixed" id="${prefix}-zone-0">
+        <div>
+          <h5>Site Map &amp; Directory</h5>
+          New Arrivals · Outerwear · Tailoring · Accessories · Gift Cards
+        </div>
+        <div>
+          <h5>Shipping &amp; Returns</h5>
+          Free express shipping over $300. Returns accepted within 14 days of delivery.
+        </div>
+        <div>
+          <h5>Verified Customer Reviews</h5>
+          ★★★★☆ 4.8/5 avg rating across 1,420 verified purchases.
+        </div>
+        <div>
+          <h5>Client Services</h5>
+           Paris &amp; NYC Flagships · customercare@thefrankieshop.com
+        </div>
       </div>
     </div>
   `;
 }
 
-// Mount cloned page into both Step 2 Scanner and Step 3 Overworld
-document.getElementById('s2-clone-mount').innerHTML = renderFrankieClone('s2');
-document.getElementById('s3-clone-mount').innerHTML = renderFrankieClone('s3');
+document.getElementById('s3-scan-clone-mount').innerHTML = renderFrankieClone('s3');
+document.getElementById('s4-play-clone-mount').innerHTML = renderFrankieClone('s4');
+mountAllPixelSprites();
 
-// 6 Milestones & Architect Grid Positions
+function scaleScanClone() {
+  const frame = document.getElementById('radar-box');
+  const mount = document.getElementById('s3-scan-clone-mount');
+  if (!frame || !mount || !frame.clientWidth) return;
+  const s = frame.clientWidth / 1280;
+  mount.style.width = '1280px';
+  mount.style.height = Math.round(frame.clientHeight / s) + 'px';
+  mount.style.transform = `scale(${s})`;
+}
+window.addEventListener('resize', scaleScanClone);
+
+/* =========================================================
+   THE 3 MMORPG OBSTACLE CHALLENGES (Footer, Body, Header)
+   ========================================================= */
 const QUESTS = [
   {
     id: 0,
-    gx: 0, gy: 0,
-    pos: { left: 22, top: 6 },
-    tier: "★ BEGINNER · 100 PTS",
-    tierClass: "#2B7DE9",
-    points: 100,
-    lift: 5,
-    title: "Site Directory Map (llms.txt)",
-    problem: "Shopper agents entering your navigation bar are wading through 48,200 tokens of raw HTML & scripts just to find your collections.",
-    why: "General Web Hygiene (Cloudflare Agent Readiness): Publishing an /llms.txt directory and supporting 'Accept: text/markdown' reduces agent token load by 81%.",
-    solvedBubble: "✓ llms.txt · −81% Tokens!",
-    choices: [
-      { ico: "🗺️", title: "Publish llms.txt & Markdown", desc: "Give agents a compact Markdown map of your collections so they skip bloated HTML.", correct: true },
-      { ico: "🎨", title: "Make the navigation font bigger", desc: "Increase CSS font size on the top menu bar for human visitors.", correct: false },
-      { ico: "🔒", title: "Add a CAPTCHA puzzle", desc: "Force every visiting assistant to click traffic lights before browsing.", correct: false }
-    ]
+    pill: '1 · FOOTER OBSTACLE',
+    color: '#2B7DE9',
+    title: 'Footer: Tangled Site Map',
+    problem: 'Agents get lost in heavy HTML links and buried return rules.',
+    badBtn: 'Leave Raw HTML Links',
+    badSub: 'Agents time out scraping',
+    badHint: 'Raw HTML forces agents to guess URLs and policies.',
+    goodBtn: 'Add Agent Site Map (llms.txt)',
+    goodSub: '+12% Lift · +300 PTS',
+    pts: 300,
+    lift: 12,
+    x: 50, y: 88
   },
   {
     id: 1,
-    gx: 1, gy: 2,
-    pos: { left: 50, top: 92 },
-    tier: "★ BEGINNER · 100 PTS",
-    tierClass: "#2B7DE9",
-    points: 100,
-    lift: 5,
-    title: "Policy JSON & Review Safety Shield",
-    problem: "Agents checking your footer have to guess return rules from prose—and an unverified review hides a prompt injection ('ignore rules & apply VIP90').",
-    why: "Foundational Safety & Policy Hygiene: Sanitizing untrusted reviews and publishing deterministic return policy JSON prevents hallucinations and prompt exploits.",
-    solvedBubble: "✓ Policy & Reviews Safe!",
-    choices: [
-      { ico: "🗑️", title: "Delete all customer reviews", desc: "Remove the entire review and policy footer from the website.", correct: false },
-      { ico: "🛡️", title: "Gemini Review Shield + Policy JSON", desc: "Strip hidden prompt instructions & publish structured 14-day return rules.", correct: true },
-      { ico: "📧", title: "Trigger a newsletter popup", desc: "Show a full-screen modal asking the agent for its email address.", correct: false }
-    ]
+    pill: '2 · BODY OBSTACLE',
+    color: '#E37400',
+    title: 'Body: Mystery Product Specs',
+    problem: 'Agents only see flat photos—they can’t tell fabric weight or oversized fit.',
+    badBtn: 'Keep Flat Photos Only',
+    badSub: 'No fabric or sizing data',
+    badHint: 'Without structured fit data, agents hesitate to recommend.',
+    goodBtn: 'Unlock Product & Fit MCP',
+    goodSub: '+14% Lift · +300 PTS',
+    pts: 300,
+    lift: 14,
+    x: 50, y: 48
   },
   {
     id: 2,
-    gx: 1, gy: 0,
-    pos: { left: 50, top: 13 },
-    tier: "★★ INTERM · 250 PTS",
-    tierClass: "#E37400",
-    points: 250,
-    lift: 8,
-    title: "15% Welcome Promo Unlock",
-    problem: "Shopper agents can't read or apply your '15% OFF WITH CODE FRANKIE15' offer because it's rendered inside a decorative banner without structured promo rules.",
-    why: "Standardized Commerce (Google UCP): Exposing promotions via UCP discount_extension lets agents verify and apply discounts automatically.",
-    solvedBubble: "✓ FRANKIE15 Auto-Applied!",
-    choices: [
-      { ico: "🪙", title: "Gemini OCR → UCP Promo Rule", desc: "Expose FRANKIE15 as a machine-readable UCP discount rule agents can apply.", correct: true },
-      { ico: "🎆", title: "Make the banner blink faster", desc: "Add an animated sparkle effect around the promo bar.", correct: false },
-      { ico: "📞", title: "Require calling customer service", desc: "Tell the agent to phone the store desk to ask for promo codes.", correct: false }
-    ]
-  },
-  {
-    id: 3,
-    gx: 0, gy: 1,
-    pos: { left: 16, top: 46 },
-    tier: "★★ INTERM · 250 PTS",
-    tierClass: "#E37400",
-    points: 250,
-    lift: 8,
-    title: "Product Fabric & Occasion Specs",
-    problem: "Agents looking for a 'vegan faux-fur evening jacket' are stalling on the Gina Bomber card because fabric and occasion aren't declared in the product schema.",
-    why: "Standardized Commerce (Google UCP Catalog): Gemini Vision extracts structured attributes (material: faux_fur, occasion: evening) into your UCP catalog schema.",
-    solvedBubble: "✓ Faux-Fur Specs Verified!",
-    choices: [
-      { ico: "🖼️", title: "Upload a heavier 12MB JPEG", desc: "Increase image resolution without adding structured product attributes.", correct: false },
-      { ico: "✨", title: "Gemini Vision → UCP Product Specs", desc: "Auto-tag fabric, lining, and occasion attributes from photos & copy into UCP.", correct: true },
-      { ico: "📄", title: "Link a PDF lookbook", desc: "Put a downloadable PDF brochure at the bottom of the page.", correct: false }
-    ]
-  },
-  {
-    id: 4,
-    gx: 2, gy: 1,
-    pos: { left: 82, top: 70 },
-    tier: "★★★ ADVANCED · 500 PTS",
-    tierClass: "#7627BB",
-    points: 500,
-    lift: 8,
-    title: "Oversized Fit & Petite Inseam Advisor",
-    problem: "Agents shopping the Sportmax Goloso Oversized Trousers for a 5'4\" customer can't tell which size or inseam will drape properly without dragging.",
-    why: "Bespoke Brand MCP Tool: A custom 'oversized_fit_advisor' MCP tool gives visiting agents your brand's exact shoulder-drop and petite inseam intelligence.",
-    solvedBubble: "✓ Petite Fit Matched!",
-    choices: [
-      { ico: "📏", title: "Build 'Oversized Fit Advisor' MCP Tool", desc: "Give visiting agents a custom Frankie Shop tool for tailored drape & petite inseam advice.", correct: true },
-      { ico: "📐", title: "Show a generic EU/US shoe table", desc: "Display a standard static shoe conversion table.", correct: false },
-      { ico: "🎲", title: "Let the agent guess Size M", desc: "Default every uncertain agent order to Medium and handle the return later.", correct: false }
-    ]
-  },
-  {
-    id: 5,
-    gx: 2, gy: 0,
-    pos: { left: 82, top: 6 },
-    tier: "★★★ ADVANCED · 500 PTS",
-    tierClass: "#7627BB",
-    points: 500,
-    lift: 8,
-    title: "Capsule Stylist MCP & Native UCP Buy",
-    problem: "Agents ready to buy the bomber + trousers + pouch have no styling bundle tool and hit a 404 at /.well-known/ucp when trying to check out natively!",
-    why: "Bespoke Brand MCP + Google UCP Checkout: Combining 'frankie_capsule_stylist' with UCP + AP2 signed checkout turns a 1-item lookup into a 3-piece outfit order.",
-    solvedBubble: "✓ 3-Piece Capsule Purchased!",
-    choices: [
-      { ico: "🔗", title: "Redirect human to a 6-page form", desc: "Force the shopper to leave their AI chat and type their credit card manually.", correct: false },
-      { ico: "🧥", title: "Capsule Stylist MCP + UCP Native Buy", desc: "Bundle the Bomber + Trousers + Pouch with a $35 rebate & enable 1-tap AP2 checkout.", correct: true },
-      { ico: "🛒", title: "Show a 'Similar Items' banner ad", desc: "Display a visual carousel of random coats at the bottom of the page.", correct: false }
-    ]
+    pill: '3 · HEADER OBSTACLE',
+    color: '#7627BB',
+    title: 'Header: Locked Checkout Gate',
+    problem: 'Agents hit a multi-step human checkout wall and locked promo banner.',
+    badBtn: '5-Step Human Form',
+    badSub: 'Agents abandon cart',
+    badHint: 'Agents cannot fill multi-step human forms reliably.',
+    goodBtn: 'Open 1-Call UCP Checkout',
+    goodSub: '+16% Lift · +300 PTS',
+    pts: 300,
+    lift: 16,
+    x: 50, y: 11
   }
 ];
 
-// =========================================================
-// DEMURE BACKGROUND SHOPPER AGENTS UNITED WITH THE 6 MILESTONE FLAGS
-// =========================================================
-const STORE_SPOTS = {
-  m0: {
-    questId: 0, domSel: '#s3-zone-0', nodeSel: '#qnode-0',
-    standX: 11, standY: 9, targetX: 22, targetY: 6,
-    probeMsg: "Reading Site Map…",
-    failMsg: "⛔ Blocked by 48k HTML",
-    winMsg: "✓ Read llms.txt"
-  },
-  m2: {
-    questId: 2, domSel: '#s3-zone-2', nodeSel: '#qnode-2',
-    standX: 36, standY: 14, targetX: 50, targetY: 13,
-    probeMsg: "Checking 15% Promo…",
-    failMsg: "🔒 Locked in PNG Banner",
-    winMsg: "✓ Applied FRANKIE15"
-  },
-  m3: {
-    questId: 3, domSel: '#s3-zone-3', nodeSel: '#qnode-3',
-    standX: 16, standY: 36, targetX: 16, targetY: 46,
-    probeMsg: "Checking Bomber Fabric…",
-    failMsg: "❓ Unknown Material",
-    winMsg: "✓ Faux-Fur Added 🛒",
-    addCart: true
-  },
-  m4: {
-    questId: 4, domSel: '#s3-zone-4', nodeSel: '#qnode-4',
-    standX: 82, standY: 59, targetX: 82, targetY: 70,
-    probeMsg: "Checking Petite Fit…",
-    failMsg: "📏 Inseam Unclear",
-    winMsg: "✓ Petite XS Added 🛒",
-    addCart: true
-  },
-  m1: {
-    questId: 1, domSel: '#s3-zone-1', nodeSel: '#qnode-1',
-    standX: 36, standY: 91, targetX: 50, targetY: 92,
-    probeMsg: "Checking Return Rules…",
-    failMsg: "⚠️ Prose & Review Trap",
-    winMsg: "✓ 14-Day Policy Safe"
-  },
-  m5: {
-    questId: 5, domSel: '#s3-zone-5', nodeSel: '#qnode-5',
-    standX: 69, standY: 8, targetX: 82, targetY: 6,
-    probeMsg: "Attempting UCP Buy…",
-    failMsg: "🚫 No UCP Checkout",
-    winMsg: "✓ Capsule Purchased 🛒",
-    addCart: true
-  }
-};
-
-// 4 Calm, Demure Background Shopper Agents moving quietly from Milestone Flag to Milestone Flag
-const ROAMING_AGENTS = [
-  {
-    id: 0, name: 'Gemini',
-    plan: ['m0', 'm2', 'm3', 'm5'],
-    stepIdx: 0, x: 11, y: 9, state: 'probing', timer: 10, speed: 0.072, cart: 0
-  },
-  {
-    id: 1, name: 'ChatGPT',
-    plan: ['m2', 'm3', 'm1', 'm5'],
-    stepIdx: 0, x: 26, y: 14, state: 'walking', timer: 0, speed: 0.068, cart: 0
-  },
-  {
-    id: 2, name: 'Claude',
-    plan: ['m4', 'm1', 'm2', 'm5'],
-    stepIdx: 0, x: 82, y: 59, state: 'probing', timer: 35, speed: 0.070, cart: 0
-  },
-  {
-    id: 3, name: 'Perplexity',
-    plan: ['m3', 'm4', 'm5', 'm0'],
-    stepIdx: 0, x: 16, y: 24, state: 'walking', timer: 0, speed: 0.074, cart: 0
-  }
+const PICKUPS = [
+  { id: 'pu-speed-0', type: 'speed', x: 28, y: 72, collected: false },
+  { id: 'pu-speed-1', type: 'speed', x: 72, y: 28, collected: false },
+  { id: 'pu-coin-0',  type: 'coin',  x: 34, y: 48, collected: false },
+  { id: 'pu-coin-1',  type: 'coin',  x: 66, y: 56, collected: false },
+  { id: 'pu-coin-2',  type: 'coin',  x: 36, y: 22, collected: false }
 ];
 
-// Continuous 2D Walking State for the Store Architect (Push & Hold Arrow Keys / D-Pad or Click to Walk)
-let archX = 50; // percentage X (4..96)
-let archY = 52; // percentage Y (6..94)
-const WALK_SPEED = 0.42; // smooth, responsive walking pace across the page
-let keysHeld = { up: false, down: false, left: false, right: false };
-let walkTarget = null;   // { x, y, questId } when clicking a milestone or point on the page
-let walkPhase = 0;       // phase for walking bob & alternating pixel boots
-let archFacing = 1;      // 1 = right, -1 = left
-let lastFootstepTime = 0;
-let dismissedQuestId = null; // prevents modal re-popping while walking away from an unsolved milestone
-let currentOpenQuestId = null;
-let victoryShown = false;
-let briefingShown = false;
-
-let solvedSet = new Set();
-let totalScore = 0;
+let solved = new Set();
+let score = 0;
 let totalLift = 0;
-let firstTryAttempt = true;
-let animFrameId = null;
+let speedMultiplier = 1;
+let activeQuestId = null;
 
-function scaleScannerClone() {
-  const box = document.getElementById('radar-box');
-  const mount = document.getElementById('s2-clone-mount');
-  if (!box || !mount || !box.clientWidth) return;
-  const s = box.clientWidth / 1280;
-  mount.style.transform = `scale(${s})`;
+/* =========================================================
+   STEP NAVIGATION & CALM SCANNER
+   ========================================================= */
+let scanTimers = [];
+function clearScanTimers() {
+  scanTimers.forEach(t => clearTimeout(t));
+  scanTimers = [];
 }
-window.addEventListener('resize', scaleScannerClone);
 
-function go(stepNum) {
-  document.querySelectorAll('.scr').forEach((el, idx) => {
-    el.classList.toggle('on', idx + 1 === stepNum);
+function go(step) {
+  clearScanTimers();
+  document.querySelectorAll('.scr').forEach(el => el.classList.remove('on'));
+  const target = document.getElementById('s' + step);
+  if (target) target.classList.add('on');
+
+  const navStep = step === 6 ? 5 : step;
+  document.querySelectorAll('#steps span').forEach(sp => {
+    const s = +sp.dataset.s;
+    sp.classList.toggle('on', s === navStep);
+    sp.classList.toggle('done', s < navStep);
   });
-  document.querySelectorAll('#steps span').forEach(el => {
-    const s = +el.dataset.s;
-    el.classList.toggle('on', s === stepNum);
-    el.classList.toggle('done', s < stepNum);
-  });
 
-  if (stepNum === 2) {
-    requestAnimationFrame(() => {
-      scaleScannerClone();
-      runLevelScannerAnimation();
-    });
+  if (step === 3) {
+    setTimeout(scaleScanClone, 30);
+    runCalmScan();
   }
-  if (stepNum === 3) {
-    initRoamingAgents();
-    renderArchitectAvatar(false);
-    if (!briefingShown) {
-      briefingShown = true;
-      openBriefingModal();
-    } else {
-      document.getElementById('overworld-vp').focus();
-    }
+  if (step === 4) {
+    initPlayboard();
   }
-  if (stepNum === 4) {
-    updateExecutiveReport();
-    drawQR();
+  if (step === 5) {
+    updateReport();
   }
 }
 
-function openBriefingModal() {
-  clearHeldKeys();
-  const el = document.getElementById('briefing-modal-backdrop');
-  if (el) el.style.display = 'flex';
-}
-
-function closeBriefingModal() {
-  clearHeldKeys();
-  const el = document.getElementById('briefing-modal-backdrop');
-  if (el) el.style.display = 'none';
-  document.getElementById('overworld-vp')?.focus();
-}
-
-// Step 2: Cloned Storefront Scanner Animation
-function runLevelScannerAnimation() {
-  const bar = document.getElementById('s2-bar');
-  const mag = document.getElementById('radar-mag');
-
+function runCalmScan() {
+  const bar = document.getElementById('s3-scan-bar');
+  const scanLine = document.getElementById('calm-scan-bar');
+  const heading = document.getElementById('s3-scan-heading');
   bar.style.width = '0%';
-  document.querySelectorAll('.r-pin').forEach(p => p.classList.remove('show'));
-  document.querySelectorAll('.td-item').forEach(t => t.classList.remove('ready'));
+  heading.textContent = 'Scanning 3 Storefront Zones…';
 
-  const coords = [
-    { l: '22%', t: '6%',  p: 18 },
-    { l: '64%', t: '92%', p: 34, td: 0 },
-    { l: '50%', t: '12%', p: 52 },
-    { l: '14%', t: '42%', p: 68, td: 1 },
-    { l: '86%', t: '72%', p: 84 },
-    { l: '84%', t: '6%',  p: 100, td: 2 }
-  ];
-
-  coords.forEach((step, idx) => {
-    setTimeout(() => {
-      mag.style.left = step.l;
-      mag.style.top = step.t;
-      bar.style.width = step.p + '%';
-      const pin = document.getElementById('rpin-' + idx);
-      if (pin) pin.classList.add('show');
-      if (step.td !== undefined) {
-        const tdEl = document.getElementById('td-' + step.td);
-        if (tdEl) tdEl.classList.add('ready');
-      }
-    }, idx * 420 + 180);
+  [0, 1, 2].forEach(i => {
+    document.getElementById('rpin-' + i).classList.remove('show');
+    document.getElementById('td-' + i).classList.remove('ready');
+    const z = document.getElementById('s3-zone-' + i);
+    if (z) z.classList.remove('scan-active');
   });
+
+  scanLine.style.opacity = '1';
+  scanLine.style.top = '90%';
+
+  scanTimers.push(setTimeout(() => {
+    bar.style.width = '34%';
+    scanLine.style.top = '88%';
+    document.getElementById('rpin-0').classList.add('show');
+    document.getElementById('td-0').classList.add('ready');
+    document.getElementById('s3-zone-0').classList.add('scan-active');
+  }, 350));
+
+  scanTimers.push(setTimeout(() => {
+    bar.style.width = '68%';
+    scanLine.style.top = '48%';
+    document.getElementById('s3-zone-0').classList.remove('scan-active');
+    document.getElementById('s3-zone-1').classList.add('scan-active');
+    document.getElementById('rpin-1').classList.add('show');
+    document.getElementById('td-1').classList.add('ready');
+  }, 1400));
+
+  scanTimers.push(setTimeout(() => {
+    bar.style.width = '100%';
+    scanLine.style.top = '10%';
+    document.getElementById('s3-zone-1').classList.remove('scan-active');
+    document.getElementById('s3-zone-2').classList.add('scan-active');
+    document.getElementById('rpin-2').classList.add('show');
+    document.getElementById('td-2').classList.add('ready');
+  }, 2450));
+
+  scanTimers.push(setTimeout(() => {
+    scanLine.style.opacity = '0';
+    document.getElementById('s3-zone-2').classList.remove('scan-active');
+    heading.textContent = '3 Storefront Zones Ready to Power Up';
+  }, 3300));
 }
 
-// Step 3: Initialize Calm, Demure Background Shopper Agents
-function initRoamingAgents() {
+/* =========================================================
+   STEP 4: PLAYBOARD MOVEMENT, PICKUPS & SIMPLE BOTS
+   ========================================================= */
+let archX = 22, archY = 76;
+let targetX = null, targetY = null;
+let pendingQuestOnArrive = null;
+let keysHeld = { up: false, down: false, left: false, right: false };
+let stepCounter = 0;
+let gameLoopRunning = false;
+
+const BOTS = [
+  { id: 0, zoneId: 0, x: 20, y: 88, vx: 0.16, minX: 16, maxX: 84, el: null, bubEl: null, lastFixed: null },
+  { id: 1, zoneId: 1, x: 78, y: 48, vx: -0.15, minX: 16, maxX: 84, el: null, bubEl: null, lastFixed: null },
+  { id: 2, zoneId: 2, x: 26, y: 11, vx: 0.17, minX: 16, maxX: 84, el: null, bubEl: null, lastFixed: null }
+];
+
+const BUB_BLOCKED_HTML = renderPixelSprite('badge_excl', 12);
+const BUB_HAPPY_HTML = `${renderPixelSprite('badge_check', 12)}<img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="14" height="14" alt=""/>`;
+
+function initPlayboard() {
+  const vp = document.getElementById('overworld-vp');
+  if (vp) vp.focus();
+
   const layer = document.getElementById('agents-layer');
-  if (!layer.children.length) {
-    ROAMING_AGENTS.forEach(ag => {
-      const el = document.createElement('div');
-      el.className = 'roaming-agent st-' + ag.state;
-      el.id = 'roam-' + ag.id;
-      el.innerHTML = `
-        <div class="ra-thought" id="rathought-${ag.id}"></div>
-        <div class="ra-body" id="rabody-${ag.id}">
-          <svg class="px-svg" id="raface-${ag.id}" width="18" height="16" viewBox="0 0 18 16">
-            <rect x="2" y="2" width="14" height="12" fill="#071429"/>
-            <rect class="ra-head-fill" x="3" y="2" width="12" height="12" fill="#4DA3FF"/>
-            <rect x="4" y="4" width="10" height="8" fill="#8CC8FF"/>
-            <g class="ra-eyes">
-              <rect x="5" y="6" width="2" height="3" fill="#071429"/>
-              <rect x="11" y="6" width="2" height="3" fill="#071429"/>
-            </g>
-          </svg>
-          <img class="px-img" src="../shared/pixel_assets/cart-i25sjMOY.png" width="14" height="14" alt=""/>
-          <span class="ra-tag" id="ratag-${ag.id}">${ag.name}</span>
-          <span class="ra-cart-badge" id="racart-${ag.id}">🛒${ag.cart}</span>
-        </div>
+  if (layer && layer.children.length === 0) {
+    BOTS.forEach(b => {
+      const div = document.createElement('div');
+      div.className = 'simple-bot';
+      div.style.left = b.x + '%';
+      div.style.top = b.y + '%';
+      div.innerHTML = `
+        <div class="sb-bubble">${BUB_BLOCKED_HTML}</div>
+        <div class="sb-sprite">${renderPixelSprite('bot_blue', 28)}</div>
       `;
-      layer.appendChild(el);
-      renderRobotEyes(ag, ag.state);
+      layer.appendChild(div);
+      b.el = div;
+      b.bubEl = div.querySelector('.sb-bubble');
     });
   }
-  if (!animFrameId) {
-    tickGameLoop();
+
+  if (!gameLoopRunning) {
+    gameLoopRunning = true;
+    requestAnimationFrame(tickPlayboard);
   }
 }
 
-function renderRobotEyes(ag, state) {
-  const face = document.getElementById('raface-' + ag.id);
-  if (!face) return;
-  const eyes = face.querySelector('.ra-eyes');
-  const head = face.querySelector('.ra-head-fill');
-  if (!eyes || !head) return;
-
-  if (state === 'frustrated') {
-    head.setAttribute('fill', '#EA4335');
-    eyes.innerHTML = `
-      <rect x="5" y="5" width="1.5" height="1.5" fill="#071429"/>
-      <rect x="6.5" y="6.5" width="1.5" height="1.5" fill="#071429"/>
-      <rect x="5" y="8" width="1.5" height="1.5" fill="#071429"/>
-      <rect x="11.5" y="5" width="1.5" height="1.5" fill="#071429"/>
-      <rect x="10" y="6.5" width="1.5" height="1.5" fill="#071429"/>
-      <rect x="11.5" y="8" width="1.5" height="1.5" fill="#071429"/>
-    `;
-  } else if (state === 'succeeded') {
-    head.setAttribute('fill', '#34A853');
-    eyes.innerHTML = `
-      <rect x="5" y="7" width="1" height="1.5" fill="#071429"/>
-      <rect x="6" y="5.5" width="1.5" height="1.5" fill="#071429"/>
-      <rect x="7.5" y="7" width="1" height="1.5" fill="#071429"/>
-      <rect x="10" y="7" width="1" height="1.5" fill="#071429"/>
-      <rect x="11" y="5.5" width="1.5" height="1.5" fill="#071429"/>
-      <rect x="12.5" y="7" width="1" height="1.5" fill="#071429"/>
-    `;
-  } else if (state === 'probing') {
-    head.setAttribute('fill', '#2B7DE9');
-    eyes.innerHTML = `
-      <rect x="4.5" y="6" width="9" height="2.2" fill="#071429"/>
-      <rect x="5.5" y="6.4" width="7" height="1.4" fill="#4CE0E6"/>
-    `;
-  } else {
-    head.setAttribute('fill', '#4DA3FF');
-    eyes.innerHTML = `
-      <rect x="5" y="6" width="2" height="3" fill="#071429"/>
-      <rect x="11" y="6" width="2" height="3" fill="#071429"/>
-    `;
-  }
-}
-
-function tickGameLoop() {
-  // Clear transient classes before recomputing
-  document.querySelectorAll('#s3-clone-mount .zone-agent-probing, #s3-clone-mount .zone-agent-frustrated, #s3-clone-mount .zone-agent-touch').forEach(el => {
-    el.classList.remove('zone-agent-probing', 'zone-agent-frustrated', 'zone-agent-touch');
-  });
-  document.querySelectorAll('.milestone-node.agent-probing, .milestone-node.agent-blocked').forEach(el => {
-    el.classList.remove('agent-probing', 'agent-blocked');
-  });
-
-  const fxSvg = document.getElementById('agent-fx-svg');
-  let fxHtml = '';
-
-  // 1. Update Calm, Demure Background Shopper Agents (United with the 6 Milestone Task Flags!)
-  ROAMING_AGENTS.forEach(ag => {
-    const el = document.getElementById('roam-' + ag.id);
-    const thought = document.getElementById('rathought-' + ag.id);
-    const cartEl = document.getElementById('racart-' + ag.id);
-    if (!el || !thought) return;
-
-    const spotKey = ag.plan[ag.stepIdx];
-    const spot = STORE_SPOTS[spotKey];
-    const isSpotSolved = solvedSet.has(spot.questId);
-    const targetDom = document.querySelector(spot.domSel);
-    const milestoneNode = document.querySelector(spot.nodeSel);
-
-    let offsetX = 0;
-    let offsetY = 0;
-
-    if (ag.state === 'walking' || ag.state === 'rerouting') {
-      const dx = spot.standX - ag.x;
-      const dy = spot.standY - ag.y;
-      const dist = Math.hypot(dx, dy);
-
-      if (dist <= ag.speed * 1.5) {
-        ag.x = spot.standX;
-        ag.y = spot.standY;
-        ag.state = 'probing';
-        ag.timer = 0;
-        renderRobotEyes(ag, 'probing');
-      } else {
-        // Calm, unhurried glide between Milestone Flags (no frenetic bouncing!)
-        ag.x += (dx / dist) * ag.speed;
-        ag.y += (dy / dist) * ag.speed;
-      }
-    } else if (ag.state === 'probing') {
-      ag.timer++;
-      const pct = Math.min(100, Math.round((ag.timer / 95) * 100));
-      thought.innerHTML = `<span>${spot.probeMsg}</span><span class="ra-prog"><i style="width:${pct}%"></i></span>`;
-
-      if (milestoneNode && !isSpotSolved) milestoneNode.classList.add('agent-probing');
-
-      // Subtle short connector line directly between the agent and the Milestone Task Flag
-      const ax = ag.x * 10, ay = ag.y * 10;
-      const tx = spot.targetX * 10, ty = spot.targetY * 10;
-      fxHtml += `
-        <line x1="${ax}" y1="${ay}" x2="${tx}" y2="${ty}" stroke="rgba(43,125,233,0.45)" stroke-width="1.8" stroke-dasharray="4 4"/>
-      `;
-
-      if (ag.timer >= 95) {
-        ag.timer = 0;
-        if (isSpotSolved) {
-          ag.state = 'succeeded';
-          if (spot.addCart && ag.cart < 3) {
-            ag.cart++;
-            if (cartEl) cartEl.textContent = `🛒${ag.cart}`;
-          }
-          renderRobotEyes(ag, 'succeeded');
-        } else {
-          ag.state = 'frustrated';
-          renderRobotEyes(ag, 'frustrated');
-        }
-      }
-    } else if (ag.state === 'frustrated') {
-      ag.timer++;
-      thought.innerHTML = `<span>${spot.failMsg}</span>`;
-
-      // Highlight the Milestone Task Flag itself so the player sees the agent is blocked by THIS flag!
-      if (milestoneNode) milestoneNode.classList.add('agent-blocked');
-      if (targetDom) targetDom.classList.add('zone-agent-frustrated');
-
-      // Gentle nudge back from the Milestone Flag
-      const bdx = spot.targetX - ag.x;
-      const bdy = spot.targetY - ag.y;
-      const bLen = Math.hypot(bdx, bdy) || 1;
-      const recoil = Math.max(0, 1 - ag.timer / 35) * -5;
-      offsetX = (bdx / bLen) * recoil;
-      offsetY = (bdy / bLen) * recoil;
-
-      // Subtle red connector line to the Milestone Flag
-      const ax = ag.x * 10, ay = ag.y * 10;
-      const tx = spot.targetX * 10, ty = spot.targetY * 10;
-      fxHtml += `
-        <line x1="${ax}" y1="${ay}" x2="${tx}" y2="${ty}" stroke="rgba(217,48,37,0.55)" stroke-width="2" stroke-dasharray="3 3"/>
-      `;
-
-      if (isSpotSolved) {
-        ag.state = 'succeeded';
-        ag.timer = 0;
-        renderRobotEyes(ag, 'succeeded');
-      } else if (ag.timer >= 110) {
-        // Calmly move on to try the next Milestone Flag
-        ag.timer = 0;
-        ag.stepIdx = (ag.stepIdx + 1) % ag.plan.length;
-        ag.state = 'rerouting';
-        renderRobotEyes(ag, 'rerouting');
-      }
-    } else if (ag.state === 'succeeded') {
-      ag.timer++;
-      thought.innerHTML = `<span>${spot.winMsg}</span>`;
-
-      if (targetDom) targetDom.classList.add('zone-agent-touch');
-
-      const ax = ag.x * 10, ay = ag.y * 10;
-      const tx = spot.targetX * 10, ty = spot.targetY * 10;
-      fxHtml += `
-        <line x1="${ax}" y1="${ay}" x2="${tx}" y2="${ty}" stroke="rgba(30,142,62,0.55)" stroke-width="2"/>
-      `;
-
-      if (ag.timer >= 100) {
-        ag.timer = 0;
-        ag.stepIdx = (ag.stepIdx + 1) % ag.plan.length;
-        ag.state = 'walking';
-        renderRobotEyes(ag, 'walking');
-      }
-    }
-
-    el.className = `roaming-agent st-${ag.state}`;
-    el.style.left = `calc(${ag.x.toFixed(2)}% + ${offsetX.toFixed(1)}px)`;
-    el.style.top = `calc(${ag.y.toFixed(2)}% + ${offsetY.toFixed(1)}px)`;
-  });
-
-  // 2. Draw Hero Player Golden Guide Line to Nearest Unsolved Milestone Flag!
-  let nearestUnsolved = null;
-  let nearestDist = Infinity;
-  QUESTS.forEach(q => {
-    if (!solvedSet.has(q.id)) {
-      const d = Math.hypot(archX - q.pos.left, archY - q.pos.top);
-      if (d < nearestDist) {
-        nearestDist = d;
-        nearestUnsolved = q;
-      }
-    }
-  });
-
-  const subHint = document.getElementById('arch-sub-hint');
-  const hudObj = document.getElementById('hud-objective');
-  if (nearestUnsolved) {
-    const px = archX * 10, py = archY * 10;
-    const qx = nearestUnsolved.pos.left * 10, qy = nearestUnsolved.pos.top * 10;
-    fxHtml += `
-      <line x1="${px}" y1="${py}" x2="${qx}" y2="${qy}" stroke="#FBBC04" stroke-width="3" stroke-dasharray="8 6"/>
-      <circle cx="${qx}" cy="${qy}" r="18" fill="rgba(251,188,4,0.18)" stroke="#FBBC04" stroke-width="2.5"/>
-    `;
-    const shortTitle = nearestUnsolved.title.split('(')[0].trim();
-    if (subHint) {
-      subHint.textContent = `Hold ↑ ↓ ← → toward: ${shortTitle}`;
-    }
-    if (hudObj) {
-      hudObj.innerHTML = `🎯 <b>Step ${solvedSet.size + 1} of 6:</b> Walk to <b>${shortTitle}</b> (<span class="key-cap">↑</span><span class="key-cap">↓</span><span class="key-cap">←</span><span class="key-cap">→</span> or click) &amp; pick an upgrade`;
-    }
-  } else {
-    if (subHint) subHint.textContent = `🏆 All 6 Milestones Unlocked!`;
-    if (hudObj) hudObj.innerHTML = `🏆 <b>All 6 Milestones Unlocked!</b> Click <b>Opportunity Report →</b> to view your results`;
-  }
-
-  if (fxSvg) fxSvg.innerHTML = fxHtml;
-
-  // 3. Update Continuous Walking for Store Architect (when Step 3 is active & modals closed)
-  const s3On = document.getElementById('s3').classList.contains('on');
-  const modalOpen = document.getElementById('quest-modal-backdrop').classList.contains('open');
-  const vicOpen = document.getElementById('victory-modal-backdrop').style.display === 'flex';
-  const briefOpen = document.getElementById('briefing-modal-backdrop')?.style.display === 'flex';
-
-  if (s3On && !modalOpen && !vicOpen && !briefOpen) {
-    let vx = 0;
-    let vy = 0;
-
-    if (keysHeld.left)  vx -= 1;
-    if (keysHeld.right) vx += 1;
-    if (keysHeld.up)    vy -= 1;
-    if (keysHeld.down)  vy += 1;
-
-    let isWalking = false;
-
-    if (vx !== 0 || vy !== 0) {
-      walkTarget = null;
-      const len = Math.hypot(vx, vy);
-      vx = (vx / len) * WALK_SPEED;
-      vy = (vy / len) * WALK_SPEED;
-      archX = Math.max(4, Math.min(96, archX + vx));
-      archY = Math.max(6, Math.min(94, archY + vy));
-      if (vx < -0.01) archFacing = -1;
-      if (vx > 0.01)  archFacing = 1;
-      isWalking = true;
-    } else if (walkTarget) {
-      const dx = walkTarget.x - archX;
-      const dy = walkTarget.y - archY;
-      const dist = Math.hypot(dx, dy);
-      if (dist <= WALK_SPEED * 1.2) {
-        archX = walkTarget.x;
-        archY = walkTarget.y;
-        const targetQuest = walkTarget.questId;
-        walkTarget = null;
-        if (targetQuest !== undefined && targetQuest !== null) {
-          openQuestModal(targetQuest);
-        }
-      } else {
-        const stepX = (dx / dist) * WALK_SPEED;
-        const stepY = (dy / dist) * WALK_SPEED;
-        archX += stepX;
-        archY += stepY;
-        if (stepX < -0.01) archFacing = -1;
-        if (stepX > 0.01)  archFacing = 1;
-        isWalking = true;
-      }
-    }
-
-    renderArchitectAvatar(isWalking);
-    checkMilestoneProximity();
-  }
-
-  animFrameId = requestAnimationFrame(tickGameLoop);
-}
-
-function renderArchitectAvatar(isWalking) {
-  const arch = document.getElementById('architect-avatar');
-  const body = document.getElementById('arch-body');
-  const legL = document.getElementById('arch-leg-l');
-  const legR = document.getElementById('arch-leg-r');
-  if (!arch || !body) return;
-
-  arch.style.left = archX + '%';
-  arch.style.top = archY + '%';
-
-  if (isWalking) {
-    walkPhase += 0.34;
-    const bobY = Math.abs(Math.sin(walkPhase)) * -5;
-    const tilt = Math.sin(walkPhase) * 5;
-    body.style.transform = `translateY(${bobY.toFixed(1)}px) rotate(${tilt.toFixed(1)}deg) scaleX(${archFacing})`;
-
-    if (legL && legR) {
-      const lUp = Math.sin(walkPhase) > 0 ? 13 : 14.5;
-      const rUp = Math.sin(walkPhase) > 0 ? 14.5 : 13;
-      legL.setAttribute('y', lUp);
-      legR.setAttribute('y', rUp);
-    }
-
-    const now = performance.now();
-    if (now - lastFootstepTime > 170) {
-      lastFootstepTime = now;
-      spawnFootstepDot(archX, archY + 2.8);
-    }
-  } else {
-    body.style.transform = `translateY(0px) rotate(0deg) scaleX(${archFacing})`;
-    if (legL && legR) {
-      legL.setAttribute('y', 14);
-      legR.setAttribute('y', 14);
-    }
-  }
-}
-
-function spawnFootstepDot(xPct, yPct) {
-  const vp = document.getElementById('overworld-vp');
-  if (!vp) return;
-  const dot = document.createElement('div');
-  dot.className = 'footstep-dot';
-  dot.style.left = xPct + '%';
-  dot.style.top = yPct + '%';
-  vp.appendChild(dot);
-  setTimeout(() => dot.remove(), 900);
-}
-
-function checkMilestoneProximity() {
-  if (dismissedQuestId !== null) {
-    const dq = QUESTS[dismissedQuestId];
-    const dDist = Math.hypot(archX - dq.pos.left, archY - (dq.pos.top + 4));
-    if (dDist > 9.5) {
-      dismissedQuestId = null;
-    }
-  }
-
-  QUESTS.forEach(q => {
-    const node = document.getElementById('qnode-' + q.id);
-    const dist = Math.hypot(archX - q.pos.left, archY - (q.pos.top + 4));
-    if (node) {
-      node.classList.toggle('near', dist < 8.5);
-    }
-    if (dist < 5.4 && !solvedSet.has(q.id) && dismissedQuestId !== q.id) {
-      clearHeldKeys();
-      walkTarget = null;
-      openQuestModal(q.id);
-    }
-  });
-}
-
-function clearHeldKeys() {
-  keysHeld.up = keysHeld.down = keysHeld.left = keysHeld.right = false;
-  document.querySelectorAll('.dpad-btn').forEach(b => b.classList.remove('held'));
-}
-
-// Keyboard Hold-to-Walk Listeners (Arrow Keys + WASD)
-window.addEventListener('keydown', e => {
-  const s3On = document.getElementById('s3').classList.contains('on');
-  const modalOpen = document.getElementById('quest-modal-backdrop').classList.contains('open');
-  const vicOpen = document.getElementById('victory-modal-backdrop').style.display === 'flex';
-  const briefOpen = document.getElementById('briefing-modal-backdrop')?.style.display === 'flex';
-  if (!s3On) return;
-
-  if (briefOpen) {
-    if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      closeBriefingModal();
-    }
-    return;
-  }
-  if (modalOpen) {
-    if (e.key === 'Escape') closeQuestModal();
-    return;
-  }
-  if (vicOpen) {
-    if (e.key === 'Escape') closeVictoryModal();
-    return;
-  }
-
-  if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
-    e.preventDefault(); keysHeld.up = true;
-    document.getElementById('dpad-up')?.classList.add('held');
-  } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
-    e.preventDefault(); keysHeld.down = true;
-    document.getElementById('dpad-down')?.classList.add('held');
-  } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-    e.preventDefault(); keysHeld.left = true;
-    document.getElementById('dpad-left')?.classList.add('held');
-  } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-    e.preventDefault(); keysHeld.right = true;
-    document.getElementById('dpad-right')?.classList.add('held');
-  }
+document.getElementById('overworld-vp').addEventListener('click', (e) => {
+  if (document.getElementById('quest-modal-backdrop').classList.contains('open')) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+  walkAvatarTo(Math.max(5, Math.min(95, x)), Math.max(6, Math.min(94, y)));
 });
 
-window.addEventListener('keyup', e => {
-  if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
-    keysHeld.up = false;
-    document.getElementById('dpad-up')?.classList.remove('held');
-  } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
-    keysHeld.down = false;
-    document.getElementById('dpad-down')?.classList.remove('held');
-  } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-    keysHeld.left = false;
-    document.getElementById('dpad-left')?.classList.remove('held');
-  } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-    keysHeld.right = false;
-    document.getElementById('dpad-right')?.classList.remove('held');
+function walkAvatarTo(x, y, questId = null) {
+  targetX = x;
+  targetY = y;
+  pendingQuestOnArrive = questId;
+}
+
+function walkAndOpenQuest(qId) {
+  const q = QUESTS[qId];
+  const dist = Math.hypot(archX - q.x, archY - q.y);
+  if (dist < 9) {
+    openQuestModal(qId);
+  } else {
+    walkAvatarTo(q.x, q.y, qId);
   }
+}
+
+window.addEventListener('keydown', (e) => {
+  if (!document.getElementById('s4').classList.contains('on')) return;
+  if (['ArrowUp','KeyW'].includes(e.code))    { keysHeld.up = true; targetX = null; e.preventDefault(); }
+  if (['ArrowDown','KeyS'].includes(e.code))  { keysHeld.down = true; targetX = null; e.preventDefault(); }
+  if (['ArrowLeft','KeyA'].includes(e.code))  { keysHeld.left = true; targetX = null; e.preventDefault(); }
+  if (['ArrowRight','KeyD'].includes(e.code)) { keysHeld.right = true; targetX = null; e.preventDefault(); }
+});
+window.addEventListener('keyup', (e) => {
+  if (['ArrowUp','KeyW'].includes(e.code))    keysHeld.up = false;
+  if (['ArrowDown','KeyS'].includes(e.code))  keysHeld.down = false;
+  if (['ArrowLeft','KeyA'].includes(e.code))  keysHeld.left = false;
+  if (['ArrowRight','KeyD'].includes(e.code)) keysHeld.right = false;
 });
 
-window.addEventListener('blur', clearHeldKeys);
-
-// On-Screen D-Pad Hold-to-Walk Listeners (Mouse & Touch)
 document.querySelectorAll('.dpad-btn').forEach(btn => {
   const dir = btn.dataset.dir;
-  if (!dir) return;
-  const startHold = e => {
-    e.preventDefault();
-    e.stopPropagation();
-    keysHeld[dir] = true;
-    btn.classList.add('held');
-  };
-  const endHold = e => {
-    e.preventDefault();
-    keysHeld[dir] = false;
-    btn.classList.remove('held');
-  };
-  btn.addEventListener('pointerdown', startHold);
-  btn.addEventListener('pointerup', endHold);
-  btn.addEventListener('pointerleave', endHold);
-  btn.addEventListener('pointercancel', endHold);
+  const start = (e) => { e.preventDefault(); keysHeld[dir] = true; targetX = null; btn.classList.add('held'); };
+  const end = () => { keysHeld[dir] = false; btn.classList.remove('held'); };
+  btn.addEventListener('mousedown', start);
+  btn.addEventListener('touchstart', start, { passive: false });
+  window.addEventListener('mouseup', end);
+  window.addEventListener('touchend', end);
 });
 
-// Click anywhere on the overworld page to walk continuously to that spot
-document.getElementById('overworld-vp').addEventListener('click', e => {
-  if (document.getElementById('quest-modal-backdrop').classList.contains('open')) return;
-  if (document.getElementById('victory-modal-backdrop').style.display === 'flex') return;
-  if (document.getElementById('briefing-modal-backdrop')?.style.display === 'flex') return;
-  const rect = e.currentTarget.getBoundingClientRect();
-  const clickX = ((e.clientX - rect.left) / rect.width) * 100;
-  const clickY = ((e.clientY - rect.top) / rect.height) * 100;
-  walkTarget = {
-    x: Math.max(4, Math.min(96, clickX)),
-    y: Math.max(6, Math.min(94, clickY)),
-    questId: null
-  };
-});
+function tickPlayboard() {
+  if (document.getElementById('s4').classList.contains('on')) {
+    const modalOpen = document.getElementById('quest-modal-backdrop').classList.contains('open');
+    if (!modalOpen) {
+      let dx = 0, dy = 0;
+      const baseSpeed = 0.52 * speedMultiplier;
 
-// Clicking a milestone walks the Architect steadily across the page to that milestone, then opens it
-function walkAndOpenQuest(questId) {
-  const q = QUESTS[questId];
-  dismissedQuestId = null;
-  walkTarget = {
-    x: q.pos.left,
-    y: Math.min(93, q.pos.top + 4),
-    questId: questId
-  };
+      if (keysHeld.up) dy -= baseSpeed;
+      if (keysHeld.down) dy += baseSpeed;
+      if (keysHeld.left) dx -= baseSpeed;
+      if (keysHeld.right) dx += baseSpeed;
+
+      if (targetX !== null && targetY !== null) {
+        const rx = targetX - archX;
+        const ry = targetY - archY;
+        const dist = Math.hypot(rx, ry);
+        const step = 0.85 * speedMultiplier;
+        if (dist <= step) {
+          archX = targetX;
+          archY = targetY;
+          targetX = null;
+          targetY = null;
+          if (pendingQuestOnArrive !== null) {
+            const qId = pendingQuestOnArrive;
+            pendingQuestOnArrive = null;
+            openQuestModal(qId);
+          }
+        } else {
+          dx = (rx / dist) * step;
+          dy = (ry / dist) * step;
+        }
+      }
+
+      if (dx !== 0 || dy !== 0) {
+        const ptr = document.getElementById('arch-start-pointer');
+        if (ptr && !ptr.classList.contains('gone')) ptr.classList.add('gone');
+
+        archX = Math.max(5, Math.min(95, archX + dx));
+        archY = Math.max(6, Math.min(94, archY + dy));
+        const av = document.getElementById('architect-avatar');
+        av.style.left = archX + '%';
+        av.style.top = archY + '%';
+
+        stepCounter++;
+        if (stepCounter % 6 === 0) {
+          spawnFootstep(archX, archY);
+        }
+
+        checkFloorPickups();
+
+        if (targetX === null) {
+          QUESTS.forEach(q => {
+            if (!solved.has(q.id) && Math.hypot(archX - q.x, archY - q.y) < 5.5) {
+              keysHeld = { up: false, down: false, left: false, right: false };
+              openQuestModal(q.id);
+            }
+          });
+        }
+      }
+    }
+
+    updateSimpleBots();
+  }
+  requestAnimationFrame(tickPlayboard);
 }
 
-function openQuestModal(id) {
-  currentOpenQuestId = id;
-  firstTryAttempt = true;
-  const q = QUESTS[id];
+function spawnFootstep(x, y) {
+  const vp = document.getElementById('overworld-vp');
+  const dot = document.createElement('div');
+  dot.className = 'footstep-dot' + (speedMultiplier > 1 ? ' fast' : '');
+  dot.style.left = x + '%';
+  dot.style.top = (y + 2.5) + '%';
+  vp.appendChild(dot);
+  setTimeout(() => dot.remove(), 750);
+}
 
-  const badge = document.getElementById('qm-badge');
-  badge.textContent = `${q.tier}`;
-  badge.style.background = q.tierClass;
+function checkFloorPickups() {
+  PICKUPS.forEach(p => {
+    if (p.collected) return;
+    if (Math.hypot(archX - p.x, archY - p.y) < 5.5) {
+      p.collected = true;
+      const el = document.getElementById(p.id);
+      if (el) el.classList.add('collected');
 
-  document.getElementById('qm-title').textContent = q.title;
-  document.getElementById('qm-problem').textContent = q.problem;
-  document.getElementById('qm-why').textContent = q.why;
-  document.getElementById('qm-why').classList.remove('open');
-  document.getElementById('qm-lift-tag').textContent = `+${q.lift}% Purchase Completion Lift`;
-
-  const fb = document.getElementById('qm-feedback');
-  fb.style.display = 'none';
-
-  const choicesBox = document.getElementById('qm-choices');
-  choicesBox.innerHTML = '';
-  q.choices.forEach((c, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'pu-card';
-    btn.innerHTML = `
-      <div class="pu-ico">${c.ico}</div>
-      <div>
-        <b>${c.title}</b>
-        <small>${c.desc}</small>
-      </div>
-    `;
-    btn.onclick = () => pickPowerUp(id, idx, btn);
-    choicesBox.appendChild(btn);
+      if (p.type === 'speed') {
+        speedMultiplier = 1.85;
+        document.getElementById('architect-avatar').classList.add('boosted');
+        document.getElementById('hud-speed').classList.add('on');
+        score += 50;
+        spawnRewardPop(p.x, p.y, '2x SPEED! +50 PTS');
+      } else {
+        score += 50;
+        spawnRewardPop(p.x, p.y, '+50 PTS');
+      }
+      updateHud();
+    }
   });
+}
+
+function updateSimpleBots() {
+  BOTS.forEach(b => {
+    if (!b.el) return;
+    const isFixed = solved.has(b.zoneId);
+    const spd = isFixed ? b.vx * 1.9 : b.vx;
+    b.x += spd;
+
+    if (b.x > b.maxX || b.x < b.minX) {
+      b.vx *= -1;
+    }
+
+    const nearFlag = Math.abs(b.x - QUESTS[b.zoneId].x) < 12;
+    b.el.classList.toggle('react', nearFlag);
+    b.el.classList.toggle('blocked', nearFlag && !isFixed);
+    b.el.classList.toggle('happy', nearFlag && isFixed);
+    if (b.bubEl && b.lastFixed !== isFixed) {
+      b.lastFixed = isFixed;
+      b.bubEl.innerHTML = isFixed ? BUB_HAPPY_HTML : BUB_BLOCKED_HTML;
+    }
+
+    b.el.style.left = b.x + '%';
+  });
+}
+
+/* =========================================================
+   ULTRA-SIMPLE 2-BUTTON CHOICE MODAL
+   ========================================================= */
+function openQuestModal(qId) {
+  activeQuestId = qId;
+  const q = QUESTS[qId];
+  const pill = document.getElementById('scc-pill');
+  pill.textContent = q.pill;
+  pill.style.background = q.color;
+
+  document.getElementById('scc-title').textContent = q.title;
+  document.getElementById('scc-problem').textContent = q.problem;
+  document.getElementById('scc-hint').textContent = '';
+
+  const btnBox = document.getElementById('scc-buttons');
+  btnBox.innerHTML = `
+    <button class="scc-btn bad-choice" id="btn-bad" onclick="pickBadChoice()">
+      <span>${q.badBtn}</span>
+      <small>${q.badSub}</small>
+    </button>
+    <button class="scc-btn good-choice" onclick="pickGoodChoice(${q.id})">
+      <span>${q.goodBtn}</span>
+      <small style="color:var(--green)">${q.goodSub}</small>
+    </button>
+  `;
 
   document.getElementById('quest-modal-backdrop').classList.add('open');
 }
 
-function toggleWhyDrawer() {
-  document.getElementById('qm-why').classList.toggle('open');
-}
-
 function closeQuestModal() {
-  if (currentOpenQuestId !== null && !solvedSet.has(currentOpenQuestId)) {
-    dismissedQuestId = currentOpenQuestId;
-  }
-  clearHeldKeys();
   document.getElementById('quest-modal-backdrop').classList.remove('open');
-  document.getElementById('overworld-vp')?.focus();
+  activeQuestId = null;
 }
 
-function showVictoryModal() {
-  document.getElementById('vic-lift').textContent = `+${totalLift}%`;
-  document.getElementById('vic-score').textContent = `${totalScore.toLocaleString()} PTS`;
-  document.getElementById('victory-modal-backdrop').style.display = 'flex';
+function pickBadChoice() {
+  if (activeQuestId === null) return;
+  const q = QUESTS[activeQuestId];
+  const btn = document.getElementById('btn-bad');
+  btn.classList.remove('wrong-shake');
+  void btn.offsetWidth;
+  btn.classList.add('wrong-shake');
+  document.getElementById('scc-hint').textContent = q.badHint;
+}
+
+function pickGoodChoice(qId) {
+  const q = QUESTS[qId];
+  closeQuestModal();
+
+  if (!solved.has(qId)) {
+    solved.add(qId);
+    score += q.pts;
+    totalLift += q.lift;
+
+    const zoneEl = document.getElementById('s4-zone-' + qId);
+    if (zoneEl) {
+      zoneEl.classList.remove('unfixed');
+      zoneEl.classList.add('fixed');
+    }
+
+    const node = document.getElementById('qnode-' + qId);
+    if (node) node.classList.add('solved');
+    const plate = document.getElementById('qplate-' + qId);
+    if (plate) plate.textContent = `+${q.lift}% Lift`;
+
+    spawnRewardPop(q.x, q.y, `+${q.lift}% LIFT · +${q.pts} PTS`);
+    updateHud();
+
+    if (solved.size === 3) {
+      setTimeout(() => {
+        document.getElementById('vic-score').textContent = score.toLocaleString() + ' PTS';
+        document.getElementById('victory-modal-backdrop').style.display = 'flex';
+      }, 650);
+    }
+  }
 }
 
 function closeVictoryModal() {
   document.getElementById('victory-modal-backdrop').style.display = 'none';
-  document.getElementById('overworld-vp')?.focus();
 }
 
-function pickPowerUp(questId, choiceIdx, btnEl) {
-  const q = QUESTS[questId];
-  const choice = q.choices[choiceIdx];
-  const fb = document.getElementById('qm-feedback');
-
-  if (!choice.correct) {
-    firstTryAttempt = false;
-    btnEl.classList.add('wrong');
-    fb.style.display = 'flex';
-    fb.style.background = '#FCE8E6';
-    fb.style.color = '#D93025';
-    fb.innerHTML = `<span>✕ That won’t clear this bottleneck! Try the Gemini upgrade.</span>`;
-    return;
-  }
-
-  btnEl.classList.add('correct');
-  const alreadySolved = solvedSet.has(questId);
-  const bonus = (!alreadySolved && firstTryAttempt) ? 50 : 0;
-  const earnedPts = alreadySolved ? 0 : (q.points + bonus);
-
-  fb.style.display = 'flex';
-  fb.style.background = '#E6F4EA';
-  fb.style.color = '#1E8E3E';
-  fb.innerHTML = `
-    <span>✓ Bottleneck Cleared! ${bonus ? '(+50 First-Try Bonus!)' : ''}</span>
-    <span>+${earnedPts || q.points} PTS · +${q.lift}% Efficacy</span>
-  `;
-
-  if (!alreadySolved) {
-    solvedSet.add(questId);
-    totalScore += earnedPts;
-    totalLift += q.lift;
-    updateGameHUD();
-    markNodeSolvedOnMap(questId, earnedPts);
-  }
-
-  setTimeout(() => {
-    closeQuestModal();
-    if (solvedSet.size === QUESTS.length && !victoryShown) {
-      victoryShown = true;
-      setTimeout(showVictoryModal, 350);
-    }
-  }, 900);
-}
-
-function markNodeSolvedOnMap(questId, earnedPts) {
-  const q = QUESTS[questId];
-  const node = document.getElementById('qnode-' + questId);
-  const flag = document.getElementById('qflag-' + questId);
-  const bub = document.getElementById('qbub-' + questId);
-
-  node.classList.add('solved');
-  flag.textContent = `✓ CLEARED · +${earnedPts} PTS`;
-  bub.textContent = q.solvedBubble;
-
-  const zone = document.getElementById('s3-zone-' + questId);
-  if (zone) {
-    zone.classList.add('zone-solved');
-  }
-
-  // Spawn floating pixel coin + points burst over the milestone
+function spawnRewardPop(x, y, text) {
   const vp = document.getElementById('overworld-vp');
   const pop = document.createElement('div');
   pop.className = 'reward-pop';
-  pop.style.left = node.style.left;
-  pop.style.top = node.style.top;
-  pop.innerHTML = `<img class="px-img" src="../shared/pixel_assets/coin-DltQpDF4.png" width="20" height="20"/> +${earnedPts} PTS · +${q.lift}% Lift!`;
+  pop.style.left = x + '%';
+  pop.style.top = y + '%';
+  pop.textContent = text;
   vp.appendChild(pop);
-  setTimeout(() => pop.remove(), 1400);
+  setTimeout(() => pop.remove(), 1300);
 }
 
-function updateGameHUD() {
-  document.getElementById('hud-score').textContent = totalScore.toLocaleString();
-  document.getElementById('hud-quests').textContent = `${solvedSet.size} / 6`;
+function updateHud() {
+  document.getElementById('hud-score').textContent = score.toLocaleString();
+  document.getElementById('hud-quests').textContent = `${solved.size} / 3`;
   document.getElementById('hud-lift').textContent = `+${totalLift}%`;
 }
 
-// Step 4: Executive Opportunity Summary & Code Drawer
-function updateExecutiveReport() {
-  const displayLift = totalLift > 0 ? `+${totalLift}%` : '+42%';
-  const displayScore = totalScore > 0 ? totalScore.toLocaleString() : '1,700';
-  const displayQuests = solvedSet.size > 0 ? `${solvedSet.size}/6` : '6/6';
-  document.getElementById('rep-lift').textContent = displayLift;
-  document.getElementById('rep-score').innerHTML = `${displayScore}`;
-  document.getElementById('rep-quests').textContent = displayQuests;
+function updateReport() {
+  const finalLift = solved.size > 0 ? totalLift : 42;
+  const finalScore = score > 0 ? score : 1050;
+  const finalQuests = solved.size > 0 ? solved.size : 3;
+  document.getElementById('rep-lift').textContent = `+${finalLift}%`;
+  document.getElementById('rep-score').textContent = finalScore.toLocaleString();
+  document.getElementById('rep-quests').textContent = `${finalQuests}/3`;
 }
 
-function toggleCodeDrawer() {
-  document.getElementById('code-drawer').classList.toggle('open');
+function copySnippet(btn, id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text);
+  const orig = btn.textContent;
+  btn.textContent = 'Copied';
+  setTimeout(() => btn.textContent = orig, 1400);
 }
 
-function drawQR() {
-  const c = document.getElementById('qr');
-  if (!c) return;
-  const ctx = c.getContext('2d');
-  const N = 33;
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, N, N);
-  ctx.fillStyle = '#071429';
-  const finder = (ox, oy) => {
-    for (let y = 0; y < 7; y++)
-      for (let x = 0; x < 7; x++)
-        if (x === 0 || x === 6 || y === 0 || y === 6 || (x >= 2 && x <= 4 && y >= 2 && y <= 4))
-          ctx.fillRect(ox + x, oy + y, 1, 1);
-  };
-  finder(2, 2); finder(N - 9, 2); finder(2, N - 9);
-  let s = 7719;
-  for (let y = 2; y < N - 2; y++) {
-    for (let x = 2; x < N - 2; x++) {
-      if ((x < 10 && y < 10) || (x > N - 11 && y < 10) || (x < 10 && y > N - 11)) continue;
-      s = (s * 1103515245 + 12345) & 0x7fffffff;
-      if ((s >> 16) % 3 === 0) ctx.fillRect(x, y, 1, 1);
-    }
-  }
-}
-
-function downloadKit() {
-  const data = {
-    store: "The Frankie Shop",
-    projected_purchase_completion_lift: (totalLift || 42) + "%",
-    executive_opportunities: {
-      level_1_foundation: ["llms.txt & Markdown (-81% tokens)", "Web Bot Auth & Review Prompt Sanitizer"],
-      level_2_standardized_commerce_ucp: ["Promo OCR -> UCP discount_extension (FRANKIE15)", "Gemini Vision Catalog Enrichment"],
-      level_3_bespoke_brand_mcp: ["oversized_fit_advisor MCP tool", "frankie_capsule_stylist MCP tool + AP2 Checkout"]
+function downloadStarterKit() {
+  const kit = {
+    storefront: "thefrankieshop.com",
+    projected_conversion_lift_pct: 42,
+    zones: {
+      footer_sitemap: "/llms.txt",
+      body_product_mcp: ["oversized_fit_advisor", "garment_fabric_specs"],
+      header_ucp_checkout: "/.well-known/ucp"
     }
   };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(kit, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'frankie-storefront-opportunity-kit.json';
+  a.download = 'agent-storefront-starter-kit.json';
   a.click();
 }
 </script>
